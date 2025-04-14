@@ -8,6 +8,7 @@
   align-self: stretch;
   border-radius: 0px 0px 50px 50px;
   background: #f8f3e9;
+  font-family: Raleway;
 }
 .header {
   display: flex;
@@ -29,142 +30,135 @@
   height: 89px;
   aspect-ratio: 166/89;
 }
-.buttons {
+.nav-links {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 40px;
-  flex: 1 0 0;
-}
-.selec {
-  color: var(--brand-color-2, #fd661f);
-  font-family: Plus Jakarta Sans;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: 0.36px;
-}
-.def {
-  color: #252641;
-  font-family: Plus Jakarta Sans;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: 0.36px;
-}
-.boton1 {
-  display: flex;
-  width: 170px;
-  height: 50px;
+  list-style: none;
+  gap: 3rem;
+  margin: 0;
+  padding: 0;
+  font-size: 19px;
+  flex: 1;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  border-radius: 10px;
-  background: #fff;
-}
-.but1tex {
-  width: 130px;
-  flex-shrink: 0;
-  color: var(--Brand-color, #0b7077);
-  font-family: Plus Jakarta Sans;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: 0.32px;
-  text-transform: uppercase;
-}
-.boton2 {
-  display: flex;
-  width: 170px;
-  height: 50px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 10px;
-  background: var(--Brand-color, #0b7077);
-}
-.but2tex {
-  color: #fff;
-  font-family: Plus Jakarta Sans;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: 0.32px;
-  text-transform: uppercase;
 }
 
-.contHeader {
+.nav-links a {
+  text-decoration: none;
+  color: #1f1f1f;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #f45511;
+}
+
+.nav-links .active {
+  color: #f45511;
+  font-weight: bold;
+}
+
+.auth {
   display: flex;
-  width: 1280px;
-  height: 566px;
+  gap: 1.2rem;
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 0.8rem 1.6rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  text-transform: uppercase;
+  transition: 0.3s ease;
+}
+
+.login {
+  background-color: #ffffff;
+  color: #0B7077;
+  border: 2px solid #0B7077;
+}
+
+.login:hover {
+  background-color: #f1f1f1;
+}
+
+.register {
+  background-color: #0B7077;
+  color: white;
+  border: 2px solid #0B7077;
+}
+
+.register:hover {
+  background-color: #0B7077;
+}
+.hero {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-shrink: 0;
-  border-bottom: 1px solid #e5e8eb;
+  padding: 0rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 2rem;
 }
-.textown {
-  display: flex;
-  height: 565px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex: 1 0 0;
+
+.hero-texto {
+  max-width: 60%;
 }
-.never {
-  width: 701px;
-  color: #252641;
-  font-family: Plus Jakarta Sans;
-  font-size: 25px;
+
+.etiqueta {
+  display: inline-block;
+  background-color: #ffffff;
+  color: black;
+  padding: 1rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-family: Raleway;
+  font-size: 18px;
   font-style: normal;
-  font-weight: 800;
-  line-height: 50px; /* 200% */
-  letter-spacing: 0.5px;
-  margin: 10px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.36px;
 }
-.center {
-  width: 701px;
-  color: var(--Brand-color, #0b7077);
-  font-family: Plus Jakarta Sans;
-  font-size: 55px;
+
+.hero-texto h1 {
+  color: #00695c;
+  font-family: Raleway;
+  font-size: 64px;
   font-style: normal;
-  font-weight: 800;
-  margin: 10px;
+  font-weight: 700;
+  line-height: 75px;
+  margin-bottom: 37px;
+  width: 800px;
 }
-.buttons2 {
+
+.botones {
   display: flex;
-  width: 701px;
-  height: 90px;
-  padding: 0px 20px;
-  align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
+  gap: 1.2rem;
 }
-.buttonorange {
-  display: flex;
-  width: 220px;
-  height: 50px;
-  padding: 0px 30px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
+
+.btn.naranja {
+  background-color: #f45511;
+  color: white;
+  padding: 20px 30px;
   border-radius: 10px;
-  background: var(--brand-color-2, #fd661f);
-}
-.textbutton {
-  color: #fff;
-  font-family: Plus Jakarta Sans;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-transform: uppercase;
+  font-family: Raleway;
   font-size: 16px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 500;
   line-height: normal;
-  letter-spacing: 0.32px;
-  text-transform: uppercase;
 }
+
+.btn.naranja:hover {
+  background-color: #c93d00;
+}
+
 .imagenweon {
   display: flex;
   width: 499px;
