@@ -6,6 +6,7 @@
   align-items: center;
   flex-shrink: 0;
   align-self: stretch;
+  
 }
 .conttext {
   display: flex;
@@ -19,8 +20,8 @@
 .benef {
   align-self: stretch;
   color: var(--Brand-color, #0b7077);
-  font-family: Plus Jakarta Sans;
-  font-size: 18px;
+  font-family: Raleway;
+  font-size: 20px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -29,7 +30,7 @@
 .tit1 {
   align-self: stretch;
   color: var(--Brand-color, #0b7077);
-  font-family: Plus Jakarta Sans;
+  font-family: Raleway;
   font-size: 42px;
   font-style: normal;
   font-weight: 700;
@@ -53,11 +54,11 @@
 .desc {
   width: 443px;
   color: #696984;
-  font-family: Plus Jakarta Sans;
-  font-size: 18px;
+  font-family: Raleway;
+  font-size: 20px;
   font-style: normal;
   font-weight: 500;
-  line-height: 180%; /* 32.4px */
+  line-height: 180%; 
   letter-spacing: 0.36px;
 }
 .contimagen {

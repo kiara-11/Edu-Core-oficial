@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import "./HeaderInicio.css";
+import Link from 'next/link';
 const HeaderInicio = () => {
   return (
     <div className="toelheaderpue">
@@ -14,34 +15,41 @@ const HeaderInicio = () => {
             alt={"Logo Hotel Pairumani"}
           />
         </div>
-        <div className="buttons">
-          <p className="selec">Inicio</p>
-          <p className="def">Blog</p>
-          <p className="def">Acerca de nosotros</p>
-          <p className="def">Explorar cursos</p>
-          <div className="boton1">
-            <p className="but1tex">INICIAR SESION</p>
-          </div>
-          <div className="boton2">
-            <p className="but2tex">REGISTRARSE</p>
-          </div>
-        </div>
+        <div className="nav-links">
+        <li><Link href={"/inicio"} passHref>
+        <span className="">Inicio</span>
+        </Link></li>
+        <li><Link href={"/blog"} passHref>Blog</Link></li>
+        <li><Link href={"/sobren"} passHref>Sobre Nosotros</Link></li>
+        <li><Link href={"/cursos"} passHref>Explorar Cursos</Link></li>
       </div>
 
-
-      <div className="contHeader">
-        <div className="textown">
-            <p className="never">Nunca dejes de aprender</p>
-            <p className="center">Centralizamos la educación personalizada: encuentra, reserva y aprende con confianza.</p>
-            <div className="buttons2">
-                <div className="buttonorange">
-                    <p className="textbutton">EXPLORAR CURSOS</p>
-                </div>
-                <div className="buttonorange">
-                    <p className="textbutton">PUBLICAR UN CURSO</p>
-                </div>
-            </div>
+      <div className="auth">
+        <Link href="/login">
+          <button className="btn login">INICIAR SESIÓN</button>
+        </Link>
+        <Link href="/register">
+          <button className="btn register">REGISTRARSE</button>
+        </Link>
+      </div>
+      </div>
+      <section className="hero">
+        <div className="hero-texto">
+          <span className="etiqueta">Nunca dejes de aprender</span>
+          <h1>
+            Centralizamos la educación personalizada: <br />
+            <strong>encuentra, reserva y aprende con confianza.</strong>
+          </h1>
+          <div className="botones">
+            <Link href="/cursos">
+              <button className="btn naranja">EXPLORAR CURSOS</button>
+            </Link>
+            <Link href="/publicar">
+              <button className="btn naranja">PUBLICAR UN CURSO</button>
+            </Link>
+          </div>
         </div>
+
         <div className="imagenweon">
         <Image
             className="lerdo"
@@ -51,7 +59,8 @@ const HeaderInicio = () => {
             alt={"Logo Hotel Pairumani"}
           />
         </div>
-      </div>
+      </section>
+      
     </div>
   );
 };

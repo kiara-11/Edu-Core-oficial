@@ -34,8 +34,8 @@
 .benefp2 {
   align-self: stretch;
   color: var(--brand-color-2, #fd661f);
-  font-family: Plus Jakarta Sans;
-  font-size: 18px;
+  font-family: Raleway;
+  font-size: 20px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -44,7 +44,7 @@
 .titp2 {
   align-self: stretch;
   color: var(--brand-color-2, #fd661f);
-  font-family: Plus Jakarta Sans;
+  font-family: Raleway;
   font-size: 42px;
   font-style: normal;
   font-weight: 700;
