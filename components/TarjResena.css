@@ -1,0 +1,68 @@
+.ContTarjResena {
+  display: flex;
+  height: 217px;
+  min-width: 240px;
+  padding: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+.ImaTutRes {
+  display: flex;
+  width: 70px;
+  height: 70px;
+  padding: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 50px;
+}
+.resena {
+  display: flex;
+  width: 530px;
+  height: 177px;
+  padding: 20px 30px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  border-radius: 20.22px;
+  background: #f8f3e9;
+}
+.resenareview {
+  display: flex;
+  width: 206px;
+  height: 15px;
+  align-items: flex-start;
+  gap: 10.11px;
+  flex-shrink: 0;
+}
+.StarzszRes {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.NomResena {
+  align-self: stretch;
+  color: #000;
+  font-family: Raleway;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin: 0px;
+}
+.TxtResena {
+  height: 82px;
+  flex-shrink: 0;
+  align-self: stretch;
+  color: #000;
+  font-family: Raleway;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0px;
+}

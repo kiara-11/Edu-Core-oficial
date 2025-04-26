@@ -1,11 +1,12 @@
 import React from "react";
-import Image from "next/image";
 import "./HeaderInicio.css";
 import Link from "next/link";
-const HeaderInicio = () => {
+import Image from "next/image";
+
+const Header = () => {
   return (
-    <div className="toelheaderpue">
-      <div className="header">
+    <div className="estiloHeapue">
+      <div className="header2">
         <div className="logo">
           <Image
             className="Buho"
@@ -47,35 +48,8 @@ const HeaderInicio = () => {
           </Link>
         </div>
       </div>
-      <section className="hero">
-        <div className="hero-texto">
-          <span className="etiqueta">Nunca dejes de aprender</span>
-          <h1>
-            Centralizamos la educación personalizada: <br />
-            <strong>encuentra, reserva y aprende con confianza.</strong>
-          </h1>
-          <div className="botones">
-            <Link href="/cursos">
-              <button className="btn naranja">EXPLORAR CURSOS</button>
-            </Link>
-            <Link href="/publicar">
-              <button className="btn naranja">PUBLICAR UN CURSO</button>
-            </Link>
-          </div>
-        </div>
-
-        <div className="imagenweon">
-          <Image
-            className="lerdo"
-            src="/image-uM5ZOTW7R-transformed 1.png"
-            width={500}
-            height={500}
-            alt={"Logo Hotel Pairumani"}
-          />
-        </div>
-      </section>
     </div>
   );
 };
 
-export default HeaderInicio;
+export default Header;

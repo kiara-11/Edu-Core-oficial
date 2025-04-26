@@ -1,0 +1,199 @@
+.ContTarjBus {
+  display: flex;
+  height: 263px;
+  padding: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 10px;
+  border: 1px solid #0b7077;
+  background: var(--sds-color-background-default-default);
+}
+.ImaTarjBusq {
+  display: flex;
+  width: 55px;
+  height: 55px;
+  padding: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 50%;
+}
+.ImaTutTB {
+  width: 55px;
+  height: 55px;
+  flex-shrink: 0;
+  display: flex;
+  width: 55px;
+  height: 55px;
+  padding: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 50%;
+}
+.DataTeachTB {
+  display: flex;
+  width: 433px;
+  height: 223px;
+  padding: 10px 0px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.NombreTeaTB {
+  align-self: stretch;
+  color: var(--sds-color-text-default-default);
+  font-family: var(--sds-typography-heading-font-family);
+  font-size: 25px;
+  font-style: normal;
+  font-weight: var(--sds-typography-heading-font-weight);
+  line-height: 120%; /* 30px */
+  letter-spacing: -0.5px;
+  margin: 0px;
+}
+.NomClassTB {
+  align-self: stretch;
+  color: var(--Brand-color, #0b7077);
+  font-family: Raleway;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.4px;
+}
+.DescTB {
+  align-self: stretch;
+  color: var(--sds-color-text-default-default);
+  font-family: var(--sds-typography-heading-font-family);
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 18px */
+  letter-spacing: -0.3px;
+}
+.RatinTeachTB {
+  display: flex;
+  width: 311px;
+  height: 223px;
+  padding: 10px 0px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  background: var(--sds-color-background-default-default);
+}
+.califTeaTB {
+  display: flex;
+  height: 35px;
+  padding: 0px 10px;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 10px;
+  background: var(--sds-color-background-default-default);
+}
+.stars {
+  display: flex;
+  width: 156px;
+  height: 29px;
+  align-items: center;
+  gap: 10.11px;
+}
+.Starssss {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+}
+.ContStarTB {
+  width: 36px;
+  height: 22px;
+  color: var(--Black, #230f0f);
+  font-family: Raleway;
+  font-size: 14.828px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 22.242px */
+}
+.CantResTB {
+  width: 59px;
+  height: 21px;
+  color: var(--Black, #230f0f);
+  font-family: Raleway;
+  font-size: 14.828px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 22.242px */
+  opacity: 0.5;
+}
+.tiempoTB {
+  display: flex;
+  height: 48px;
+  padding: 0px 10px;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 10px;
+  background: var(--sds-color-background-default-default);
+}
+.imagenTB {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  gap: 20px;
+  aspect-ratio: 1/1;
+}
+.RelojTB {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+}
+.tiempoChambTB {
+  color: var(--sds-color-text-default-default);
+  font-family: Raleway;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 18px */
+  letter-spacing: -0.3px;
+}
+.ContBotTB {
+  display: flex;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+.botonTB {
+  display: flex;
+  width: 220px;
+  height: 50px;
+  padding: 0px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  background: var(--brand-color-2, #fd661f);
+  text-decoration: none;
+  color: white;
+}
+.txtTB {
+  color: #fff;
+  font-family: Raleway;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+}

@@ -1,0 +1,89 @@
+.ComentariosyValoraciones {
+  display: flex;
+  width: 100%;
+  height: 1717px;
+  padding: 30px 0px;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  flex-shrink: 0;
+}
+.TarjTuTComen {
+  display: flex;
+  width: 1206px;
+  height: 606px;
+  padding: 30px;
+  align-items: flex-start;
+  gap: 20px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  border: 1px solid #0b7077;
+  background: var(--sds-color-background-default-default);
+}
+.InfoClassComen {
+  display: flex;
+  width: 671px;
+  height: 546px;
+  padding: 10px 0px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.InfTxTaboutComt {
+  width: 671px;
+  color: var(--sds-color-text-default-default);
+  font-family: Raleway;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 36px */
+  letter-spacing: -0.6px;
+  margin: 0px;
+}
+.DescTxtComt {
+  width: 671px;
+  height: 480px;
+  flex-shrink: 0;
+  color: var(--sds-color-text-default-default);
+  font-family: Raleway;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 120%; /* 28.8px */
+  letter-spacing: -0.48px;
+  margin: 0px;
+}
+.contenedorReseñas {
+  display: flex;
+  width: 1206px;
+  height: 1012px;
+  padding: 30px;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-radius: 20px;
+  border: 1px solid #0b7077;
+  background: var(--sds-color-background-default-default);
+}
+.txtResenas {
+  width: 475px;
+  flex-shrink: 0;
+  color: var(--sds-color-text-default-default);
+  font-family: Raleway;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 36px */
+  letter-spacing: -0.6px;
+}
+.tarjetasResenas {
+  display: flex;
+  width: 671px;
+  height: 952px;
+  padding: 10px 0px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  flex-shrink: 0;
+}

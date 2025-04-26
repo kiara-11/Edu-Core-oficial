@@ -77,8 +77,8 @@
 
 .login {
   background-color: #ffffff;
-  color: #0B7077;
-  border: 2px solid #0B7077;
+  color: #0b7077;
+  border: 2px solid #0b7077;
 }
 
 .login:hover {
@@ -86,13 +86,13 @@
 }
 
 .register {
-  background-color: #0B7077;
+  background-color: #0b7077;
   color: white;
-  border: 2px solid #0B7077;
+  border: 2px solid #0b7077;
 }
 
 .register:hover {
-  background-color: #0B7077;
+  background-color: #0b7077;
 }
 .hero {
   display: flex;
@@ -171,5 +171,27 @@
 .lerdo {
   width: 499px;
   height: 565px;
+  flex-shrink: 0;
+}
+
+.estiloHeapue {
+  display: flex;
+  height: 163px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: stretch;
+  background: #f8f3e9;
+  font-family: Raleway;
+  border-bottom: 1px solid #000;
+}
+.header2{
+  display: flex;
+  width: 1280px;
+  height: 163px;
+  padding: 0px 40px;
+  justify-content: space-between;
+  align-items: center;
   flex-shrink: 0;
 }
