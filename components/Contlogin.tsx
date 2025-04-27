@@ -17,10 +17,8 @@ const Contlogin = () => {
         <input type="password" className="txtbox" placeholder="Contraseña" />
       </div>
 
-      <Link href={"/segundainterfaz"} passHref>
-        <div className="botoninicioses">
-          <p className="txtbotoninise">Iniciar sesion</p>
-        </div>
+      <Link href="/segundainterfaz" className="botoninicioses">
+        <p className="txtbotoninise">Iniciar sesion</p>
       </Link>
 
       <p className="olvidastependejo">¿Olvidaste tu contraseña?</p>
@@ -32,30 +30,26 @@ const Contlogin = () => {
       </Link>
 
       <div className="redes">
-        <Link href={"/google"} passHref>
-          <div className="alternativa">
-            <Image
-              className="google"
-              src="/gagel.png"
-              width={500}
-              height={500}
-              alt={"Logo Hotel Pairumani"}
-            />
-            <p className="continu">Continuar con Google</p>
-          </div>
+        <Link href="/google" className="alternativa">
+          <Image
+            className="google"
+            src="/gagel.png"
+            width={500}
+            height={500}
+            alt={"Logo Hotel Pairumani"}
+          />
+          <p className="continu">Continuar con Google</p>
         </Link>
 
-        <Link href={"/faceboodk"} passHref>
-          <div className="alternativa">
-            <Image
-              className="feisbu"
-              src="/feisbuk.png"
-              width={500}
-              height={500}
-              alt={"Logo Hotel Pairumani"}
-            />
-            <p className="continu">Continuar con Facebook</p>
-          </div>
+        <Link href="/facebook" className="alternativa">
+          <Image
+            className="feisbu"
+            src="/feisbuk.png"
+            width={500}
+            height={500}
+            alt={"Logo Hotel Pairumani"}
+          />
+          <p className="continu">Continuar con Facebook</p>
         </Link>
       </div>
     </div>

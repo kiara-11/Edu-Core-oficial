@@ -141,6 +141,7 @@
   flex-shrink: 0;
   border-radius: 80px;
   border: 1px solid #fff;
+  text-decoration: none;
 }
 .txbutnc4 {
   display: flex;
@@ -156,4 +157,9 @@
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  text-decoration: none;
+}
+.buttonc4:hover {
+  transform: translateY(-4px); /* Se mueve hacia arriba 4px */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Le agrega una sombra */
 }

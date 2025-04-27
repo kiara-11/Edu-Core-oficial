@@ -163,6 +163,7 @@
   flex-shrink: 0;
   border-radius: 20px;
   background: #f5f2f0;
+  text-decoration: none;
 }
 .google {
   width: 16px;
@@ -219,6 +220,7 @@
   flex-shrink: 0;
   border-radius: 20px;
   background: #fd661f;
+  text-decoration: none;
 }
 
 .txtbutncont {
@@ -245,4 +247,17 @@
   flex-direction: column;
   gap: 20px;
   text-decoration: none;
+}
+
+.botoninicioses:hover {
+  background-color: #e25114;
+}
+.alternativa:hover {
+  background-color: #e8e6e5;
+}
+.crearcuenta:hover {
+  background-color: #e8e6e5;
+}
+.botncontinu:hover {
+  background-color: #e25114;
 }

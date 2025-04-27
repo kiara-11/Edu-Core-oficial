@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import "./Inicioparte4.css";
+import Link from "next/link";
 const Inicioparte4 = () => {
   return (
     <div className="cont4">
@@ -31,9 +32,9 @@ const Inicioparte4 = () => {
             Publica tus cursos y hazlos visibles al instante. Cobra de forma
             segura y gestiona tus clases fácilmente.
           </p>
-          <div className="buttonc4">
+          <Link href="/login" className="buttonc4">
             <p className="txbutnc4">Ingresar como Tutor</p>
-          </div>
+          </Link>
         </div>
 
         <div className="tarjestc4">
@@ -42,9 +43,9 @@ const Inicioparte4 = () => {
             Explora y reserva cursos personalizados. Aprende a tu ritmo, con
             total seguridad.
           </p>
-          <div className="buttonc4">
+          <Link href="/login" className="buttonc4">
             <p className="txbutnc4">Ingresar como Estudiante</p>
-          </div>
+          </Link>
         </div>
       </div>
     </div>

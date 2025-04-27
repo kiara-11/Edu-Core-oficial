@@ -1,6 +1,7 @@
 import React from "react";
 import "./StatsBar.css";
 import Image from "next/image";
+import Link from "next/link";
 
 const StatsBar = () => {
   return (
@@ -15,9 +16,10 @@ const StatsBar = () => {
           reservas, pagos y promociones se gestionan automáticamente. Más
           visibilidad, menos complicaciones.
         </p>
-        <p className="aboutp5">Sobre Nosotros</p>
+        <Link href="/segundainterfaz">
+          <p className="aboutp5">Sobre Nosotros</p>
+        </Link>
       </div>
-
       <div className="imagenpendejap5"></div>
     </div>
   );
