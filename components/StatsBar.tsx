@@ -16,7 +16,7 @@ const StatsBar = () => {
           reservas, pagos y promociones se gestionan automáticamente. Más
           visibilidad, menos complicaciones.
         </p>
-        <Link href="/segundainterfaz">
+        <Link href="/experiencia">
           <p className="aboutp5">Sobre Nosotros</p>
         </Link>
       </div>
