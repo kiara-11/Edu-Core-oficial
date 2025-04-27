@@ -6,9 +6,11 @@ const Inicioparte1 = () => {
   return (
     <div className="cont1">
       <div className="conttext">
-        <p className="benef">Beneficios</p>
-        <p className="tit1">
-          Accede con tu cuenta y descubre las ventajas de EduCore
+        <p className="txtgenini">
+          <span className="titverdecini">
+            Accede con tu cuenta y aprovecha todos los beneficios como
+          </span>
+          <span className="titnarncini"> Estudiante</span>
         </p>
         <div className="contima">
           <Image
@@ -30,7 +32,9 @@ const Inicioparte1 = () => {
             height={500}
             alt={"Logo Hotel Pairumani"}
           />
-          <p className="desc">Comunicación directa con tutores</p>
+          <p className="desc">
+            Habla directamente con los instructores antes y después de reservar.
+          </p>
         </div>
         <div className="contima">
           <Image

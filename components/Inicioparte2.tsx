@@ -14,9 +14,12 @@ const Inicioparte2 = () => {
         />
       </div>
 
-      <div className="conttextp2">
-        <p className="benefp2">Capacitación</p>
-        <p className="titp2">Capacitación y herramientas para tutores </p>
+      <div className="conttext">
+        <p className="titp2">
+          <span className="titnarncini">Súmate como</span>
+          <span className="titverdecini"> Tutor </span>
+          <span className="titnarncini">y haz crecer tu impacto educativo</span>
+        </p>
         <div className="contima">
           <Image
             className="imag"
@@ -26,7 +29,7 @@ const Inicioparte2 = () => {
             alt={"Logo Hotel Pairumani"}
           />
           <p className="desc">
-            Publica tus cursos fácilmente y gana visibilidad
+            Muestra tu perfil y tus clases a cientos de estudiantes interesados.
           </p>
         </div>
         <div className="contima">
@@ -37,7 +40,7 @@ const Inicioparte2 = () => {
             height={500}
             alt={"Logo Hotel Pairumani"}
           />
-          <p className="desc">Gestión de pagos automática y segura</p>
+          <p className="desc">Tú decides cuándo y cómo dar tus clases.</p>
         </div>
         <div className="contima">
           <Image
@@ -47,7 +50,9 @@ const Inicioparte2 = () => {
             height={500}
             alt={"Logo Hotel Pairumani"}
           />
-          <p className="desc">Soporte y guía para mejorar tus clases</p>
+          <p className="desc">
+            Olvídate de Facebook y panfletos, tus cursos se promocionan solos.
+          </p>
         </div>
       </div>
     </div>
