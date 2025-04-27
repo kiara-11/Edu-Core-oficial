@@ -150,7 +150,9 @@ const Page = () => {
           </section>
 
           <div className={styles.continueContainer}>
-            <button type="submit" className={styles.continueButton}>Continuar</button>
+          <Link href="/registro/roles/rtutor/expe">
+              <button type="submit" className={styles.continueButton}>Continuar</button>
+            </Link>
           </div>
         </form>
       </div>
