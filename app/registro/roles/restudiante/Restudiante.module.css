@@ -1,0 +1,109 @@
+.hiddenRadio {
+    display: none;
+  }
+  
+  .backgroundLogo {
+    position: absolute;
+    top: 170;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.06;
+  }
+  
+  .logoImage {
+    object-fit: contain;
+    width: 1700px;
+  }
+  
+  .registroContainer {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .registroContent {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .registroTitle {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    margin-top: 50px;
+    text-align: center;
+  }
+  
+  .registroSection {
+    width: 100%;
+    margin-bottom: 40px;
+  }
+  
+  .optionLabel {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .optionButton {
+    display: inline-block;
+    padding: 15px 25px;
+    min-width: 200px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    color: #000;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    transition: 0.3s;
+  }
+  
+  .hiddenRadio:checked + .optionButton {
+    background-color: #0B7077;
+    color: #ffffff;
+    border: 1px solid #0B7077;
+  }
+  
+  .optionButton:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .optionsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .continueContainer {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .continueButton {
+    background-color: #FF6B00;
+    color: #fff;
+    padding: 14px 40px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 270px;
+  }
+  
+  .continueButton:hover {
+    background-color: #e65c00;
+  }
+  

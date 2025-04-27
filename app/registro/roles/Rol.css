@@ -1,0 +1,83 @@
+
+.registro-container {
+    position: relative;
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #ffffff;
+    overflow: hidden;
+  }
+  
+
+  .background-logo {
+    position: absolute;
+    top: 170; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.06; 
+  }
+  
+
+  .logo-image {
+    object-fit: contain;
+    width: 1700px;
+  }
+  
+
+  .registro-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: calc(100vh - 100px); 
+    padding-top: 300px;
+    
+  }
+  
+ 
+  .registro-options {
+    display: flex;
+    gap: 100px;
+    align-items: center;
+    
+    
+  }
+  
+ 
+  .option-button {
+    background-color: #e8f3f1;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 50px 40px;
+    width: 360px;
+    height: 360px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .option-button:hover {
+    transform: scale(1.05);
+    background-color: #d5eee8;
+  }
+  
+  
+  .icon {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+  }
+  .option-button span {
+    text-decoration: none;
+    font-size: 29px;
+  }

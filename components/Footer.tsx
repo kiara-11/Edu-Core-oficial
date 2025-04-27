@@ -47,8 +47,7 @@ const Footer = () => {
           <h4>Enlaces rápidos</h4>
           <ul>
             <li>Sobre nosotros</li>
-            <li>Blog</li>
-            <li>Preguntas frecuentes</li>
+            <li>Novedades</li>
             <li>Términos y condiciones</li>
           </ul>
         </div>

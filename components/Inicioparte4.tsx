@@ -32,7 +32,7 @@ const Inicioparte4 = () => {
             Publica tus cursos y hazlos visibles al instante. Cobra de forma
             segura y gestiona tus clases fácilmente.
           </p>
-          <Link href="/login" className="buttonc4">
+          <Link href="/login2" className="buttonc4">
             <p className="txbutnc4">Ingresar como Tutor</p>
           </Link>
         </div>
@@ -43,7 +43,7 @@ const Inicioparte4 = () => {
             Explora y reserva cursos personalizados. Aprende a tu ritmo, con
             total seguridad.
           </p>
-          <Link href="/login" className="buttonc4">
+          <Link href="/login3" className="buttonc4">
             <p className="txbutnc4">Ingresar como Estudiante</p>
           </Link>
         </div>

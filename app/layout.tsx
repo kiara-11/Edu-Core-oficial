@@ -19,7 +19,7 @@ const barlow = Barlow({
 
 
 export const metadata: Metadata = {
-  title: "Hotel Pairumani",
+  title: "EduCore",
   description:
     "El Hotel Pairumani te ofrece paquetes personalizados con habitaciones confortables, desayuno, almuerzo y cena adaptados a tus gustos. Disfruta de nuestra piscina, sauna seco, vapor, comedor, aire acondicionado y WiFi gratuito.",
 };

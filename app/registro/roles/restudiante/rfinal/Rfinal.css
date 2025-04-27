@@ -1,0 +1,81 @@
+
+.background-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.08;
+    pointer-events: none;
+  }
+  
+  .logo-image {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    width: 1700px;
+  }
+  
+  
+  .registro-completado-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
+  .registro-completado-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px; 
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+
+  .icon-container {
+    margin-bottom: 20px;
+  }
+  
+  
+  .registro-completado-title {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+ 
+  .registro-completado-text {
+    font-size: 26px;
+    color: #555;
+    margin-bottom: 70px;
+    line-height: 1.5;
+    font-family: Raleway;
+  }
+  
+ 
+  .registro-completado-button {
+    background-color: #FF6B00;
+    color: #fff;
+    padding: 14px 30px;
+    width: 300px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+  
+  .registro-completado-button:hover {
+    background-color: #e65c00;
+  }
+  

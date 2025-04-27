@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import "./Contlogin.css";
+import Link from "next/link";
 
 const Contregistro2 = () => {
   return (
@@ -8,33 +9,31 @@ const Contregistro2 = () => {
       <p className="titinisesreg">Crear una cuenta</p>
 
       <div className="campollenado">
-        <p className="txtcampllen">Departamento</p>
-        <select className="txtbox">
-          <option value="">Seleccionar Departamento</option>
-          <option value="la_paz">La Paz</option>
-          <option value="santa_cruz">Santa Cruz</option>
-          <option value="cochabamba">Cochabamba</option>
-        </select>
+        <p className="txtcampllen">Nombre completo</p>
+        <input type="text" className="txtbox" placeholder="Nombre completo" />
       </div>
-
       <div className="campollenado">
-        <p className="txtcampllen">Ciudad</p>
-        <select className="txtbox">
-          <option value="">Seleccionar Ciudad</option>
-          <option value="la_paz">La Paz</option>
-          <option value="santa_cruz">Santa Cruz</option>
-          <option value="cochabamba">Cochabamba</option>
-        </select>
+        <p className="txtcampllen">Email</p>
+        <input type="text" className="txtbox" placeholder="Email" />
       </div>
-
       <div className="campollenado">
-        <p className="txtcampllen">Número de celular</p>
-        <input type="text" className="txtbox" placeholder="Número de celular" />
+        <p className="txtcampllen">Contraseña</p>
+        <input type="password" className="txtbox" placeholder="Contraseña" />
+      </div>
+      <div className="campollenado">
+        <p className="txtcampllen">Confirmar contraseña</p>
+        <input type="password" className="txtbox" placeholder="Confirmar contraseña" />
       </div>
 
-      <div className="botncontinu">
-        <p className="txtbutncont">Continuar</p>
-      </div>
+      <p className="txtterminos">
+        Al crear o utilizar una cuenta, usted acepta nuestros Términos de
+        servicio y Política de privacidad.
+      </p>
+      <Link href={"/registro/roles/rtutor"} passHref>
+        <div className="botncontinu">
+          <p className="txtbutncont">Continuar</p>
+        </div>
+      </Link>
     </div>
   );
 };

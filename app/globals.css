@@ -17,7 +17,30 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Raleway;
   background-color: #fff;
   color: #000;
+}
+h3 {
+  margin-left: 0px;
+  font-family: Raleway;
+}
+h4{
+  margin-left: 222px;
+  font-family: Raleway;
+}
+h4 {
+  font-size: 22px;
+  font-family: 'Raleway', sans-serif;
+}
+
+h5 {
+  font-size: 16px;
+  font-family: 'Raleway', sans-serif;
+}
+
+h3 {
+  font-size: 25px;
+  font-family: 'Raleway', sans-serif;
+  color: #0B7077;
 }

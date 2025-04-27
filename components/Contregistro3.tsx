@@ -3,7 +3,7 @@ import React from "react";
 import "./Contlogin.css";
 import Link from "next/link";
 
-const Contregistro = () => {
+const Contregistro3 = () => {
   return (
     <div className="contenedorloginreg">
       <p className="titinisesreg">Crear una cuenta</p>
@@ -29,7 +29,7 @@ const Contregistro = () => {
         Al crear o utilizar una cuenta, usted acepta nuestros Términos de
         servicio y Política de privacidad.
       </p>
-      <Link href={"/registro/roles"} passHref>
+      <Link href={"/registro/roles/restudiante"} passHref>
         <div className="botncontinu">
           <p className="txtbutncont">Continuar</p>
         </div>
@@ -38,4 +38,4 @@ const Contregistro = () => {
   );
 };
 
-export default Contregistro;
+export default Contregistro3;
