@@ -1,40 +1,25 @@
-import React from 'react';
-import './StatsBar.css';
-import Image from 'next/image';
+import React from "react";
+import "./StatsBar.css";
+import Image from "next/image";
 
 const StatsBar = () => {
   return (
-    <section className="stats-bar">
-      <div className="stat">
-        <div className="stat-icon">
-          <Image src="/tutor.png" alt="Tutores" width={32} height={32} />
-        </div>
-        <div className="stat-text">
-          <h3>3K+</h3>
-          <p>Tutores Registrados</p>
-        </div>
+    <div className="parte5">
+      <div className="conttextp5">
+        <p className="tgenep5">
+          <span className="nonegrip5">EduCore transforma la</span>
+          <span className="sinegrip5"> educación personalizada</span>
+        </p>
+        <p className="txtlargp5">
+          Conecta estudiantes y tutores en un entorno digital moderno, donde las
+          reservas, pagos y promociones se gestionan automáticamente. Más
+          visibilidad, menos complicaciones.
+        </p>
+        <p className="aboutp5">Sobre Nosotros</p>
       </div>
 
-      <div className="stat">
-        <div className="stat-icon">
-          <Image src="/clases.png" alt="Clases" width={32} height={32} />
-        </div>
-        <div className="stat-text">
-          <h3>15K+</h3>
-          <p>Clases Impartidas Exitosamente</p>
-        </div>
-      </div>
-
-      <div className="stat">
-        <div className="stat-icon">
-          <Image src="/satisfaccion.png" alt="Satisfacción" width={32} height={32} />
-        </div>
-        <div className="stat-text">
-          <h3>97%+</h3>
-          <p>Nivel De Satisfacción De Estudiantes</p>
-        </div>
-      </div>
-    </section>
+      <div className="imagenpendejap5"></div>
+    </div>
   );
 };
 

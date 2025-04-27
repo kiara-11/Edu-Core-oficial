@@ -4,92 +4,48 @@ import "./Inicioparte4.css";
 const Inicioparte4 = () => {
   return (
     <div className="cont4">
-      <div className="categoriap4">
-        <p className="titulop4">Categoría de Cursos </p>
-        <p className="categop4">
-          Explora categorías de cursos particulares disponibles en EduCore. Aquí
-          encontrarás cursos organizados por áreas temáticas, impartidos por
-          tutores especializados. Aprende lo que necesitas desde un solo lugar,
-          con confianza y seguridad.
+      <div className="txtcont4">
+        <p className="txtgeneralcont4">
+          <span className="titverdec4">¿Cómo deseas usar</span>
+          <span className="titnarnc4"> EduCore</span>
+          <span className="titverdec4">?</span>
+        </p>
+        <p className="txgenec4v2">
+          <span className="txnormc4">
+            EduCore conecta a estudiantes y tutores en un solo lugar.
+          </span>
+          <span className="txnegri4"> Reserva</span>
+          <span className="txnormc4"> cursos o</span>
+          <span className="txnegri4"> publica</span>
+          <span className="txnormc4">
+            {" "}
+            los tuyos fácilmente, sin complicaciones.
+          </span>
         </p>
       </div>
 
-      <div className="tarjetasp4">
-        <div className="cuerpotarjetap4">
-          <Image
-            className="imagtarp4"
-            src="/Vaccine 1.png"
-            width={500}
-            height={500}
-            alt={"Logo Hotel Pairumani"}
-          />
-          <p className="cattarp4">Tecnología y Programación</p>
-          <p className="desccattarp4">
-            Cursos relacionados con desarrollo de software, apps, páginas web,
-            etc.
+      <div className="opcionescont4">
+        <div className="tarjtutc4">
+          <p className="parac4">PARA TUTORES</p>
+          <p className="desctarc4">
+            Publica tus cursos y hazlos visibles al instante. Cobra de forma
+            segura y gestiona tus clases fácilmente.
           </p>
-          <div className="bottarjcatp4">
-            <p className="tbotcategp4">Explorar Cursos</p>
+          <div className="buttonc4">
+            <p className="txbutnc4">Ingresar como Tutor</p>
           </div>
         </div>
 
-        <div className="cuerpotarjetap4">
-          <Image
-            className="imagtarp4"
-            src="/Vaccine 1.png"
-            width={500}
-            height={500}
-            alt={"Logo Hotel Pairumani"}
-          />
-          <p className="cattarp4">Tecnología y Programación</p>
-          <p className="desccattarp4">
-            Cursos relacionados con desarrollo de software, apps, páginas web,
-            etc.
+        <div className="tarjestc4">
+          <p className="parac4">PARA ESTUDIANTES</p>
+          <p className="desctarc4">
+            Explora y reserva cursos personalizados. Aprende a tu ritmo, con
+            total seguridad.
           </p>
-          <div className="bottarjcatp4">
-            <p className="tbotcategp4">Explorar Cursos</p>
+          <div className="buttonc4">
+            <p className="txbutnc4">Ingresar como Estudiante</p>
           </div>
         </div>
-
-        <div className="cuerpotarjetap4">
-          <Image
-            className="imagtarp4"
-            src="/Vaccine 1.png"
-            width={500}
-            height={500}
-            alt={"Logo Hotel Pairumani"}
-          />
-          <p className="cattarp4">Tecnología y Programación</p>
-          <p className="desccattarp4">
-            Cursos relacionados con desarrollo de software, apps, páginas web,
-            etc.
-          </p>
-          <div className="bottarjcatp4">
-            <p className="tbotcategp4">Explorar Cursos</p>
-          </div>
-        </div>
-
-        <div className="cuerpotarjetap4">
-          <Image
-            className="imagtarp4"
-            src="/Vaccine 1.png"
-            width={500}
-            height={500}
-            alt={"Logo Hotel Pairumani"}
-          />
-          <p className="cattarp4">Tecnología y Programación</p>
-          <p className="desccattarp4">
-            Cursos relacionados con desarrollo de software, apps, páginas web,
-            etc.
-          </p>
-          <div className="bottarjcatp4">
-            <p className="tbotcategp4">Explorar Cursos</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="botonp4">
-        <p className="vertop4">Ver Todos</p>
       </div>
     </div>
   );

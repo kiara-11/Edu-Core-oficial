@@ -1,131 +1,158 @@
 .cont4 {
   display: flex;
-  height: 830px;
-  padding: 50px 0px;
+
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+
+  background: #fff;
+  margin-bottom: 10px;
+}
+.txtcont4 {
+  display: flex;
+  height: 246px;
+  padding: 25px 0px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   flex-shrink: 0;
   align-self: stretch;
 }
-.categoriap4 {
-  display: flex;
-  width: 1280px;
-  height: 219px;
-  padding: 20px 0px;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+.txtgeneralcont4 {
+  width: 697px;
+  height: 76px;
   flex-shrink: 0;
 }
-.titulop4 {
-  color: var(--Brand-color, #0b7077);
+.titverdec4 {
+  color: #0b7077;
   text-align: center;
-  font-family: Plus Jakarta Sans;
-  font-size: 48px;
+  font-family: Raleway;
+  font-size: 44px;
   font-style: normal;
   font-weight: 700;
-  line-height: 62.4px; /* 130% */
-  letter-spacing: -2.88px;
-  margin: 0px;
+  line-height: 180%; /* 79.2px */
 }
-.categop4 {
-  width: 827.999px;
-  color: var(--gray, #696984);
+.titnarnc4 {
+  color: #fd661f;
+  font-family: Raleway;
+  font-size: 44px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 180%;
+}
+.txgenec4v2 {
+  width: 916px;
+  height: 100px;
+  flex-shrink: 0;
   text-align: center;
-  font-family: Plus Jakarta Sans;
-  font-size: 22px;
+}
+.txnormc4 {
+  color: #252641;
+  text-align: center;
+  font-family: Raleway;
+  font-size: 28px;
   font-style: normal;
   font-weight: 400;
-  line-height: 160%;
-  margin: 0px;
+  line-height: 180%; /* 50.4px */
+  letter-spacing: 0.56px;
 }
-.tarjetasp4 {
+.txnegri4 {
+  color: #252641;
+  font-family: Raleway;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 180%;
+  letter-spacing: 0.56px;
+}
+.opcionescont4 {
   display: flex;
-  width: 1280px;
-  height: 480px;
-  justify-content: center;
+  height: 479px;
+  padding: 0px 100px;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
   flex-shrink: 0;
+  align-self: stretch;
 }
 
-.cuerpotarjetap4 {
+.opcionescont4 {
   display: flex;
-  width: 290px;
-  height: 329px;
-  flex-direction: column;
-  justify-content: center;
+  height: 479px;
+  padding: 0px 100px;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
   flex-shrink: 0;
-  border-radius: 15px;
-  border: 1px solid #000;
+  align-self: stretch;
 }
-.imagtarp4 {
-  width: 73px;
-  height: 73px;
+
+.tarjtutc4 {
+  display: flex;
+  width: 500px;
+  height: 385px;
+  padding: 50px 0px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  background: url("/tutores.png") lightgray 50% / cover no-repeat;
+}
+
+.tarjestc4 {
+  display: flex;
+  width: 500px;
+  height: 385px;
+  padding: 50px 0px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  background: url("/estudiantes.png") lightgray 50% / cover no-repeat;
+}
+.parac4 {
+  width: 314px;
+  height: 46px;
   flex-shrink: 0;
-  aspect-ratio: 1/1;
-}
-.cattarp4 {
-  color: var(--Brand-color, #0b7077);
+  color: #fff;
   text-align: center;
-  font-family: Plus Jakarta Sans;
-  font-size: 27px;
+  font-family: Raleway;
+  font-size: 32px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin: 0px;
 }
-.desccattarp4 {
-  width: 260px;
-  color: var(--gray, #696984);
-  text-align: center;
-  font-family: Plus Jakarta Sans;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 29px;
-  margin: 0px;
-}
-.bottarjcatp4 {
-  display: flex;
-  width: 190px;
-  height: 40px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+.desctarc4 {
+  width: 314px;
+  height: 120px;
   flex-shrink: 0;
-  border-radius: 10px;
-  background: var(--brand-color-2, #fd661f);
-}
-.tbotcategp4 {
   color: #fff;
   text-align: center;
-  font-family: Plus Jakarta Sans;
-  font-size: 15px;
+  font-family: Raleway;
+  font-size: 20px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
 }
-.botonp4 {
+.buttonc4 {
   display: flex;
-  width: 192px;
-  height: 35px;
+  width: 235px;
+  height: 66px;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
   flex-shrink: 0;
-  border-radius: 10px;
-  border: 1px solid var(--Brand-color, #0b7077);
-  background: var(--white, #fff);
+  border-radius: 80px;
+  border: 1px solid #fff;
 }
-.vertop4 {
-  color: var(--pri, #0b7077);
+.txbutnc4 {
+  display: flex;
+  width: 182px;
+  height: 63px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
   text-align: center;
-  font-family: Plus Jakarta Sans;
-  font-size: 15px;
+  font-family: Raleway;
+  font-size: 18px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;

@@ -47,32 +47,24 @@ const HeaderInicio = () => {
           </Link>
         </div>
       </div>
+
       <section className="hero">
-        <div className="hero-texto">
-          <span className="etiqueta">Nunca dejes de aprender</span>
-          <h1>
-            Centralizamos la educación personalizada: <br />
-            <strong>encuentra, reserva y aprende con confianza.</strong>
-          </h1>
-          <div className="botones">
-            <Link href="/cursos">
-              <button className="btn naranja">EXPLORAR CURSOS</button>
-            </Link>
-            <Link href="/publicar">
-              <button className="btn naranja">PUBLICAR UN CURSO</button>
-            </Link>
+        <div className="txinfoini">
+          <div className="mensajeb1">
+            <p className="txmensajeb1">Nunca dejes de aprender</p>
+          </div>
+          <p className="txtgeneral">
+            <span className="titulo-naranja">Encuentra el curso ideal.</span>
+            <br />
+            <span className="titulo-verde">
+              Reserva fácil, segura y sin complicaciones.
+            </span>
+          </p>
+          <div className="mensajeb2">
+            <p className="txmensajeb2">Cursos en diversas áreas y niveles</p>
           </div>
         </div>
-
-        <div className="imagenweon">
-          <Image
-            className="lerdo"
-            src="/image-uM5ZOTW7R-transformed 1.png"
-            width={500}
-            height={500}
-            alt={"Logo Hotel Pairumani"}
-          />
-        </div>
+        <div className="imagenpendeja"></div>
       </section>
     </div>
   );
