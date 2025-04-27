@@ -1,0 +1,248 @@
+.contenedorloginreg {
+  display: flex;
+  padding: 60px 0px;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  align-self: stretch;
+}
+.titinisesreg {
+  color: #171412;
+  text-align: center;
+  font-feature-settings: "dlig" on;
+  font-family: "Plus Jakarta Sans";
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 30px; /* 75% */
+  margin: 0px;
+}
+.campollenado {
+  display: flex;
+  width: 448px;
+  height: 80px;
+  min-width: 160px;
+  min-height: 28.571px;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  gap: 10px;
+}
+.txtcampllen {
+  align-self: stretch;
+  color: #171412;
+  font-feature-settings: "dlig" on;
+  font-family: "Plus Jakarta Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  margin: 0px;
+}
+.txtbox {
+  display: flex;
+  padding: 10px 15px;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 12px;
+  border: 1px solid #e5e0db;
+  background: #fff;
+  display: flex;
+  height: 56px;
+  flex-direction: column;
+  justify-content: center;
+  color: #877363;
+  font-feature-settings: "dlig" on;
+  font-family: "Plus Jakarta Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  margin: 0px;
+}
+.txtboxcamllen {
+  display: flex;
+  height: 56px;
+  flex-direction: column;
+  justify-content: center;
+  color: #877363;
+  font-feature-settings: "dlig" on;
+  font-family: "Plus Jakarta Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  margin: 0px;
+}
+.botoninicioses {
+  display: flex;
+  width: 150px;
+  height: 40px;
+  min-width: 84px;
+  max-width: 480px;
+  padding: 0px 16px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: #fd661f;
+}
+.txtbotoninise {
+  display: flex;
+  width: 91px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: stretch;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  font-feature-settings: "dlig" on;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: "Plus Jakarta Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 21px; /* 150% */
+}
+.olvidastependejo {
+  width: 214px;
+  color: #877363;
+  text-align: center;
+  font-feature-settings: "dlig" on;
+  font-family: "Plus Jakarta Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px; /* 150% */
+}
+.crearcuenta {
+  display: flex;
+  width: 150px;
+  height: 40px;
+  min-width: 84px;
+  max-width: 480px;
+  padding: 0px 16px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: #f5f2f0;
+}
+.txtcrear {
+  display: flex;
+  width: 116px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: stretch;
+  overflow: hidden;
+  color: #171412;
+  text-align: center;
+  font-feature-settings: "dlig" on;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: "Plus Jakarta Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 21px; /* 150% */
+  text-decoration: none;
+}
+.alternativa {
+  display: flex;
+  width: 448px;
+  height: 40px;
+  min-width: 84px;
+  max-width: 480px;
+  padding: 0px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: #f5f2f0;
+}
+.google {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.feisbu {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.continu {
+  display: flex;
+  width: 180px;
+  height: 40px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  color: #171412;
+  text-align: center;
+  font-feature-settings: "dlig" on;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: "Plus Jakarta Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 21px; /* 150% */
+  text-decoration: none;
+  margin: 0px;
+}
+
+.txtterminos {
+  width: 634px;
+  color: #877363;
+  font-feature-settings: "dlig" on;
+  font-family: "Plus Jakarta Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px; /* 150% */
+  text-decoration: none;
+}
+.botncontinu {
+  display: flex;
+  width: 480px;
+  height: 40px;
+  min-width: 84px;
+  max-width: 480px;
+  padding: 0px 16px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: #fd661f;
+}
+
+.txtbutncont {
+  display: flex;
+  width: 91px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: stretch;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  font-feature-settings: "dlig" on;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: "Plus Jakarta Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 21px; /* 150% */
+}
+.redes {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-decoration: none;
+}

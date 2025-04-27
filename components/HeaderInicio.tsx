@@ -23,7 +23,7 @@ const HeaderInicio = () => {
           </li>
           <li>
             <Link href={"/blog"} passHref>
-              Blog
+              Novedades
             </Link>
           </li>
           <li>
@@ -42,7 +42,7 @@ const HeaderInicio = () => {
           <Link href="/login">
             <button className="btn login">INICIAR SESIÓN</button>
           </Link>
-          <Link href="/register">
+          <Link href="/registro">
             <button className="btn register">REGISTRARSE</button>
           </Link>
         </div>
