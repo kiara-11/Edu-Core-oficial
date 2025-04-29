@@ -1,4 +1,4 @@
-import Contlogin3 from "@/components/Contlogin3";
+import Contlogin from "@/components/Contlogin";
 import Header from "@/components/Header";
 import React from "react";
 
@@ -6,7 +6,7 @@ const page = () => {
   return (
     <div>
       <Header />
-      <Contlogin3 />
+      <Contlogin />
     </div>
   );
 };

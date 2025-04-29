@@ -71,12 +71,10 @@ const Contlogin = () => {
           />
         </div>
 
-        {/* Mostrar el error si existe */}
         {error && <p className="error-message">{error}</p>}
 
-        {/* Botón de envío del formulario */}
         <button type="submit" className="botoninicioses">
-          <p className="txtbotoninise">Iniciar sesión</p>
+          <p className="txtbotoninise">Iniciar sesión </p>
         </button>
       </form>
 
