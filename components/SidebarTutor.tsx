@@ -8,11 +8,11 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: 'Inicio', href: '/Inicio' },
-    { name: 'Mis cursos', href: '/miscursos' },//cambiar links por el correspondiente page
     { name: 'Novedades', href: '/novedades' },
     { name: 'Notificaciones', href: '/notificaciones' },
+    { name: 'Mis cursos', href: '/miscursos' },//cambiar links por el correspondiente page
     { name: 'Explorar cursos', href: '/explorar' },
-    { name: 'Convertirme en Tutor ', href: '/formulario' }
+    { name: 'Publicar un curso', href: '/formulario' }
   ];
 
   return (

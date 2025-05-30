@@ -7,12 +7,10 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   const menuItems = [
-    { name: 'Inicio', href: '/Inicio' },
-    { name: 'Mis cursos', href: '/miscursos' },//cambiar links por el correspondiente page
-    { name: 'Novedades', href: '/novedades' },
-    { name: 'Notificaciones', href: '/notificaciones' },
-    { name: 'Explorar cursos', href: '/explorar' },
-    { name: 'Convertirme en Tutor ', href: '/formulario' }
+    { name: 'Gestión de roles', href: '/Inicio' },
+    { name: 'Aprobación de cursos', href: '/novedades' },
+    { name: 'Aprobación de certificados', href: '/notificaciones' },
+    { name: 'Control de pagos', href: '/miscursos' }//cambiar links por el correspondiente page
   ];
 
   return (
