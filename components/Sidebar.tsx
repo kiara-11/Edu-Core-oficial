@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import "./headerySide.css";
+import styles from './headerySide.module.css';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -14,16 +14,16 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
-      <nav className="sidebar-nav">
-        <ul className="menu-list">
+    <aside className={styles.sidebar}>
+      <nav className={styles.sidebarNav}>
+        <ul className={styles.menuList}>
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <li key={item.name}>
                 <Link
                   href={item.href}
-                  className={`menu-item ${isActive ? 'active' : ''}`}
+                  className={`${styles.menuItem} ${isActive ? 'active' : ''}`}
                 >
                   {item.name}
                 </Link>
