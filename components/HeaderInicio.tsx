@@ -22,7 +22,7 @@ const HeaderInicio = () => {
             </Link>
           </li>
           <li>
-            <Link href={"/novedades"} passHref>
+            <Link href={"/novedades2"} passHref>
               Novedades
             </Link>
           </li>
@@ -32,7 +32,7 @@ const HeaderInicio = () => {
             </Link>
           </li>
           <li>
-            <Link href={"/explorar-cursos"} passHref>
+            <Link href={"/explorar"} passHref>
               Explorar Cursos
             </Link>
           </li>
