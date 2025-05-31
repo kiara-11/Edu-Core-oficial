@@ -43,7 +43,7 @@ const Header = () => {
 
           <div className={styles.userSection} ref={dropdownRef}>
             <div className={styles.userInfo} onClick={toggleDropdown}>
-              <p className={styles.userName}>WARA HUAMAPACO</p>
+              <p className={styles.userName}>WARA HUAÑAPACO</p>
               <p className={styles.userProfile}>Mi Perfil</p>
             </div>
             <div className={styles.userAvatar} onClick={toggleDropdown}>
