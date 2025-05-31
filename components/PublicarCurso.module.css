@@ -1,0 +1,244 @@
+.container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.form {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  background: white;
+}
+
+.title {
+  color: #ff6b35;
+  font-size: 24px;
+  margin: 0 0 20px 0;
+  font-weight: bold;
+}
+
+.formGroup {
+  margin-bottom: 30px;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.input,
+.select,
+.textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #ff6b35;
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.priceContainer {
+  display: flex;
+  gap: 5px;
+}
+
+.priceInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.currency {
+  width: 60px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.horariosTitle {
+  color: #ff6b35;
+  font-size: 20px;
+  margin: 0 0 20px 0;
+  font-weight: bold;
+}
+
+.horarioForm {
+  background: #f8f8f8;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.horarioInputs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.horarioField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.horarioField label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.timeInput {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.agregarBtn {
+  background: #ff6b35;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.agregarBtn:hover {
+  background: #e55a2e;
+}
+
+.horariosTable {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 100px;
+  background: #e8f4f8;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 12px;
+  color: #666;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 100px;
+  padding: 12px;
+  border-top: 1px solid #eee;
+  align-items: center;
+  font-size: 14px;
+}
+
+.quitarBtn {
+  background: none;
+  border: none;
+  color: #ff6b35;
+  cursor: pointer;
+  font-size: 12px;
+  text-align: center;
+}
+
+.quitarBtn:hover {
+  color: #e55a2e;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-start;
+}
+
+.publicarBtn {
+  background: #ff6b35;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  flex: 1;
+  max-width: 200px;
+}
+
+.publicarBtn:hover {
+  background: #e55a2e;
+}
+
+.cancelarBtn {
+  background: #b0d4da;
+  color: #666;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  max-width: 150px;
+}
+
+.cancelarBtn:hover {
+  background: #9bc7ce;
+}
+
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .horarioInputs {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .publicarBtn,
+  .cancelarBtn {
+    max-width: none;
+  }
+}

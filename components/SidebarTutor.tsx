@@ -12,7 +12,7 @@ const Sidebar = () => {
     { name: 'Notificaciones', href: '/notificacionestutor' },
     { name: 'Mis cursos', href: '/miscursostutor' },//cambiar links por el correspondiente page
     { name: 'Explorar cursos', href: '/explorartutor' },
-    { name: 'Publicar un curso', href: '/formulariotutor' }
+    { name: 'Publicar un curso', href: '/publicarcurso' }
   ];
 
   return (
