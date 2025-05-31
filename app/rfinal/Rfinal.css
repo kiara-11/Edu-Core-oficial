@@ -20,6 +20,7 @@
   
   .registro-completado-container {
     position: relative;
+    margin: 120px auto 30px auto;
     width: 100%;
     min-height: 100vh;
     display: flex;
