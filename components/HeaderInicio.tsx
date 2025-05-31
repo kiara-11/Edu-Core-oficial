@@ -12,7 +12,7 @@ const HeaderInicio = () => {
             src="/Captura_de_pantalla_2025-04-06_201213_LE_upscale_balanced_x4-removebg-preview 1.png"
             width={500}
             height={500}
-            alt={"Logo Hotel Pairumani"}
+            alt={""}
           />
         </div>
         <div className="nav-links">
@@ -22,17 +22,17 @@ const HeaderInicio = () => {
             </Link>
           </li>
           <li>
-            <Link href={"/blog"} passHref>
+            <Link href={"/novedades"} passHref>
               Novedades
             </Link>
           </li>
           <li>
-            <Link href={"/sobren"} passHref>
+            <Link href={"/sobre-nosotros"} passHref>
               Sobre Nosotros
             </Link>
           </li>
           <li>
-            <Link href={"/explorar"} passHref>
+            <Link href={"/explorar-cursos"} passHref>
               Explorar Cursos
             </Link>
           </li>
@@ -64,7 +64,7 @@ const HeaderInicio = () => {
             <p className="txmensajeb2">Cursos en diversas áreas y niveles</p>
           </div>
         </div>
-        <div className="imagenpendeja"></div>
+        <div className="imagenp"></div>
       </section>
     </div>
   );

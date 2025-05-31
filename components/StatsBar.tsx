@@ -12,9 +12,7 @@ const StatsBar = () => {
           <span className="sinegrip5"> educación personalizada</span>
         </p>
         <p className="txtlargp5">
-          Conecta estudiantes y tutores en un entorno digital moderno, donde las
-          reservas, pagos y promociones se gestionan automáticamente. Más
-          visibilidad, menos complicaciones.
+          Conecta estudiantes y tutores en un entorno digital moderno, donde las reservas, pagos y promociones se gestionan automáticamente. Más visibilidad, menos complicaciones.
         </p>
         <Link href="/segundainterfaz">
           <p className="aboutp5">Sobre Nosotros</p>

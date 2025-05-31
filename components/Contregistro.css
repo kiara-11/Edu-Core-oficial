@@ -1,0 +1,151 @@
+/* Contregistro.css */
+
+.contenedorloginreg {
+  max-width: 650px;
+  margin: 30px auto 40px auto;
+  padding: calc(var(--header-height, 133px) + 40px) 35px 60px 35px; /* <== Aquí está la corrección */
+  background: #fff;
+  border-radius: 12px 12px 50px 50px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  text-align: center;
+}
+
+/* El resto igual */
+.titulo-principal {
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 6px;
+  color: #222;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.subtitulo {
+  font-size: 14px;
+  font-weight: 400;
+  color: #777;
+  margin-bottom: 25px;
+}
+
+.formulario-registro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.formulario-registro label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formulario-registro input[type="text"],
+.formulario-registro input[type="email"],
+.formulario-registro input[type="password"],
+.formulario-registro input[type="tel"],
+.formulario-registro input[type="date"] {
+  padding: 11px 14px;
+  border: 1.5px solid #d9d9d9;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  color: #444;
+  font-weight: 500;
+}
+
+.formulario-registro input::placeholder {
+  color: #bfbfbf;
+  font-weight: 400;
+}
+
+.formulario-registro input:focus {
+  border-color: #ff6a20;
+  box-shadow: 0 0 8px rgba(255, 106, 32, 0.3);
+}
+
+.fecha-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-fecha {
+  width: 100%;
+  padding-right: 38px;
+}
+
+.icono-calendario {
+  position: absolute;
+  right: 12px;
+  font-size: 20px;
+  pointer-events: none;
+  color: #888;
+  user-select: none;
+}
+
+.txtterminos {
+  font-size: 11px;
+  color: #999;
+  margin-top: 14px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.link-terminos {
+  color: #f36b21;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.boton-continuar {
+  margin-top: 20px;
+  background-color: #f36b21;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 0;
+  color: #fff;
+  font-weight: 700;
+  font-size: 17px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.boton-continuar:hover {
+  background-color: #d85c16;
+}
+
+.txt-tienes-cuenta {
+  margin-top: 22px;
+  font-size: 13px;
+  color: #555;
+  font-weight: 400;
+  text-align: center;
+}
+
+.link-iniciar-sesion {
+  color: #f36b21;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.link-iniciar-sesion:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .contenedorloginreg {
+    margin: 20px 15px 35px 15px;
+    padding: calc(var(--header-height, 133px) + 10px) 20px 35px 20px;
+    max-width: 100%;
+  }
+}

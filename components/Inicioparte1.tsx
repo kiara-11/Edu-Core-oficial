@@ -18,7 +18,7 @@ const Inicioparte1 = () => {
             src="/Group 237640.png"
             width={500}
             height={500}
-            alt={"Logo Hotel Pairumani"}
+            alt={""}
           />
           <p className="desc">
             Acceso centralizado a todos tus cursos y tutorías
@@ -30,7 +30,7 @@ const Inicioparte1 = () => {
             src="/Group 237641.png"
             width={500}
             height={500}
-            alt={"Logo Hotel Pairumani"}
+            alt={""}
           />
           <p className="desc">
             Habla directamente con los instructores antes y después de reservar.
@@ -42,7 +42,7 @@ const Inicioparte1 = () => {
             src="/Group 237642.png"
             width={500}
             height={500}
-            alt={"Logo Hotel Pairumani"}
+            alt={""}
           />
           <p className="desc">
             Notificaciones de clases programadas y recordatorios
@@ -57,14 +57,14 @@ const Inicioparte1 = () => {
             src="/Group (1).png"
             width={500}
             height={500}
-            alt={"Logo Hotel Pairumani"}
+            alt={""}
           />
           <Image
             className="imag1"
             src="/Group.png"
             width={500}
             height={500}
-            alt={"Logo Hotel Pairumani"}
+            alt={""}
           />
         </div>
       </div>

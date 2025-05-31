@@ -10,11 +10,11 @@ const Inicioparte2 = () => {
           src="/pana 1.png"
           width={500}
           height={500}
-          alt={"Logo Hotel Pairumani"}
+          alt={""}
         />
       </div>
 
-      <div className="conttext">
+      <div className="conttext5">
         <p className="titp2">
           <span className="titnarncini">Súmate como</span>
           <span className="titverdecini"> Tutor </span>
@@ -26,7 +26,7 @@ const Inicioparte2 = () => {
             src="/Group 237641 (1).png"
             width={500}
             height={500}
-            alt={"Logo Hotel Pairumani"}
+            alt={""}
           />
           <p className="desc">
             Muestra tu perfil y tus clases a cientos de estudiantes interesados.
@@ -38,7 +38,7 @@ const Inicioparte2 = () => {
             src="/Group 237641.png"
             width={500}
             height={500}
-            alt={"Logo Hotel Pairumani"}
+            alt={""}
           />
           <p className="desc">Tú decides cuándo y cómo dar tus clases.</p>
         </div>
@@ -48,7 +48,7 @@ const Inicioparte2 = () => {
             src="/Group 237642.png"
             width={500}
             height={500}
-            alt={"Logo Hotel Pairumani"}
+            alt={""}
           />
           <p className="desc">
             Olvídate de Facebook y panfletos, tus cursos se promocionan solos.

@@ -1,4 +1,4 @@
-'use client';  
+'use client';
 
 import React, { useState } from "react";
 import Image from "next/image";
@@ -7,110 +7,89 @@ import Link from "next/link";
 
 const Contlogin = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); 
-  const [error, setError] = useState("");  
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); 
+    e.preventDefault();
     if (!email || !password) {
       setError("Por favor, ingresa tu email y contraseña.");
       return;
     }
-
     try {
-
       const response = await fetch("/api/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json", 
-        },
-        body: JSON.stringify({ email, password }),  
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-
-      const data = await response.json(); 
-
-
+      const data = await response.json();
       if (response.ok) {
-
         localStorage.setItem("token", data.token);
-
-        window.location.href = "/"; 
+        window.location.href = "/";
       } else {
-        setError(data.message); 
+        setError(data.message);
       }
     } catch (error) {
- 
       setError("Hubo un error al iniciar sesión");
     }
   };
 
   return (
-    <div className="contenedorloginreg">
-      <p className="titinisesreg">Iniciar Sesión</p>
+    <div className="contenedor-principal">
+      {/* Lado izquierdo: formulario */}
+      <div className="lado-izquierdo">
+        <h1 className="titulo-principal">Bienvenido a SIREAP<br />Iniciar Sesión</h1>
 
-      {/* Formulario de login */}
-      <form onSubmit={handleSubmit}>
-        <div className="campollenado">
-          <p className="txtcampllen">Email</p>
-          <input
-            type="text"
-            className="txtbox"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}  // Actualizar el estado con el email ingresado
-          />
-        </div>
+        <form className="formulario-login" onSubmit={handleSubmit}>
+          <div className="campollenado">
+            <label htmlFor="email" className="txtcampllen">Email</label>
+            <input
+              type="email"
+              id="email"
+              className="txtbox"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-        <div className="campollenado">
-          <p className="txtcampllen">Contraseña</p>
-          <input
-            type="password"
-            className="txtbox"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}  // Actualizar el estado con la contraseña ingresada
-          />
-        </div>
+          <div className="campollenado">
+            <label htmlFor="password" className="txtcampllen">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              className="txtbox"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-        {/* Mostrar el error si existe */}
-        {error && <p className="error-message">{error}</p>}
+          {error && <p className="error-texto">{error}</p>}
 
-        {/* Botón de envío del formulario */}
-        <button type="submit" className="botoninicioses">
-          <p className="txtbotoninise">Iniciar sesión</p>
-        </button>
-      </form>
+          <button type="submit" className="botoninicioses">
+            <span className="txtbotoninise">Iniciar sesión</span>
+          </button>
 
-      <p className="olvidastependejo">¿Olvidaste tu contraseña?</p>
+          <p className="olvidastependejo">¿Olvidaste tu contraseña?</p>
 
-      <Link href={"/registro"} passHref>
-        <div className="crearcuenta">
-          <p className="txtcrear">Crear una cuenta</p>
-        </div>
-      </Link>
+          <Link href="/registro" className="crearcuenta">
+            <span className="txtcrear">Crear una cuenta</span>
+          </Link>
+        </form>
+      </div>
 
-      {/* Sección de botones para iniciar sesión con Google o Facebook */}
-      <div className="redes">
-        <Link href="/google" className="alternativa">
-          <Image
-            className="google"
-            src="/gagel.png"
-            width={500}
-            height={500}
-            alt={"Logo Google"}
-          />
-          <p className="continu">Continuar con Google</p>
-        </Link>
-
-        <Link href="/facebook" className="alternativa">
-          <Image
-            className="feisbu"
-            src="/feisbuk.png"
-            width={500}
-            height={500}
-            alt={"Logo Facebook"}
-          />
-          <p className="continu">Continuar con Facebook</p>
-        </Link>
+      {/* Lado derecho: imagen y texto */}
+      <div className="lado-derecho">
+        <Image
+          className="Buh"
+          src="/bu.png"
+          width={500}
+          height={500}
+          alt=""
+          priority
+                  />
+      
       </div>
     </div>
   );

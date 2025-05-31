@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 import Header from '@/components/Header';
-import partyIcon from '@/public/party.png';
 import './Rfinal.css';
 
 const Page = () => {
@@ -11,12 +10,11 @@ const Page = () => {
         <img src="/logoBackground.png" alt="Logo de fondo" className="logo-image" />
       </div>
 
-
       <Header />
 
       <div className="registro-completado-content">
         <div className="icon-container">
-          <Image src={partyIcon} alt="Celebración" width={90} height={90} />
+          <Image src="/party.png" alt="Celebración" width={90} height={90} />
         </div>
         <h1 className="registro-completado-title">¡Registro completado!</h1>
         <p className="registro-completado-text">
