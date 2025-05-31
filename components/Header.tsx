@@ -1,19 +1,19 @@
 import React from "react";
-import "./Header.css";
+import "./HeaderInicio.css";
 import Link from "next/link";
 import Image from "next/image";
 
 const Header = () => {
   return (
-    
-    <div className="header">
+    <div className="estiloHeapue">
+      <div className="header2">
         <div className="logo">
           <Image
             className="Buho"
             src="/Captura_de_pantalla_2025-04-06_201213_LE_upscale_balanced_x4-removebg-preview 1.png"
             width={500}
             height={500}
-            alt={""}
+            alt={"Logo Hotel Pairumani"}
           />
         </div>
         <div className="nav-links">
@@ -23,7 +23,7 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link href={"/novedades"} passHref>
+            <Link href={"/novedades2"} passHref>
               Novedades
             </Link>
           </li>
@@ -33,7 +33,7 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link href={"/explorar-cursos"} passHref>
+            <Link href={"/explorar"} passHref>
               Explorar Cursos
             </Link>
           </li>
@@ -48,6 +48,7 @@ const Header = () => {
           </Link>
         </div>
       </div>
+    </div>
   );
 };
 
