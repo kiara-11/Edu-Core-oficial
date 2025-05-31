@@ -1,0 +1,281 @@
+/* components/Certificate.module.css */
+
+:root {
+  --primary-color: #0b7077;
+  --text-color: #333;
+  --border-radius: 6px;
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+  padding: 2rem;
+  font-family: var(--font-family);
+  color: var(--text-color);
+}
+
+.container h1 {
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.container p {
+  margin-bottom: 1rem;
+}
+
+
+
+
+.models {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  gap: 1rem; /* Espacio entre tarjetas */
+  flex-wrap: wrap; /* Para que bajen si no entran */
+  margin: 1rem 0;
+}
+
+.modelCard {
+  border: 2px solid #ccc;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: border 0.3s, transform 0.3s;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.modelCard img {
+  width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.selected {
+  border-color: #0070f3;
+  transform: scale(1.05);
+  background-color: #e0f0ff;
+}
+
+
+
+.modelCard:hover {
+  transform: translateY(-2px);
+}
+
+.modelCard.selected {
+  border-color: var(--primary-color);
+}
+
+.modelCard p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  color: var(--text-color);
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.form input,
+.form textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  width: 100%;
+  resize: vertical;
+}
+
+.form textarea {
+  min-height: 80px;
+}
+
+.form label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-color);
+}
+
+.firmaBlock {
+  margin-top: 0.5rem;
+}
+
+.previewTitle {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.preview {
+  position: relative;
+  width: 800px;
+  height: 565px;
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+.certificateBg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.course {
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.student {
+  margin-top: 0.5rem;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.description {
+  margin-top: 1.2rem;
+  font-size: 1rem;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  color: #444;
+}
+
+.signatureBlock {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  text-align: center;
+}
+
+.signatureBlock img {
+  width: 100px;
+  height: 60px;
+  object-fit: contain;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  background-color: white;
+}
+
+.teacher {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.botonGuardar,
+.botonCancelar {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.botonGuardar {
+  background-color: #0070f3;
+  color: white;
+}
+
+.botonGuardar:hover {
+  background-color: #005bb5;
+  justify-content: flex-end; 
+}
+
+.botonCancelar {
+  background-color: #ccc;
+  color: #333;
+  justify-content: flex-end;
+}
+
+.botonCancelar:hover {
+  background-color: #999;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end; /* alinea los botones a la derecha */
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.guardarBtn,
+.cancelarBtn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.guardarBtn {
+  background-color: #00796b;
+  color: white;
+}
+
+.guardarBtn:hover {
+  background-color: #00796b;
+}
+
+.cancelarBtn {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.cancelarBtn:hover {
+  background-color: #c2c2c2;
+}
+
+
+@media (max-width: 900px) {
+  .preview {
+    width: 100%;
+    height: auto;
+  }
+  .overlay {
+    padding: 1rem;
+  }
+  .course {
+    font-size: 1.2rem;
+  }
+  .student {
+    font-size: 1.6rem;
+  }
+  .description {
+    font-size: 0.9rem;
+    width: 85%;
+  }
+}

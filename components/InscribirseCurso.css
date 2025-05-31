@@ -1,0 +1,143 @@
+.inscripcion-container {
+  padding: 40px;
+  font-family: Arial, sans-serif;
+}
+
+.inscripcion-content {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.curso-info {
+  width: 300px;
+  background-color: #f8f3e9;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.curso-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.curso-detalle h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.curso-detalle p {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+  gap: 10px 40px; /* Espacio entre filas y columnas */
+  justify-content: center; /* Centra el grid dentro del contenedor */
+  text-align: center; /* Centra el texto dentro de cada celda */
+  font-size: 14px; /* Puedes ajustar este valor */
+  line-height: 1.8; /* Aumenta la separación entre líneas */
+
+
+}
+
+.curso-detalle h3 {
+  grid-column: span 2; /* Ocupa las dos columnas */
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 12px; /* Puedes ajustar este valor */
+
+}
+
+.formulario-inscripcion {
+  flex: 1;
+  background-color: #dceeed;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.formulario-inscripcion h3 {
+  margin-bottom: 15px;
+}
+
+textarea,
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+}
+
+.codigo-promocional {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-aplicar {
+  padding: 12px;
+  background-color: #004d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.resumen-costos {
+  background-color: #e7f3f3;
+  padding: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.aceptar-condiciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-confirmar {
+  width: 100%;
+  padding: 12px;
+  background-color: #0b7077;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.volver {
+  display: block;
+  margin-top: 20px;
+  color: #0b7077;
+  text-decoration: none;
+}
+
+.btn-inscripcion {
+  padding: 12px;
+  background-color: #0b7077;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-inscripcion:hover {
+  background-color: #095e61;
+}
+
+
+.titulocurso {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 26px; /* Puedes ajustar este valor */
+  color: #3d4546;   /* Cambia este valor por el color que desees */
+}
+.icono-titulo {
+  width: 24px;
+  height: 24px;
+}
+
