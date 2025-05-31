@@ -1,0 +1,391 @@
+.container {
+  max-width: 100vw;
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.searchSection {
+  margin-bottom: 30px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchBar {
+  display: flex;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px 0 0 8px;
+  font-size: 20px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.searchInput:focus {
+  border-color: #ff6b35;
+}
+
+.searchButton {
+  background: #ff6b35;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 0 8px 8px 0;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.searchButton:hover {
+  background: #e5552d;
+}
+
+.filterSection {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.filterSelect {
+  padding: 8px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 20px;
+  background: white;
+  font-size: 16px;
+  color: #666;
+  cursor: pointer;
+  flex: 1;
+  min-width: 200px;
+  box-sizing: border-box;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #ff6b35;
+}
+
+.tutorGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.tutorCard {
+  background: white;
+  border: 2px solid #4a90e2;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: center;
+  height: fit-content;
+  min-height: 380px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+.tutorCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.tutorHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.tutorImageContainer {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.tutorImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.tutorInfo {
+  text-align: center;
+}
+
+.tutorSubject {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+
+.tutorName {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+}
+
+.tutorDescription {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.tutorDescription h4 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+}
+
+.tutorDescription p {
+  margin: 0;
+  font-size: 18px;
+  color: #666;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.tutorRating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 8px;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.starFilled {
+  color: #ffc107;
+  font-size: 24px;
+}
+
+.starEmpty {
+  color: #e0e0e0;
+  font-size: 24px;
+}
+
+.reviewCount {
+  font-size: 18px;
+  color: #666;
+  font-weight: 600;
+}
+
+.tutorActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.videoCallIcon {
+  font-size: 18px;
+  color: #666;
+}
+
+.priceSection {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.priceSection::before {
+  content: "💼";
+  font-size: 16px;
+}
+
+.price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.verMasButton {
+  width: 100%;
+  background: #ff6b35;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-transform: uppercase;
+}
+
+.verMasButton:hover {
+  background: #e5552d;
+}
+
+.registerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 40px;
+}
+
+.registerSection span {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.registerButton {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.registerButton:hover {
+  background: #0056b3;
+}
+
+/* Media queries ajustadas para pantalla completa */
+@media (min-width: 1400px) {
+  .tutorGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .tutorGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .container {
+    padding: 15px;
+    max-width: 100vw;
+  }
+  
+  .tutorGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .filterSection {
+    gap: 10px;
+  }
+  
+  .filterSelect {
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+    max-width: 100vw;
+  }
+  
+  .searchSection {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .searchInput {
+    font-size: 14px;
+  }
+  
+  .filterSection {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .filterSelect {
+    min-width: 100%;
+  }
+  
+  .tutorGrid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .tutorCard {
+    padding: 15px;
+    min-height: auto;
+  }
+  
+  .tutorSubject {
+    font-size: 24px;
+  }
+  
+  .tutorName {
+    font-size: 18px;
+  }
+  
+  .tutorDescription h4 {
+    font-size: 18px;
+  }
+  
+  .tutorDescription p {
+    font-size: 16px;
+  }
+  
+  .registerSection {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+    max-width: 100vw;
+  }
+  
+  .searchSection {
+    padding: 15px;
+  }
+  
+  .searchInput {
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+  
+  .searchButton {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+  
+  .tutorCard {
+    padding: 12px;
+  }
+}
