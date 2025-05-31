@@ -1,12 +1,12 @@
 import Header from '@/components/HeaderLog';
-import Sidebar from '@/components/SidebarAdmin';
+import SidebarAdmin from '@/components/SidebarAdmin';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="layout-container">
       <Header />
       <div className="main-layout">
-        <Sidebar />
+        <SidebarAdmin />
         <main className="content-area">
           {children}
         </main>

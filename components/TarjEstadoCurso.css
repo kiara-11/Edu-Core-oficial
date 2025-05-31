@@ -1,15 +1,26 @@
 .contenidotarjetaestado {
   display: flex;
   width: 300px;
-  height: 360px;
-  padding: 20px;
+  padding: 10px;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 10px;
   align-items: flex-start;
   border-radius: 10px;
   border: 1px solid #0b7077;
   background: var(--sds-color-background-default-default);
+  text-decoration: none;
 }
+
+.contenidotarjetaestado:hover {
+  background: rgba(224, 83, 18, 0.1);
+  /* fondo naranjita transparente */
+  color: #fff;
+  transform: translateY(-3px);
+  /* se mueve ligeramente hacia arriba */
+  box-shadow: 0 4px 12px rgba(224, 83, 18, 0.3);
+  /* sombrita elegante */
+}
+
 .ImaTutEstado {
   display: flex;
   width: 80px;
@@ -23,27 +34,30 @@
   aspect-ratio: 1/1;
   border-radius: 100px;
 }
+
 .DetalleClase {
   display: flex;
-  height: 223px;
-  padding: 10px 0px;
+  width: 280px;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
   flex-shrink: 0;
   align-self: stretch;
 }
+
 .NomTutEstado {
   align-self: stretch;
-  color: var(--sds-color-text-default-default);
+  color: #252641;
   font-family: var(--sds-typography-heading-font-family);
   font-size: 25px;
   font-style: normal;
   font-weight: var(--sds-typography-heading-font-weight);
-  line-height: 120%; /* 30px */
+  line-height: 120%;
+  /* 30px */
   letter-spacing: -0.5px;
-  margin: 0px;
 }
+
 .ClasTutEstado {
   align-self: stretch;
   color: var(--Brand-color, #0b7077);
@@ -55,6 +69,7 @@
   letter-spacing: 0.4px;
   margin: 0px;
 }
+
 .contenedorbotonestado {
   display: flex;
   height: 75px;
@@ -64,6 +79,7 @@
   flex-shrink: 0;
   align-self: stretch;
 }
+
 .botonestado {
   display: flex;
   width: 220px;
@@ -75,6 +91,7 @@
   border-radius: 10px;
   background: var(--brand-color-2, #fd661f);
 }
+
 .txtestado {
   color: #fff;
   font-family: Raleway;

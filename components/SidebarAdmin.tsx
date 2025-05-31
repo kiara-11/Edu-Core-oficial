@@ -7,10 +7,10 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   const menuItems = [
-    { name: 'Gestión de roles', href: '/Inicio' },
-    { name: 'Aprobación de cursos', href: '/novedades' },
-    { name: 'Aprobación de certificados', href: '/notificaciones' },
-    { name: 'Control de pagos', href: '/miscursos' }//cambiar links por el correspondiente page
+    { name: 'Gestión de roles', href: '/gesroles' },
+    { name: 'Aprobación de cursos', href: '/aprovCurso' },
+    { name: 'Aprobación de certificados', href: '/certificacion' },
+    { name: 'Control de pagos', href: '/contpag' }//cambiar links por el correspondiente page
   ];
 
   return (

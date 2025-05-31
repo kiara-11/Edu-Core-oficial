@@ -1,12 +1,13 @@
 import ContMiscursos from '@/components/ContMiscursos'
-import Header from '@/components/Header'
+import HeaderySidebar from '@/components/HeaderySidebar'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-        <Header/>
-        <ContMiscursos/>
+      <HeaderySidebar>
+        <ContMiscursos />
+      </HeaderySidebar>
     </div>
   )
 }

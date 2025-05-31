@@ -75,7 +75,7 @@ const TarjTutComt = () => {
             <p className="horatrabajComt">5.935 horas enseñando</p>
           </div>
           <div className="contButComt">
-          <Link href="/miscursos" className="ButComt">
+            <Link href="/miscursos" className="ButComt">
               <p className="TxtButComt">CONTACTAR</p>
             </Link>
           </div>
