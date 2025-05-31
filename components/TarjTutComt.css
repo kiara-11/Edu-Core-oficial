@@ -11,6 +11,7 @@
   border: 1px solid #0b7077;
   background: var(--sds-color-background-default-default);
 }
+
 .ImgTutComt {
   display: flex;
   width: 130px;
@@ -24,6 +25,7 @@
   aspect-ratio: 1/1;
   border-radius: 100px;
 }
+
 .ImaTutComt {
   display: flex;
   width: 130px;
@@ -37,6 +39,7 @@
   aspect-ratio: 1/1;
   border-radius: 100px;
 }
+
 .TxtTutComt {
   display: flex;
   width: 445px;
@@ -47,6 +50,7 @@
   gap: 10px;
   flex-shrink: 0;
 }
+
 .TxtClasComt {
   height: 104px;
   flex-shrink: 0;
@@ -56,10 +60,12 @@
   font-size: 32px;
   font-style: normal;
   font-weight: 300;
-  line-height: 120%; /* 38.4px */
+  line-height: 120%;
+  /* 38.4px */
   letter-spacing: -0.64px;
   margin: 0px;
 }
+
 .TxtNomTutComt {
   align-self: stretch;
   color: var(--sds-color-text-default-default);
@@ -67,10 +73,12 @@
   font-size: 25px;
   font-style: normal;
   font-weight: 500;
-  line-height: 120%; /* 30px */
+  line-height: 120%;
+  /* 30px */
   letter-spacing: -0.5px;
   margin: 0px;
 }
+
 .ContRevwComt {
   display: flex;
   height: 188px;
@@ -81,6 +89,7 @@
   flex-shrink: 0;
   align-self: stretch;
 }
+
 .ResStarComt {
   display: flex;
   height: 35px;
@@ -90,6 +99,7 @@
   flex-shrink: 0;
   align-self: stretch;
 }
+
 .Cantstarz {
   display: flex;
   width: 156px;
@@ -97,12 +107,14 @@
   align-items: center;
   gap: 10.11px;
 }
+
 .Starzzzz {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
   aspect-ratio: 1/1;
 }
+
 .cantStarComt {
   width: 36px;
   height: 22px;
@@ -111,8 +123,10 @@
   font-size: 14.828px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 22.242px */
+  line-height: 150%;
+  /* 22.242px */
 }
+
 .cantResComt {
   width: 183px;
   height: 21px;
@@ -121,8 +135,10 @@
   font-size: 14.828px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 22.242px */
+  line-height: 150%;
+  /* 22.242px */
 }
+
 .cantHorComt {
   display: flex;
   height: 48px;
@@ -132,6 +148,7 @@
   flex-shrink: 0;
   align-self: stretch;
 }
+
 .imagenComt {
   display: flex;
   width: 30px;
@@ -140,21 +157,25 @@
   gap: 20px;
   aspect-ratio: 1/1;
 }
+
 .RelojComt {
   width: 30px;
   height: 30px;
   flex-shrink: 0;
   aspect-ratio: 1/1;
 }
+
 .horatrabajComt {
   color: var(--sds-color-text-default-default);
   font-family: var(--sds-typography-heading-font-family);
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
-  line-height: 120%; /* 18px */
+  line-height: 120%;
+  /* 18px */
   letter-spacing: -0.3px;
 }
+
 .contButComt {
   display: flex;
   height: 65px;
@@ -166,11 +187,11 @@
   border-radius: 10px;
   background: #fff;
 }
+
 .ButComt {
   display: flex;
   width: 220px;
-  height: 50px;
-  padding: 0px 30px;
+  height: 45px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -178,6 +199,13 @@
   background: var(--brand-color-2, #fd661f);
   text-decoration: none;
 }
+
+.ButComt:hover {
+  background: #e05312;
+  /* color un poquito más oscuro al pasar el mouse */
+  border-color: #e05312;
+}
+
 .TxtButComt {
   color: #fff;
   font-family: Raleway;
@@ -187,4 +215,65 @@
   line-height: normal;
   letter-spacing: 0.32px;
   text-transform: uppercase;
+}
+
+.Tarjtutnew {
+  display: flex;
+  width: 300px;
+  height: 360px;
+  padding: 20px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-radius: 10px;
+  border: 1px solid #0B7077;
+  background: var(--sds-color-background-default-default);
+}
+
+.newtutim {
+  display: flex;
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  border-radius: 100px;
+}
+
+.nwtutinf {
+  display: flex;
+  height: 223px;
+  padding: 10px 0px;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.nwtutname {
+  align-self: stretch;
+  color: var(--sds-color-text-default-default);
+  font-family: var(--sds-typography-heading-font-family);
+  font-size: 25px;
+  font-style: normal;
+  font-weight: var(--sds-typography-heading-font-weight);
+  line-height: 120%;
+  /* 30px */
+  letter-spacing: -0.5px;
+}
+
+.nwtutarea {
+  align-self: stretch;
+  color: var(--Brand-color, #0B7077);
+  font-family: Raleway;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.4px;
 }

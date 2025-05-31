@@ -1,29 +1,24 @@
 import React from "react";
 import TarjEstadoCurso from "./TarjEstadoCurso";
+import "./Novedades.css";
 import "./ContMiscursos.css";
 
 const ContMiscursos = () => {
   return (
     <div className="EstadoCursoEMR">
-      <div className="submenuclas">
-        <div className="selecoptioncla">
-          <p className="txtoptioncla">Mis cursos</p>
-        </div>
+      <p className="titnovd">Mis cursos</p>
+      <p className="subtitnovd">En proceso</p>
+      <div className="contTarjetasCursoEstado">
+        <TarjEstadoCurso />
+        <TarjEstadoCurso />
+        <TarjEstadoCurso />
+        <TarjEstadoCurso />
+        <TarjEstadoCurso />
+        <TarjEstadoCurso />
       </div>
-
-      <div className="detalleclases">
-        <p className="txtdetalle">Mis cursos</p>
-        <div className="contDetCursos">
-          <p className="estadoCurso">Próximos</p>
-          <div className="contTarjetasCursoEstado">
-            <TarjEstadoCurso />
-            <TarjEstadoCurso />
-          </div>
-          <p className="estadoCurso">Historial de Cursos</p>
-          <div className="contTarjetasCursoEstado">
-            <TarjEstadoCurso />
-          </div>
-        </div>
+      <p className="subtitnovd">Finalizados</p>
+      <div className="contTarjetasCursoEstado">
+        <TarjEstadoCurso />
       </div>
     </div>
   );
