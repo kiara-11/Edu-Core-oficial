@@ -1,0 +1,245 @@
+.tutorFormContainer {
+  min-height: 100vh;
+  background: white;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.formCard {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #f8f3e9;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.formTitle {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 40px;
+}
+
+.formSection {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  font-weight: 500;
+  color: #4a5568;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.formInput,
+.formSelect {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s;
+  background: white;
+  box-sizing: border-box;
+}
+
+.formInput:focus,
+.formSelect:focus {
+  outline: none;
+  border-color: #0B7077;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.addMore {
+  margin-top: 15px;
+}
+
+.addMore span {
+  color: #0B7077;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.addMore span:hover {
+  text-decoration: underline;
+}
+
+.questionSection {
+  margin-bottom: 30px;
+}
+
+.questionSection h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 20px;
+}
+
+.subjectGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.subjectBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 100px;
+}
+
+.subjectBtn:hover {
+  border-color: #0B7077;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.subjectBtn.selected {
+  border-color: #0B7077;
+  background: #f7fafc;
+}
+
+.subjectIcon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.subjectBtn span {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.subQuestion {
+  margin-bottom: 25px;
+}
+
+.subQuestion h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #4a5568;
+  margin-bottom: 12px;
+}
+
+.optionGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center
+}
+
+.optionBtn {
+  padding: 10px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 25px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.optionBtn:hover {
+  border-color: #0B7077;
+}
+
+.optionBtn.selected {
+  border-color: #0B7077;
+  background: #0B7077;
+  color: white;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 16px;
+  background:#FD661F ;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 20px;
+}
+
+.submitBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .formCard {
+    padding: 20px;
+    margin: 10px;
+  }
+  
+  .subjectGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .optionGroup {
+    flex-direction: column;
+  }
+  
+  .optionBtn {
+    text-align: center;
+  }
+  
+  .formTitle {
+    font-size: 24px;
+  }
+  
+  .sectionTitle {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tutorFormContainer {
+    padding: 10px;
+  }
+  
+  .formCard {
+    padding: 15px;
+  }
+  
+  .formTitle {
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
+  
+  .subjectBtn {
+    min-height: 80px;
+    padding: 15px;
+  }
+  
+  .subjectIcon {
+    font-size: 20px;
+  }
+}

@@ -1,52 +1,63 @@
 import React from "react";
-import Image from "next/image";
 import "./Inicioparte4.css";
 import Link from "next/link";
 const Inicioparte4 = () => {
   return (
-    <div className="cont4">
-      <div className="txtcont4">
-        <p className="txtgeneralcont4">
-          <span className="titverdec4">¿Cómo deseas usar</span>
-          <span className="titnarnc4"> EduCore</span>
-          <span className="titverdec4">?</span>
-        </p>
-        <p className="txgenec4v2">
-          <span className="txnormc4">
-            EduCore conecta a estudiantes y tutores en un solo lugar.
-          </span>
-          <span className="txnegri4"> Reserva</span>
-          <span className="txnormc4"> cursos o</span>
-          <span className="txnegri4"> publica</span>
-          <span className="txnormc4">
-            {" "}
-            los tuyos fácilmente, sin complicaciones.
-          </span>
-        </p>
-      </div>
-
-      <div className="opcionescont4">
-        <div className="tarjtutc4">
-          <p className="parac4">PARA TUTORES</p>
-          <p className="desctarc4">
-            Publica tus cursos y hazlos visibles al instante. Cobra de forma
-            segura y gestiona tus clases fácilmente.
-          </p>
-          <Link href="/login2" className="buttonc4">
-            <p className="txbutnc4">Ingresar como Tutor</p>
-          </Link>
+    <div className="contenedor-principal">
+      <div className="fondo-oscuro">
+        <div className="texto-eduCore">
+          <h2>EduCore</h2>
+          <p>Simplifica tu educación</p>
         </div>
 
-        <div className="tarjestc4">
-          <p className="parac4">PARA ESTUDIANTES</p>
-          <p className="desctarc4">
-            Explora y reserva cursos personalizados. Aprende a tu ritmo, con
-            total seguridad.
-          </p>
-          <Link href="/login3" className="buttonc4">
-            <p className="txbutnc4">Ingresar como Estudiante</p>
-          </Link>
+        <div className="contenido-info">
+          <div className="info-item">
+            <div className="icono lupa" />
+            <div className="texto-item">
+              <p>Encuentra los cursos que necesitas o enseña lo que dominas.</p>
+            </div>
+          </div>
+
+          <div className="info-item">
+            <div className="icono agenda" />
+            <div className="texto-item">
+              <p>Agenda las clases de acuerdo a tu tiempo disponible.</p>
+            </div>
+          </div>
+
+          <div className="info-item">
+            <div className="icono cerebro" />
+            <div className="texto-item">
+              <p>Aprende o imparte clases de manera personalizada.</p>
+            </div>
+          </div>
+
+          <div className="info-item">
+            <div className="icono contacto" />
+            <div className="texto-item">
+              <p>Contacto directo estudiante tutor</p>
+            </div>
+          </div>
+
+          <div className="info-item">
+            <div className="icono pagos" />
+            <div className="texto-item">
+              <p>Pagos seguros</p>
+            </div>
+          </div>
+
+          <div className="info-item">
+            <div className="icono explora" />
+            <div className="texto-item">
+              <p>
+                Explora los cursos que tenemos para ofrecerte, registrate y se parte de nuestra comunidad.
+              </p>
+            </div>
+          </div>
         </div>
+        <Link href="/registro">
+          <button className="btn-registrarme">¡Quiero Registrarme!</button>
+        </Link>
       </div>
     </div>
   );

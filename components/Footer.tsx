@@ -1,71 +1,67 @@
 import React from 'react';
 import './Footer.css';
 import Image from 'next/image';
+import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="footer">
-      
-      <div className="footer-curve-css"></div>
-
-      
-      <div className="footer-top">
-        
-        <div className="footer-col">
-          <Image src="/logo2.png" alt="Logo EduCore" width={180} height={80} />
-
-          <div className="footer-contact">
-            <div className="contact-item">
-              <Image src="/Call.png" alt="Teléfono" width={20} height={20} />
-              <span>Tel: +591 62594327</span>
+    <footer className="footer-simple">
+      <div className="footer-simple-container">
+        <div className="footer-logo-contact">
+          <Image src="/logo2.png" alt="Logo EduCore" width={150} height={70} />
+          <p className="footer-desc">"Encuentra el tutor ideal o conviértete en uno. Aprende o enseña desde donde estés."</p>
+          <div className="footer-contact-info">
+            <div>
+              <Image src="/Call.png" alt="Teléfono" width={16} height={16} />
+              <span>Tel: +591 78994035</span>
             </div>
-            <div className="contact-item">
-              <Image src="/Time Circle.png" alt="Horario" width={20} height={20} />
+            <div>
+              <Image src="/Time Circle.png" alt="Horario" width={16} height={16} />
               <span>Horarios: Lunes a viernes de 8:00 a 20:00</span>
             </div>
-            <div className="contact-item">
-              <Image src="/Group2.png" alt="Email" width={20} height={20} />
-              <span>Email: contacto@educore.bo</span>
+            <div>
+              <Image src="/Group2.png" alt="Email" width={16} height={16} />
+              <span>Email: whusunapacol@est.emi.edu.bo</span>
             </div>
           </div>
         </div>
 
-        
-        <div className="footer-col">
-          <h4>Categorías destacadas</h4>
-          <ul>
-            <li>Programación</li>
-            <li>Idiomas</li>
-            <li>Refuerzo escolar</li>
-            <li>Música</li>
-            <li>Ver todas →</li>
-          </ul>
-        </div>
-
-        
-        <div className="footer-col">
-          <h4>Enlaces rápidos</h4>
-          <ul>
-            <li>Sobre nosotros</li>
-            <li>Novedades</li>
-            <li>Términos y condiciones</li>
-          </ul>
-        </div>
-
-       
-        <div className="footer-col">
-          <h4>Suscripción a novedades</h4>
-          <p>Mantente al día con los nuevos cursos y promociones</p>
-          <div className="newsletter">
-            <input type="email" placeholder="Email" />
-            <button>Enviar</button>
+        <div className="footer-links-group">
+          <div>
+            <h5>Explora EduCore</h5>
+            <ul>
+              <li>
+                <Link href={"/novedades"} passHref>
+                  Novedades
+                </Link>
+              </li>
+              <li>
+                <Link href={"/sobre-nosotros"} passHref>
+                  Sobre Nosotros
+                </Link>
+              </li>
+              <li>
+                <Link href={"/explorar-cursos"} passHref>
+                  Explorar Cursos
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h5>Términos y Privacidad</h5>
+            <ul>
+              <li>Política de Privacidad</li>
+              <li>Términos y Condiciones</li>
+            </ul>
+          </div>
+          <div>
+            <h5>Ayuda</h5>
+            <ul>
+              <li>Guía para Estudiantes</li>
+              <li>Guía para Tutores</li>
+            </ul>
           </div>
         </div>
-      </div>
-
-      
-      <div className="footer-bottom">
-        <p><strong>EduCore</strong> – Simplifica tu educación. Encuentra, reserva, aprende.</p>
       </div>
     </footer>
   );
