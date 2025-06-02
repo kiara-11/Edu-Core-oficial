@@ -11,7 +11,7 @@ const TarjEstadoCurso = () => {
       <Link href="/ComentariosVal" className="contenidotarjetaestado">
         <Image
           className="ImaTutEstado"
-          src="/zorraRandom.png"
+          src="/zrimage.png"
           width={500}
           height={500}
           alt={"Logo Hotel Pairumani"}

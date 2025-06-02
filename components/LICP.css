@@ -173,7 +173,7 @@
     align-items: center;
     flex-shrink: 0;
     align-self: stretch;
-    background: linear-gradient(0deg, rgba(23, 27, 65, 0.50) 0%, rgba(23, 27, 65, 0.50) 100%), url("/pendejosfelices.png") lightgray 50% / cover no-repeat;
+    background: linear-gradient(0deg, rgba(23, 27, 65, 0.50) 0%, rgba(23, 27, 65, 0.50) 100%), url("/pfimag.png") lightgray 50% / cover no-repeat;
 }
 
 .propg {

@@ -22,8 +22,8 @@ const EncabInLog = () => {
             </div>
             <div className="inlog10">
                 <Image
-                    className="zorra"
-                    src="/NIÑA PENDEJA.png"
+                    className="imgnpa"
+                    src="/npimg.png"
                     width={500}
                     height={500}
                     alt={"Logo Hotel Pairumani"}

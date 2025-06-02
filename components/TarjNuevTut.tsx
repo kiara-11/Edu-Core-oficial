@@ -8,7 +8,7 @@ const TarjNuevTut = () => {
         <div className="Tarjtutnew">
             <Image
                 className="newtutim"
-                src="/zorraRandom.png"
+                src="/zrimage.png"
                 width={500}
                 height={500}
                 alt={"Logo Hotel Pairumani"}
