@@ -1,44 +1,27 @@
 import React from "react";
-import "./HeaderInicio.css";
+import "./Header.css";
 import Link from "next/link";
 import Image from "next/image";
 
 const Header = () => {
   return (
-    <div className="estiloHeapue">
+     <header className="estiloHeapue">
       <div className="header2">
         <div className="logo">
           <Image
             className="Buho"
             src="/Captura_de_pantalla_2025-04-06_201213_LE_upscale_balanced_x4-removebg-preview 1.png"
-            width={500}
-            height={500}
-            alt={"Logo Hotel Pairumani"}
+            width={166}
+            height={89}
+            alt="Logo EduCore"
           />
         </div>
-        <div className="nav-links">
-          <li>
-            <Link href={"/"} passHref>
-              <span className="">Inicio</span>
-            </Link>
-          </li>
-          <li>
-            <Link href={"/novedades2"} passHref>
-              Novedades
-            </Link>
-          </li>
-          <li>
-            <Link href={"/sobre-nosotros"} passHref>
-              Sobre Nosotros
-            </Link>
-          </li>
-          <li>
-            <Link href={"/explorar"} passHref>
-              Explorar Cursos
-            </Link>
-          </li>
-        </div>
-
+        <nav className="nav-links">
+          <li><Link href="/">Inicio</Link></li>
+          <li><Link href="/novedades2">Novedades</Link></li>
+          <li><Link href="/sobre-nosotros">Sobre Nosotros</Link></li>
+          <li><Link href="/explorar">Explorar Cursos</Link></li>
+        </nav>
         <div className="auth">
           <Link href="/login">
             <button className="btn login">INICIAR SESIÓN</button>
@@ -48,8 +31,9 @@ const Header = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
+
 
 export default Header;

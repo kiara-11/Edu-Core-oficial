@@ -5,55 +5,44 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    max-width: 1200px;
+    max-width: 800px; /* ancho más manejable */
     margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .notititl {
-    width: 319px;
+    width: 100%;
+    max-width: 319px;
     color: #FD661F;
-    font-family: Raleway;
+    font-family: 'Raleway', sans-serif;
     font-size: 40px;
-    font-style: normal;
     font-weight: 800;
-    line-height: 70px;
+    line-height: 1.75;
+    margin-bottom: 24px;
 }
 
 .notifcards {
     display: flex;
-    padding: 30px 0px;
     flex-direction: column;
     align-items: center;
     gap: 30px;
-    align-self: stretch;
+    width: 100%;
 }
-
-.infocanoti {
-    display: flex;
-    width: 364px;
-    padding: 10px 0px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 10px;
-    flex-shrink: 0;
-    align-self: stretch;
-    border-radius: 15px;
-    background: #F8F3E9;
-}
-
-
 
 .cardcontent {
     display: flex;
-    width: 700px;
-    height: 140px;
-    padding: 10px 20px;
+    width: 100%;
+    max-width: 700px;
+    min-height: 140px;
+    padding: 20px 30px;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     border-radius: 15px;
     border: 1px solid #000;
     background: #F8F3E9;
+    box-sizing: border-box;
+    /* Sombra suave para dar profundidad */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .imagecanoti {
@@ -62,7 +51,6 @@
     height: 110px;
     justify-content: center;
     align-items: center;
-    gap: 10px;
     flex-shrink: 0;
     border-radius: 15px;
     background: #F8F3E9;
@@ -71,29 +59,35 @@
 .imgnotif {
     width: 46px;
     height: 46px;
-    flex-shrink: 0;
-    aspect-ratio: 1/1;
+    object-fit: contain;
+}
+
+.infocanoti {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    flex-grow: 1;
+    border-radius: 15px;
+    background: #F8F3E9;
 }
 
 .titnoti {
     color: #000;
-    font-family: Raleway;
+    font-family: 'Raleway', sans-serif;
     font-size: 18px;
-    font-style: normal;
-    font-weight: var(--sds-typography-heading-font-weight);
-    line-height: 120%;
-    /* 24px */
+    font-weight: 700;
+    line-height: 1.3;
     letter-spacing: -0.4px;
 }
 
 .detanoti {
-    color: rgba(0, 0, 0, 0.50);
-    font-family: Raleway;
+    color: rgba(0, 0, 0, 0.5);
+    font-family: 'Raleway', sans-serif;
     font-size: 14px;
-    font-style: normal;
-    font-weight: var(--sds-typography-heading-font-weight);
-    line-height: 120%;
-    /* 19.2px */
+    font-weight: 600;
+    line-height: 1.3;
     letter-spacing: -0.32px;
 }
 
@@ -103,16 +97,14 @@
     gap: 10px;
     border-radius: 15px;
     background: #F8F3E9;
-
 }
 
 .datenoti {
-    color: rgba(0, 0, 0, 0.50);
-    font-family: var(--sds-typography-heading-font-family);
+    color: rgba(0, 0, 0, 0.5);
+    font-family: 'Raleway', sans-serif;
     font-size: 16px;
-    font-style: normal;
-    font-weight: var(--sds-typography-heading-font-weight);
-    line-height: 120%;
+    font-weight: 600;
+    line-height: 1.3;
     letter-spacing: -0.32px;
 }
 
@@ -122,19 +114,16 @@
     height: 25px;
     justify-content: center;
     align-items: center;
-    gap: 10px;
     border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.50);
-    background: rgba(11, 112, 119, 0.20);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    background: rgba(11, 112, 119, 0.2);
 }
 
 .estnotif {
-    color: rgba(0, 0, 0, 0.50);
-    font-family: Raleway;
+    color: rgba(0, 0, 0, 0.5);
+    font-family: 'Raleway', sans-serif;
     font-size: 13px;
-    font-style: normal;
     font-weight: 500;
-    line-height: normal;
     letter-spacing: 0.26px;
     text-transform: capitalize;
 }
@@ -143,14 +132,11 @@
     display: flex;
     width: 145px;
     padding: 10px 0px;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-    align-self: stretch;
     border-radius: 15px;
     background: #F8F3E9;
     text-decoration: none;
-
 }
 
 .buttnnoti {
@@ -159,34 +145,57 @@
     width: 145px;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    flex: 1 0 0;
     border-radius: 10px;
-    background: var(--brand-color-2, #FD661F);
-    text-decoration: none;
-    /* quita la línea azul */
+    background: #FD661F;
     color: white;
-    /* asegúrate que el texto sea blanco */
     border: 2px solid transparent;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.26px;
+    text-transform: uppercase;
+    text-decoration: none;
 }
 
 .buttnnoti:hover {
     background: #e05312;
-    /* color un poquito más oscuro al pasar el mouse */
     border-color: #e05312;
 }
 
 .txtbtnnoti {
-    color: #FFF;
-    font-family: Raleway;
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-    letter-spacing: 0.26px;
-    text-transform: uppercase;
-    text-decoration: none;
+    margin: 0;
+}
 
+@media screen and (max-width: 768px) {
+  .cardcontent {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 15px 20px;
+    gap: 15px;
+  }
+
+  .imagecanoti {
+    width: 80px;
+    height: 80px;
+  }
+
+  .infocanoti {
+    width: 100%;
+  }
+
+  .xtracanoti {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .buttnnoti {
+    width: 100%;
+  }
+
+  .notititl {
+    font-size: 32px;
+    width: 100%;
+  }
 }

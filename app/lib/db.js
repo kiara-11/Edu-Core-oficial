@@ -1,27 +1,29 @@
-import sql from 'mssql';
+import * as sql from 'mssql';
 
-// Configuración de conexión a SQL Server
 const config = {
-  user: 'sa',                        // Usuario de SQL Server
-  password: 'apazaeric1',          // Contraseña del usuario `sa`
-  server: 'localhost',                // Nombre del servidor, usa `localhost` o `127.0.0.1`
-  database: 'educore',                // Nombre de la base de datos
+  user: 'sa',
+  password: 'Kiara1108*',
+  server: '192.168.0.23',
+  database: 'educore',
   options: {
-    encrypt: true,                    // Usar cifrado si es necesario
-    trustServerCertificate: true,     // Solo para desarrollo local
+    encrypt: true,
+    trustServerCertificate: true,
   },
 };
 
+let pool;
+
 export async function connectToDb() {
   try {
-    // Establece la conexión con SQL Server
-    await sql.connect(config);
-    console.log('Conectado a SQL Server');
+    if (!pool) {
+      pool = await sql.connect(config);
+      console.log('✅ Conectado a SQL Server');
+    }
+    return pool;
   } catch (error) {
-    console.error('Error al conectar a la base de datos', error);
+    console.error('❌ Error al conectar a la base de datos', error);
     throw error;
   }
 }
 
-// Exporta el objeto sql para usarlo en consultas
 export { sql };
