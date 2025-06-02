@@ -75,7 +75,7 @@
   align-items: flex-start;
   justify-content: center;
   flex-shrink: 0;
-  background: url("/sonsera.png") lightgray 50% / cover no-repeat, #f8f3e9;
+  background: url("/soimg.png") lightgray 50% / cover no-repeat, #f8f3e9;
 }
 
 .aboutp5:hover {

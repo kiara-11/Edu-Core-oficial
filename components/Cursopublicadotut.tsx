@@ -9,7 +9,7 @@ const Cursopublicadotut = () => {
             <div className="ImaTarjBusq">
                 <Image
                     className="ImaTutTB"
-                    src="/zorraRandom.png"
+                    src="/zrimage.png"
                     width={500}
                     height={500}
                     alt={"Logo Hotel Pairumani"}
