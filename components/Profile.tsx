@@ -1,30 +1,99 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import "./Profile.css";
 
-const UserProfile = () => {
+const Perfil = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: 'WARA HUAMAPACO',
-    email: 'wara.huamapaco@email.com',
-    phone: '+51 987 654 321',
-    bio: 'Estudiante de Ingeniería de Sistemas',
-    avatar: '/Imagen de WhatsApp 2024-11-13 a las 19.33.07_84c43483.png'
+    nombreCompleto: '',
+    user_name: '',
+    email: '',
+    telefono: '',
+    bio: '',
+    avatar: '/Imagen de WhatsApp 2024-11-13 a las 19.33.07_84c43483.png',
   });
+
+  // Datos académicos tutor aprobado (solo lectura)
+  const [tutorData, setTutorData] = useState<{
+    universidad: string;
+    titulo: string;
+    certificacion: string;
+    entidad: string;
+    año: string;
+  } | null>(null);
+
+  // Control para mostrar sección tutor
+  const [showTutorSection, setShowTutorSection] = useState(false);
 
   const [editData, setEditData] = useState(profileData);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
+
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    if (!email) return;
+
+    // Carga info básica usuario
+    fetch(`/api/usuario?email=${email}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data?.nombreCompleto) {
+          setProfileData(prev => ({
+            ...prev,
+            nombreCompleto: data.nombreCompleto,
+            email: data.email,
+            telefono: data.telefono || '',
+            user_name: data.user_name || '',
+            bio: data.bio || '',
+          }));
+        }
+      });
+
+    // Verificar si usuario es tutor aprobado
+    const esTutor = localStorage.getItem('esTutorAprobado');
+    if (esTutor === 'true') {
+      setShowTutorSection(true);
+      const solicitudAprobada = JSON.parse(localStorage.getItem('solicitudTutorAprobada') || '{}');
+      setTutorData({
+        universidad: solicitudAprobada.universidad || '',
+        titulo: solicitudAprobada.titulo || '',
+        certificacion: solicitudAprobada.certificacion || '',
+        entidad: solicitudAprobada.entidad || '',
+        año: solicitudAprobada.año || ''
+      });
+    } else {
+      setShowTutorSection(false);
+      setTutorData(null);
+    }
+  }, []);
 
   const handleEdit = () => {
-    setIsEditing(true);
     setEditData(profileData);
+    setIsEditing(true);
   };
 
-  const handleSave = () => {
-    setProfileData(editData);
-    setIsEditing(false);
+  const handleSave = async () => {
+    const updated = { ...editData };
+
+    const res = await fetch('/api/usuario', {
+      method: 'PUT',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated)
+    });
+
+    if (res.ok) {
+      setProfileData(updated);
+      setIsEditing(false);
+      localStorage.setItem('nombreCompleto', updated.nombreCompleto);
+      localStorage.setItem('email', updated.email);
+    } else {
+      alert("❌ Error al guardar los cambios.");
+    }
   };
 
   const handleCancel = () => {
@@ -55,6 +124,24 @@ const UserProfile = () => {
     setShowImageUpload(false);
   };
 
+  const handlePasswordChange = async () => {
+    try {
+      const response = await fetch('/api/cambiarContrasena', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: profileData.email,
+          contrasenaActual: currentPassword,
+          contrasenaNueva: newPassword
+        })
+      });
+      const data = await response.json();
+      setPasswordMessage(data.message);
+    } catch (error) {
+      setPasswordMessage("Error al actualizar contraseña.");
+    }
+  };
+
   return (
     <div className="profile-container">
       <div className="profile-header">
@@ -63,23 +150,20 @@ const UserProfile = () => {
       </div>
 
       <div className="profile-content">
-        {/* Avatar Section */}
+        {/* Avatar */}
         <div className="avatar-section">
           <div className="avatar-container">
             <div className="avatar-wrapper">
               <Image
                 src={isEditing ? editData.avatar : profileData.avatar}
-                alt="Avatar del usuario"
+                alt="Avatar"
                 width={120}
                 height={120}
                 className="profile-avatar"
               />
               {isEditing && (
                 <div className="avatar-overlay" onClick={() => setShowImageUpload(true)}>
-                  <svg className="camera-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                  📷
                 </div>
               )}
             </div>
@@ -97,127 +181,160 @@ const UserProfile = () => {
                   <label htmlFor="avatar-upload" className="upload-button">
                     Seleccionar imagen
                   </label>
-                  <button 
-                    onClick={() => setShowImageUpload(false)}
-                    className="cancel-upload"
-                  >
-                    Cancelar
-                  </button>
+                  <button onClick={() => setShowImageUpload(false)} className="cancel-upload">Cancelar</button>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Profile Info Section */}
+        {/* Información Personal */}
         <div className="info-section">
           <div className="info-header">
             <h2>Información Personal</h2>
             {!isEditing ? (
-              <button onClick={handleEdit} className="edit-button">
-                <svg className="edit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Editar
-              </button>
+              <button onClick={handleEdit} className="edit-button">Editar</button>
             ) : (
               <div className="action-buttons">
-                <button onClick={handleSave} className="save-button">
-                  <svg className="save-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Guardar
-                </button>
-                <button onClick={handleCancel} className="cancel-button">
-                  <svg className="cancel-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  Cancelar
-                </button>
+                <button onClick={handleSave} className="save-button">Guardar</button>
+                <button onClick={handleCancel} className="cancel-button">Cancelar</button>
               </div>
             )}
           </div>
 
           <div className="info-grid">
             <div className="info-field">
-              <label className="field-label">Nombre completo</label>
+              <label>Nombre completo</label>
               {!isEditing ? (
-                <p className="field-value">{profileData.name}</p>
+                <p>{profileData.nombreCompleto}</p>
               ) : (
                 <input
                   type="text"
-                  value={editData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="field-input"
+                  value={editData.nombreCompleto}
+                  onChange={(e) => handleInputChange('nombreCompleto', e.target.value)}
                 />
               )}
             </div>
 
             <div className="info-field">
-              <label className="field-label">Correo electrónico</label>
+              <label>Nombre de usuario</label>
               {!isEditing ? (
-                <p className="field-value">{profileData.email}</p>
+                <p>{profileData.user_name}</p>
+              ) : (
+                <input
+                  type="text"
+                  value={editData.user_name}
+                  onChange={(e) => handleInputChange('user_name', e.target.value)}
+                />
+              )}
+            </div>
+
+            <div className="info-field">
+              <label>Correo electrónico</label>
+              {!isEditing ? (
+                <p>{profileData.email}</p>
               ) : (
                 <input
                   type="email"
                   value={editData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="field-input"
                 />
               )}
             </div>
 
             <div className="info-field">
-              <label className="field-label">Teléfono</label>
+              <label>Teléfono</label>
               {!isEditing ? (
-                <p className="field-value">{profileData.phone}</p>
+                <p>{profileData.telefono}</p>
               ) : (
                 <input
                   type="tel"
-                  value={editData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  className="field-input"
+                  value={editData.telefono}
+                  onChange={(e) => handleInputChange('telefono', e.target.value)}
                 />
               )}
             </div>
 
             <div className="info-field full-width">
-              <label className="field-label">Biografía</label>
+              <label>Biografía</label>
               {!isEditing ? (
-                <p className="field-value">{profileData.bio}</p>
+                <p>{profileData.bio}</p>
               ) : (
                 <textarea
+                  rows={3}
                   value={editData.bio}
                   onChange={(e) => handleInputChange('bio', e.target.value)}
-                  className="field-textarea"
-                  rows={3}
                 />
               )}
             </div>
           </div>
         </div>
 
-        {/* Security Section */}
+        {/* Mostrar sección académica SOLO si es tutor aprobado */}
+        {showTutorSection && tutorData && (
+          <div className="info-section" style={{ marginTop: '2rem', backgroundColor: '#f0f4f8' }}>
+            <h2>Información Académica (Tutor)</h2>
+            <div className="info-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="info-field">
+                <label>Universidad</label>
+                <p>{tutorData.universidad || 'No registrado'}</p>
+              </div>
+              <div className="info-field">
+                <label>Título</label>
+                <p>{tutorData.titulo || 'No registrado'}</p>
+              </div>
+              <div className="info-field">
+                <label>Certificación</label>
+                <p>{tutorData.certificacion || 'No registrado'}</p>
+              </div>
+              <div className="info-field">
+                <label>Entidad emisora</label>
+                <p>{tutorData.entidad || 'No registrado'}</p>
+              </div>
+              <div className="info-field">
+                <label>Año</label>
+                <p>{tutorData.año || 'No registrado'}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Seguridad */}
         <div className="security-section">
           <h2>Seguridad</h2>
           <div className="security-options">
-            <button className="security-button">
-              <svg className="security-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              Cambiar contraseña
-            </button>
-            <button className="security-button">
-              <svg className="security-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              Autenticación de dos factores
-            </button>
+            <button className="security-button" onClick={() => setShowPasswordModal(true)}>Cambiar contraseña</button>
+            <button className="security-button">Autenticación de dos factores</button>
           </div>
         </div>
+
+        {showPasswordModal && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>🔐 Cambiar contraseña</h3>
+              <input
+                type="password"
+                placeholder="Contraseña actual"
+                className="txtbox"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Nueva contraseña"
+                className="txtbox"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <button className="modal-btn" onClick={handlePasswordChange}>Guardar</button>
+              <button className="modal-btn" onClick={() => setShowPasswordModal(false)}>Cancelar</button>
+              {passwordMessage && <p className="mensaje-texto">{passwordMessage}</p>}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default UserProfile;
+export default Perfil;

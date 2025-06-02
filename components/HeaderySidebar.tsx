@@ -1,12 +1,15 @@
-import Header from '@/components/HeaderLog';
-import Sidebar from '@/components/SidebarEst';
+'use client';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+import React from 'react';
+import Header from '@/components/HeaderLog';
+import SidebarWrapper from '@/components/SidebarWrapper';
+
+const HeaderySidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="layout-container">
       <Header />
       <div className="main-layout">
-        <Sidebar />
+        <SidebarWrapper />
         <main className="content-area">
           {children}
         </main>
@@ -15,4 +18,4 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default Layout;
+export default HeaderySidebar;

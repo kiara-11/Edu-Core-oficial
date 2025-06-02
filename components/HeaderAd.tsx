@@ -4,19 +4,11 @@ import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './headerySide.module.css';
-const Header = () => {
+
+const HeaderAdmin = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [nombreCompleto, setNombreCompleto] = useState('');
-  const [correoUsuario, setCorreoUsuario] = useState('');
   const router = useRouter();
-
-  useEffect(() => {
-    const nombre = localStorage.getItem('nombreCompleto');
-    const correo = localStorage.getItem('email');
-    if (nombre) setNombreCompleto(nombre);
-    if (correo) setCorreoUsuario(correo);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -55,8 +47,7 @@ const Header = () => {
 
           <div className={styles.userSection} ref={dropdownRef}>
             <div className={styles.userInfo} onClick={toggleDropdown}>
-              <p className={styles.userName}>{nombreCompleto || 'Usuario'}</p>
-              <p className={styles.userProfile}>Mi Perfil</p>
+              <p className={styles.adminLabel}>Administración</p>
             </div>
             <div className={styles.userAvatar} onClick={toggleDropdown}>
               <Image
@@ -69,29 +60,6 @@ const Header = () => {
 
             {isDropdownOpen && (
               <div className={styles.dropdownMenu}>
-                <div className={styles.dropdownHeader}>
-                  <div className={styles.dropdownAvatar}>
-                    <Image
-                      src="/Imagen de WhatsApp 2024-11-13 a las 19.33.07_84c43483.png"
-                      alt="Avatar"
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <div className={styles.dropdownInfo}>
-                    <p className={styles.dropdownName}>{nombreCompleto || 'Usuario'}</p>
-                    <p className={styles.dropdownEmail}>{correoUsuario || 'correo@ejemplo.com'}</p>
-                  </div>
-                </div>
-
-                <div className={styles.dropdownDivider}></div>
-
-                <div className={styles.dropdownItem}>
-                  <a href="/miperfil" className={styles.dropdownLink}>
-                    Ver perfil
-                  </a>
-                </div>
-
                 <div className={styles.dropdownItem}>
                   <button onClick={handleLogout} className={styles.dropdownLink}>
                     Cerrar sesión
@@ -106,4 +74,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderAdmin;

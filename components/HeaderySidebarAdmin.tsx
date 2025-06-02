@@ -1,4 +1,4 @@
-import Header from '@/components/HeaderLog';
+import Header from '@/components/HeaderAd';
 import SidebarAdmin from '@/components/SidebarAdmin';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
