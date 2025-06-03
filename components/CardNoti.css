@@ -5,9 +5,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    max-width: 800px; /* ancho más manejable */
+    max-width: 1200px;
     margin: 0 auto;
-    box-sizing: border-box;
 }
 
 .notititl {
@@ -42,7 +41,7 @@
     background: #F8F3E9;
     box-sizing: border-box;
     /* Sombra suave para dar profundidad */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .imagecanoti {
@@ -168,34 +167,34 @@
 }
 
 @media screen and (max-width: 768px) {
-  .cardcontent {
-    flex-direction: column;
-    width: 100%;
-    height: auto;
-    padding: 15px 20px;
-    gap: 15px;
-  }
+    .cardcontent {
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        padding: 15px 20px;
+        gap: 15px;
+    }
 
-  .imagecanoti {
-    width: 80px;
-    height: 80px;
-  }
+    .imagecanoti {
+        width: 80px;
+        height: 80px;
+    }
 
-  .infocanoti {
-    width: 100%;
-  }
+    .infocanoti {
+        width: 100%;
+    }
 
-  .xtracanoti {
-    width: 100%;
-    justify-content: center;
-  }
+    .xtracanoti {
+        width: 100%;
+        justify-content: center;
+    }
 
-  .buttnnoti {
-    width: 100%;
-  }
+    .buttnnoti {
+        width: 100%;
+    }
 
-  .notititl {
-    font-size: 32px;
-    width: 100%;
-  }
+    .notititl {
+        font-size: 32px;
+        width: 100%;
+    }
 }

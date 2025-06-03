@@ -18,7 +18,7 @@ const LICP3 = () => {
                 <p className='mintiti'>Explora los cursos que tenemos para ofrecerte, registrate y se parte de nuestra comunidad.</p>
                 <div className='CbtnExp'>
 
-                    <Link href="/explorar" className="btExCu">
+                    <Link href="/explorarcurso" className="btExCu">
                         <p className='txbtncu'>Explorar cursos</p>
                     </Link>
                     <Link href="/novedades" className="btExCu">

@@ -9,7 +9,7 @@ function Sobren() {
       photo: "/kiara-photo.png"
     },
     {
-      name: "Mauricio David Mercado",
+      name: "Mauricio David Menacho Triguero",
       role: "Estudiante de la carrera de Ingeniería de Sistemas",
       photo: "/mauricio-photo.png"
     },

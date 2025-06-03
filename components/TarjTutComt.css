@@ -219,6 +219,7 @@
 
 .Tarjtutnew {
   display: flex;
+  min-width: 300px;
   width: 300px;
   height: 360px;
   padding: 20px;
@@ -228,6 +229,8 @@
   border-radius: 10px;
   border: 1px solid #0B7077;
   background: var(--sds-color-background-default-default);
+  flex-shrink: 0;
+  /* evita que se achiquen en scroll horizontal */
 }
 
 .newtutim {
