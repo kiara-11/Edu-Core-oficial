@@ -5,6 +5,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Variables agregadas desde Certificate.module.css y ReportPreview.module.css */
+  --primary-color: #0b7077;
+  --text-color: #333;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,9 +17,11 @@
     --foreground: #ededed;
   }
 }
+
 html {
   scroll-behavior: smooth;
 }
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -23,26 +29,21 @@ body {
   background-color: #fff;
   color: #000;
 }
+
 h3 {
   margin-left: 0px;
-  font-family: Raleway;
-}
-h4{
-  margin-left: 222px;
-  font-family: Raleway;
-}
-h4 {
-  font-size: 22px;
   font-family: 'Raleway', sans-serif;
+  font-size: 25px;
+  color: #0B7077;
+}
+
+h4 {
+  margin-left: 222px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 22px;
 }
 
 h5 {
   font-size: 16px;
   font-family: 'Raleway', sans-serif;
-}
-
-h3 {
-  font-size: 25px;
-  font-family: 'Raleway', sans-serif;
-  color: #0B7077;
 }
