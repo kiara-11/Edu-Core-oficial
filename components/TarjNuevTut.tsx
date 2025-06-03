@@ -1,9 +1,9 @@
-import React from 'react'
-import Image from "next/image";
-import Link from "next/link";
-import "./TarjTutComt.css";
+// TarjNuevTut.tsx
+import React from 'react';
+import Image from 'next/image';
+import './TarjTutComt.css';
 
-const TarjNuevTut = () => {
+const TarjNuevTut = ({ curso }: { curso: any }) => {
     return (
         <div className="Tarjtutnew">
             <Image
@@ -11,22 +11,16 @@ const TarjNuevTut = () => {
                 src="/zrimage.png"
                 width={500}
                 height={500}
-                alt={"Logo Hotel Pairumani"}
+                alt="Logo Hotel Pairumani"
             />
             <div className="nwtutinf">
-                <p className="nwtutname">Insert Teacher’s name here</p>
-                <p className="nwtutarea">Insert area</p>
+                <p className="nwtutname">{curso.nom_curso}</p>
+                <p className="nwtutarea">{curso.discripcion}</p>
                 <div className='newtutbutcont'>
-                    <div className="contButComt">
-                        <Link href="/miscursos" className="ButComt">
-                            <p className="TxtButComt">VER DETALLES</p>
-                        </Link>
-                    </div>
-                </div>
+                </div>  
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default TarjNuevTut
+export default TarjNuevTut;

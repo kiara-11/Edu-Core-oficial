@@ -7,7 +7,6 @@
     justify-content: flex-start;
     max-width: 1200px;
     margin: 0 auto;
-    margin: 120px auto 30px auto; 
 }
 
 .titnovd {
@@ -63,12 +62,16 @@
     /* pequeño movimiento hacia arriba */
 }
 
-
 .TutNuev {
     display: flex;
     height: 380px;
     align-items: center;
     gap: 20px;
     align-self: stretch;
-    overflow-x: auto;
+
+    overflow-x: auto;   /* scroll horizontal */
+    overflow-y: hidden; /* sin scroll vertical */
+
+    flex-wrap: nowrap;  /* una sola fila */
+    -webkit-overflow-scrolling: touch; /* suavidad en iOS */
 }
