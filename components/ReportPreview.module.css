@@ -1,10 +1,5 @@
 /* components/ReportsPage.module.css */
-:root {
-  --primary-color: #0b7077;
-  --text-color: #333;
-  --border-radius: 4px;
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+
 
 .container {
   max-width: 1024px;
