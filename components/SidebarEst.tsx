@@ -11,7 +11,7 @@ const Sidebar = () => {
     { name: 'Mis cursos', href: '/miscursos' },
     { name: 'Novedades', href: '/novedades' },
     { name: 'Notificaciones', href: '/notificaciones' },//cambiar links por el correspondiente page
-    { name: 'Explorar cursos', href: '/explorar' },
+    { name: 'Explorar cursos', href: '/explorarcurso' },
     { name: 'Convertirme en Tutor', href: '/formulario' },
     { name: 'Control de Pagos', href: '/pagos'}
   ];
