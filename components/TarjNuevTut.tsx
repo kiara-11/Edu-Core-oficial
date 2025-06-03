@@ -17,7 +17,7 @@ const TarjNuevTut = ({ curso }: { curso: any }) => {
                 <p className="nwtutname">{curso.nom_curso}</p>
                 <p className="nwtutarea">{curso.discripcion}</p>
                 <div className='newtutbutcont'>
-                </div>
+                </div>  
             </div>
         </div>
     );
