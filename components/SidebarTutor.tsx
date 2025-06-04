@@ -11,10 +11,10 @@ const Sidebar = () => {
     { name: 'Inicio', href: '/Inicio' },
     { name: 'Novedades', href: '/novedades' },
     { name: 'Notificaciones', href: '/notificaciones' },
-    { name: 'Mis cursos', href: '/miscursos' },//cambiar links por el correspondiente page
+    { name: 'Mis cursos', href: '/miscursostutor' },//cambiar links por el correspondiente page
     { name: 'Explorar cursos', href: '/explorarcurso' },
     { name: 'Publicar un curso', href: '/publicarcurso' },
-    { name: 'Control de Pagos', href: '/pagos'}
+    { name: 'Control de Pagos', href: '/pagos' }
   ];
 
   return (
