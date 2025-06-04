@@ -266,8 +266,16 @@
   font-style: normal;
   font-weight: var(--sds-typography-heading-font-weight);
   line-height: 120%;
-  /* 30px */
   letter-spacing: -0.5px;
+
+  /* Control de texto largo */
+  max-width: 100%;
+  white-space: nowrap;
+  /* Evita salto de línea */
+  overflow: hidden;
+  /* Oculta lo que no cabe */
+  text-overflow: ellipsis;
+  /* Muestra "..." al cortar */
 }
 
 .nwtutarea {
@@ -279,4 +287,10 @@
   font-weight: 500;
   line-height: normal;
   letter-spacing: 0.4px;
+
+  /* Control para posibles textos largos */
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

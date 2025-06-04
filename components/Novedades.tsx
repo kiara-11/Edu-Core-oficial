@@ -7,32 +7,31 @@ import TarjNuevTut from './TarjNuevTut';
 import Link from 'next/link';
 
 const Novedades = () => {
-    const [cursos, setCursos] = useState<any[]>([]); // aseguramos que sea un array
+    const [tutores, setTutores] = useState<any[]>([]); // aseguramos que sea un array
 
     useEffect(() => {
-        const fetchCursos = async () => {
+        const fetchTutores = async () => {
             try {
-                const res = await fetch('/api/curso');
+                const res = await fetch('/api/tutores');
                 if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
-                const data = await res.json(); // data ya es un array
+                const data = await res.json();
                 console.log("Cursos recibidos:", data);
 
                 if (Array.isArray(data)) {
-                    setCursos(data);
+                    setTutores(data);
                 } else {
                     console.warn("La respuesta no es un arreglo:", data);
-                    setCursos([]);
+                    setTutores([]);
                 }
             } catch (error) {
                 console.error('Error al obtener cursos:', error);
-                setCursos([]);
+                setTutores([]);
             }
         };
 
-        fetchCursos();
+        fetchTutores();
     }, []);
-
 
     return (
         <div className='novdads'>
@@ -40,26 +39,24 @@ const Novedades = () => {
 
             <p className='subtitnovd'>Nuevos cursos</p>
             <div className='CurNuev'>
-                <TarjBusq />
-                <TarjBusq />
-                <TarjBusq />
+                {tutores.slice(0, 3).map((tutor, index) => (
+                    <TarjBusq key={index} tutor={tutor} />
+                ))}
                 <a
-                    href="/explorar"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="/explorarcurso"
                     className="VMasNuCu"
                 >
                     VER MÁS
                 </a>
+
             </div>
 
             <p className='subtitnovd'>Nuevos Tutores</p>
             <div className='TutNuev'>
-                {cursos.slice(0, 4).map((curso, index) => (
-                    <TarjNuevTut key={index} curso={curso} />
+                {tutores.slice(0, 4).map((tutor, index) => (
+                    <TarjNuevTut key={index} tutor={tutor} />
                 ))}
             </div>
-
         </div>
     );
 };

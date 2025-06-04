@@ -9,7 +9,7 @@ const Sidebar = () => {
   const menuItems = [
     { name: 'Gestión de roles', href: '/adminrol' },
     { name: 'Aprobación de cursos', href: '/admintutor' },
-    { name: 'Aprobación de certificados', href: '/notificaciones' },
+    { name: 'Aprobación de certificados', href: '/Certificado' },
     { name: 'Control de pagos', href: '/miscursos' }//cambiar links por el correspondiente page
   ];
 

@@ -25,7 +25,6 @@ const Roladmi: React.FC = () => {
     ambos: false
   });
 
-  // Cargar usuarios desde API y roles desde localStorage
   useEffect(() => {
     async function fetchUsers() {
       try {
@@ -33,10 +32,13 @@ const Roladmi: React.FC = () => {
         if (!res.ok) throw new Error('Error al obtener usuarios');
         const data: User[] = await res.json();
 
+        // Eliminar usuarios duplicados por email
+        const uniqueUsers = Array.from(new Map(data.map(u => [u.email, u])).values());
+
         const storedRoles = localStorage.getItem('rolesUsuarios');
         const roles: Record<string, string> = storedRoles ? JSON.parse(storedRoles) : {};
 
-        const usuariosConRoles = data.map(u => ({
+        const usuariosConRoles = uniqueUsers.map(u => ({
           ...u,
           role: roles[u.email] || 'Estudiante',
           status: roles[u.email] ? 'Activo' : 'Pendiente'
@@ -47,10 +49,10 @@ const Roladmi: React.FC = () => {
         console.error(error);
       }
     }
+
     fetchUsers();
   }, []);
 
-  // Filtrar usuarios
   const filteredUsers = users.filter(user => {
     const matchesRole = filterRole === 'Todos' || user.role === filterRole;
     const matchesSearch =
@@ -161,7 +163,7 @@ const Roladmi: React.FC = () => {
             </div>
 
             {filteredUsers.map(user => (
-              <div key={user.email} className={styles.tableRow}>
+              <div key={user.id} className={styles.tableRow}>
                 <div className={styles.avatarCell}>
                   <img src={user.avatar} alt={user.name} />
                 </div>

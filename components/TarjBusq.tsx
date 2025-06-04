@@ -3,7 +3,25 @@ import Image from "next/image";
 import "./TarjBusq.css";
 import Link from "next/link";
 
-const TarjBusq = () => {
+
+
+
+
+interface TarjBusqProps {
+  tutor: {
+    Nombre: string;
+    ApePat: string;
+    ApeMat: string;
+    nom_curso: string;
+    discripcion: string;
+  };
+}
+
+const TarjBusq: React.FC<TarjBusqProps> = ({ tutor }) => {
+  const nombreTutor = `${tutor.Nombre} ${tutor.ApePat} ${tutor.ApeMat}`;
+  const nombreClase = tutor.nom_curso;
+  const descripcion = tutor.discripcion;
+
   return (
     <div className="ContTarjBus">
       <div className="ImaTarjBusq">
@@ -16,9 +34,9 @@ const TarjBusq = () => {
         />
       </div>
       <div className="DataTeachTB">
-        <p className="NombreTeaTB">Insert Teacher’s name here</p>
-        <p className="NomClassTB">Insert Class name here</p>
-        <p className="DescTB">Insert Description here</p>
+        <p className="NombreTeaTB">{nombreTutor}</p>
+        <p className="NomClassTB">{nombreClase}</p>
+        <p className="DescTB">{descripcion}</p>
       </div>
       <div className="RatinTeachTB">
         <div className="califTeaTB">

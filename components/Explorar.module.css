@@ -7,7 +7,7 @@
   min-height: 100vh;
   box-sizing: border-box;
   overflow-x: hidden;
-  margin: 130px auto 30px auto; 
+  margin: 130px auto 30px auto;
 }
 
 .searchSection {
@@ -90,24 +90,38 @@
 }
 
 .tutorCard {
-  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  background-color: #fff;
   border: 2px solid #4a90e2;
   border-radius: 16px;
   padding: 20px;
+
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
   text-align: center;
-  height: fit-content;
-  min-height: 380px;
   box-sizing: border-box;
-  width: 100%;
+
+  /* Tamaños fijos mínimos para evitar deformación */
+  min-height: 480px;
+  /* aumenta el alto mínimo */
+  max-height: 100%;
+  /* para evitar recortes */
+  min-width: 280px;
+  /* para mantener proporción */
   max-width: 100%;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .tutorCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
+
 
 .tutorHeader {
   display: flex;
@@ -294,16 +308,16 @@
     padding: 15px;
     max-width: 100vw;
   }
-  
+
   .tutorGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
-  
+
   .filterSection {
     gap: 10px;
   }
-  
+
   .filterSelect {
     min-width: 150px;
   }
@@ -314,51 +328,51 @@
     padding: 15px;
     max-width: 100vw;
   }
-  
+
   .searchSection {
     padding: 20px;
     margin-bottom: 20px;
   }
-  
+
   .searchInput {
     font-size: 14px;
   }
-  
+
   .filterSection {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .filterSelect {
     min-width: 100%;
   }
-  
+
   .tutorGrid {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .tutorCard {
     padding: 15px;
     min-height: auto;
   }
-  
+
   .tutorSubject {
     font-size: 24px;
   }
-  
+
   .tutorName {
     font-size: 18px;
   }
-  
+
   .tutorDescription h4 {
     font-size: 18px;
   }
-  
+
   .tutorDescription p {
     font-size: 16px;
   }
-  
+
   .registerSection {
     flex-direction: column;
     gap: 15px;
@@ -371,21 +385,21 @@
     padding: 10px;
     max-width: 100vw;
   }
-  
+
   .searchSection {
     padding: 15px;
   }
-  
+
   .searchInput {
     font-size: 16px;
     padding: 10px 12px;
   }
-  
+
   .searchButton {
     padding: 10px 15px;
     font-size: 14px;
   }
-  
+
   .tutorCard {
     padding: 12px;
   }
