@@ -58,13 +58,32 @@ h2 {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   display: inline-block;
   margin: 20px 0;
+  justify-content: center;
+  align-items: center;     /* centra verticalmente */
 }
 
 .qr-img {
   width: 160px;
   height: 160px;
   margin-bottom: 10px;
+  justify-content: center;
+  align-items: center;     /* centra verticalmente */
 }
+
+/* Centra el texto del título */
+.titulo-seccion,
+.centro {
+  text-align: center;
+}
+
+/* Centra la imagen del QR */
+.qr-img {
+  display: block;
+  margin: 0 auto;
+  max-width: 200px; /* opcional, ajusta según tamaño deseado */
+  height: auto;
+}
+
 
 .monto {
   margin: 10px 0;
@@ -110,4 +129,12 @@ h2 {
   width: 3.5cm;
   height: 2cm;
   object-fit: cover; /* Asegura que la imagen se recorte bien si es necesario */
+}
+
+.dos-tarjetas {
+  display: flex;
+  flex-direction: row;
+  width: 15cm;
+  gap: 1cm;
+  margin: 0 auto; /* <-- centra horizontalmente */
 }

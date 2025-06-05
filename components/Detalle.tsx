@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react';
 import styles from './Detalle.module.css';
+import Link2 from 'next/link';
+
 
 interface CourseDetailProps {
   course?: {
@@ -328,9 +330,11 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
             </div>
           </div>
           
-          <button className={styles.enrollButton}>
-            INSCRIBIRME AHORA
-          </button>
+          <Link2 href="/Inscribirsecurso">
+            <button className={styles.enrollButton}>
+              INSCRIBIRME AHORA
+            </button>
+          </Link2>
           
           <div className={styles.courseMetadata}>
             <div className={styles.metadataRow}>

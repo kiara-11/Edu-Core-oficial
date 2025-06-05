@@ -6,7 +6,7 @@ import "./InscribirseCurso.css";
 const InscribirseCurso = () => {
   return (
     <div className="inscripcion-container">
-      <h1>Inscribirse a un Curso</h1>
+      <h1>Datos de la Inscripción</h1>
       <div className="inscripcion-content">
 
         {/* Tarjeta de Curso */}
@@ -35,8 +35,6 @@ const InscribirseCurso = () => {
           Completa tu Inscripción
           </h3>
           <label>Observaciones (Opcional)</label>
-          <textarea
-          ></textarea>
           <input type="text" placeholder="Escribe aquí tus necesidades, horarios preferidos, etc." />
 
 
