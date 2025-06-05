@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import styles from './Explorar2.module.css';
+import styles from './Explorar.module.css';
 import Link from "next/link";
 
 interface Course {
