@@ -1,120 +1,101 @@
-'use client'
+'use client';
+
 import { useState, useEffect } from 'react';
-import styles from './Explorar.module.css';
+import styles from './Explorar2.module.css';
 import Link from "next/link";
 
-interface Curso {
+interface Course {
   id: number;
-  titulo: string;
+  title: string;
   instructor: string;
-  descripcion: string;
-  categoria: string;
-  nivel: string;
-  modalidad: string;
-  precio: number;
-  duracion: string;
-  imagen?: string;
-  instructorFoto?: string;
+  description: string;
+  duration: string;
   rating: number;
-  reviewCount: number;
-  totalInscritos: number;
+  reviews: number;
+  price: number;
+  imageUrl: string;
+  category: string;
+  level: string;
+  modality: string;
 }
 
-const CursosGrid = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedLevel, setSelectedLevel] = useState('');
-  const [selectedModality, setSelectedModality] = useState('');
-  const [selectedPrice, setSelectedPrice] = useState('');
-  const [cursos, setCursos] = useState<Curso[]>([]);
+// Imagen por defecto en caso de error
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=300&fit=crop';
+
+export default function CourseExplorer() {
+  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [levelFilter, setLevelFilter] = useState('');
+  const [modalityFilter, setModalityFilter] = useState('');
+  const [priceFilter, setPriceFilter] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
 
-  // Opciones para los filtros
-  const categories = ['Ciencias Exactas', 'Humanidades', 'Idiomas', 'Artes', 'Tecnología', 'Negocios'];
-  const levels = ['Básico/Primaria', 'Secundaria', 'Universidad', 'Posgrado'];
-  const modalities = ['Presencial/Virtual/Presencial', 'Solo Virtual', 'Solo Presencial'];
-  const priceRanges = ['10-20 Bs', '20-30 Bs', '30-40 Bs', '40 Bs +'];
-
-  // Obtener cursos de la API
+  // Cargar cursos desde la API
   useEffect(() => {
-    const fetchCursos = async () => {
-      try {
-        console.log('Iniciando fetch de cursos...');
-        const response = await fetch('/api/explorar');
-        console.log('Respuesta recibida:', response.status, response.statusText);
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Error en la API:', errorData);
-          throw new Error(`Error ${response.status}: ${errorData.error} - ${errorData.details}`);
-        }
-        
-        const data = await response.json();
-        console.log('Datos recibidos:', data);
-        setCursos(data.cursos);
-      } catch (error) {
-        console.error('Error completo:', error);
-        setError(`Error al cargar los cursos: ${error}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCursos();
+    fetchCourses();
   }, []);
 
-  // Filtrar cursos
-  const filteredCursos = cursos.filter(curso => {
-    const matchesSearch = curso.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         curso.instructor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         curso.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = !selectedCategory || curso.categoria === selectedCategory;
-    const matchesLevel = !selectedLevel || curso.nivel === selectedLevel;
-    const matchesModality = !selectedModality || curso.modalidad.includes(selectedModality.replace('Solo ', ''));
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/explorarcurso');
+      const data = await response.json();
+      
+      if (data.success) {
+        setCourses(data.courses);
+      } else {
+        setError('Error al cargar los cursos');
+      }
+    } catch (err) {
+      setError('Error de conexión');
+      console.error('Error fetching courses:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         course.instructor.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !categoryFilter || course.category === categoryFilter;
+    const matchesLevel = !levelFilter || course.level === levelFilter;
+    const matchesModality = !modalityFilter || course.modality === modalityFilter;
     
     let matchesPrice = true;
-    if (selectedPrice) {
-      const [min, max] = selectedPrice.split('-').map(p => parseInt(p.replace(/[^\d]/g, '')));
-      if (selectedPrice.includes('+')) {
-        matchesPrice = curso.precio >= min;
-      } else {
-        matchesPrice = curso.precio >= min && curso.precio <= max;
+    if (priceFilter) {
+      if (priceFilter === '0-50') {
+        matchesPrice = course.price >= 0 && course.price <= 50;
+      } else if (priceFilter === '50-100') {
+        matchesPrice = course.price > 50 && course.price <= 100;
+      } else if (priceFilter === '100+') {
+        matchesPrice = course.price > 100;
       }
     }
-
+    
     return matchesSearch && matchesCategory && matchesLevel && matchesModality && matchesPrice;
   });
 
-  // Renderizar estrellas
   const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, index) => (
-      <span key={index} className={index < Math.floor(rating) ? styles.starFilled : styles.starEmpty}>
+    return Array.from({ length: 5 }, (_, i) => (
+      <span key={i} className={i < rating ? styles.starFilled : styles.starEmpty}>
         ★
       </span>
     ));
   };
 
-  // Obtener imagen del curso o imagen genérica
-  const getCourseImage = (curso: Curso) => {
-    if (curso.imagen) {
-      return curso.imagen;
-    }
-    if (curso.instructorFoto) {
-      return curso.instructorFoto;
-    }
-    // Imagen genérica basada en la categoría
-    const genericImages = {
-      'Ciencias Exactas': '/images/generic-science.jpg',
-      'Humanidades': '/images/generic-humanities.jpg',
-      'Idiomas': '/images/generic-language.jpg',
-      'Artes': '/images/generic-arts.jpg',
-      'Tecnología': '/images/generic-tech.jpg',
-      'Negocios': '/images/generic-business.jpg'
-    };
-    return genericImages[curso.categoria as keyof typeof genericImages] || '/images/generic-course.jpg';
+  // Función para manejar errores de imagen
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    target.src = DEFAULT_IMAGE;
   };
+
+  // Obtener opciones únicas para los filtros
+  const uniqueCategories = [...new Set(courses.map(course => course.category))];
+  const uniqueLevels = [...new Set(courses.map(course => course.level))];
+  const uniqueModalities = [...new Set(courses.map(course => course.modality))];
 
   if (loading) {
     return (
@@ -130,7 +111,10 @@ const CursosGrid = () => {
     return (
       <div className={styles.container}>
         <div style={{ textAlign: 'center', padding: '50px' }}>
-          <p style={{ color: 'red' }}>{error}</p>
+          <p>Error: {error}</p>
+          <button onClick={fetchCourses} style={{ marginTop: '10px', padding: '8px 16px' }}>
+            Reintentar
+          </button>
         </div>
       </div>
     );
@@ -138,141 +122,140 @@ const CursosGrid = () => {
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.title}>Explorar Cursos</h1>
+      
       <div className={styles.searchSection}>
-        <div className={styles.searchBar}>
+        <div className={styles.searchContainer}>
           <input
             type="text"
-            placeholder="Buscar curso, instructor o tema"
+            placeholder="Busca cursos, tema o tutor"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.searchInput}
           />
-          <button className={styles.searchButton}>🔍</button>
+          <button className={styles.searchButton}>
+            🔍
+          </button>
         </div>
+        
+        <button 
+          className={styles.filterButton}
+          onClick={() => setShowFilters(!showFilters)}
+        >
+          ≡ Filtrar
+        </button>
+      </div>
 
-        <div className={styles.filterSection}>
+      {showFilters && (
+        <div className={styles.filtersContainer}>
           <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
             className={styles.filterSelect}
           >
-            <option value="">Categoría/Materia/Humanidades</option>
-            {categories.map(category => (
+            <option value="">Categoría (Inglés, Matemática, etc...)</option>
+            {uniqueCategories.map(category => (
               <option key={category} value={category}>{category}</option>
             ))}
           </select>
 
           <select
-            value={selectedLevel}
-            onChange={(e) => setSelectedLevel(e.target.value)}
+            value={levelFilter}
+            onChange={(e) => setLevelFilter(e.target.value)}
             className={styles.filterSelect}
           >
-            <option value="">Nivel/Primaria/Secundaria/Universidad</option>
-            {levels.map(level => (
+            <option value="">Nivel (Primaria, Secundaria, Universidad, etc)</option>
+            {uniqueLevels.map(level => (
               <option key={level} value={level}>{level}</option>
             ))}
           </select>
 
           <select
-            value={selectedModality}
-            onChange={(e) => setSelectedModality(e.target.value)}
+            value={modalityFilter}
+            onChange={(e) => setModalityFilter(e.target.value)}
             className={styles.filterSelect}
           >
-            <option value="">Modalidad/Virtual/Presencial</option>
-            {modalities.map(modality => (
+            <option value="">Modalidad (Virtual / Presencial)</option>
+            {uniqueModalities.map(modality => (
               <option key={modality} value={modality}>{modality}</option>
             ))}
           </select>
 
           <select
-            value={selectedPrice}
-            onChange={(e) => setSelectedPrice(e.target.value)}
+            value={priceFilter}
+            onChange={(e) => setPriceFilter(e.target.value)}
             className={styles.filterSelect}
           >
             <option value="">Precio</option>
-            {priceRanges.map(range => (
-              <option key={range} value={range}>{range}</option>
-            ))}
+            <option value="0-50">Bs. 0 - 50</option>
+            <option value="50-100">Bs. 50 - 100</option>
+            <option value="100+">Bs. 100+</option>
           </select>
         </div>
-      </div>
+      )}
 
-      <div className={styles.tutorGrid}>
-        {filteredCursos.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '50px', gridColumn: '1 / -1' }}>
+      <div className={styles.coursesGrid}>
+        {filteredCourses.length === 0 ? (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '50px' }}>
             <p>No se encontraron cursos que coincidan con los filtros seleccionados.</p>
           </div>
         ) : (
-          filteredCursos.map(curso => (
-            <div key={curso.id} className={styles.tutorCard}>
-              <div className={styles.tutorHeader}>
-                <div className={styles.tutorImageContainer}>
-                  <img 
-                    src={getCourseImage(curso)} 
-                    alt={curso.titulo} 
-                    className={styles.tutorImage}
-                    onError={(e) => {
-                      e.currentTarget.src = '/images/generic-course.jpg';
-                    }}
-                  />
-                </div>
-                <div className={styles.tutorInfo}>
-                  <h3 className={styles.tutorSubject}>{curso.titulo}</h3>
-                  <p className={styles.tutorName}>{curso.instructor}</p>
-                </div>
-              </div>
-
-              <div className={styles.tutorDescription}>
-                <h4>Descripción</h4>
-                <p>{curso.descripcion}</p>
-                {curso.duracion && (
-                  <p style={{ fontSize: '14px', color: '#888', marginTop: '8px' }}>
-                    Duración: {curso.duracion}
-                  </p>
-                )}
-              </div>
-
-              <div className={styles.tutorRating}>
-                <div className={styles.stars}>
-                  {renderStars(curso.rating)}
-                </div>
-                <span className={styles.reviewCount}>
-                  {curso.rating} ({curso.reviewCount} reseñas)
-                </span>
-              </div>
-
-              <div className={styles.tutorActions}>
-                <div className={styles.videoCallIcon}>📚</div>
-                <div className={styles.priceSection}>
-                  <span className={styles.price}>Bs {curso.precio}</span>
-                </div>
+          filteredCourses.map((course) => (
+            <div key={course.id} className={styles.courseCard}>
+              <div className={styles.courseImage}>
+                <img 
+                  src={course.imageUrl} 
+                  alt={course.title} 
+                  className={styles.courseImg}
+                  onError={handleImageError}
+                />
               </div>
               
-              <div style={{ 
-                fontSize: '14px', 
-                color: '#666', 
-                marginBottom: '15px', 
-                textAlign: 'center' 
-              }}>
-                {curso.totalInscritos} estudiantes inscritos
+              <div className={styles.courseContent}>
+                <h3 className={styles.courseTitle}>{course.title}</h3>
+                
+                <div className={styles.instructorInfo}>
+                  <img src="/avatar.png" alt="Instructor" className={styles.instructorAvatar} />
+                  <span className={styles.instructorName}>{course.instructor}</span>
+                </div>
+                
+                <p className={styles.courseDescription}>{course.description}</p>
+                
+                <div className={styles.courseDetails}>
+                  <div className={styles.detailItem}>
+                    <span className={styles.icon}>🕒</span>
+                    <span>{course.duration}</span>
+                  </div>
+                  
+                  <div className={styles.detailItem}>
+                    <span className={styles.icon}>📋</span>
+                    <span>{course.modality}</span>
+                  </div>
+                </div>
+                
+                <div className={styles.courseFooter}>
+                  <div className={styles.rating}>
+                    <div className={styles.stars}>
+                      {renderStars(course.rating)}
+                    </div>
+                    <span className={styles.reviewCount}>({course.reviews})</span>
+                  </div>
+                  
+                  <div className={styles.price}>
+                    <span className={styles.priceAmount}>Bs. {course.price}</span>
+                  </div>
+                </div>
+                
+                <Link href={`/explorar/detalles?id=${course.id}`}>
+                  <button className={styles.viewMoreButton}>
+                    VER MÁS
+                  </button>
+                </Link>
               </div>
-
-              <Link href={`/detalle/${curso.id}`}>
-                <button className={styles.verMasButton}>VER MAS</button>
-              </Link>
             </div>
           ))
         )}
       </div>
-
-      <div className={styles.registerSection}>
-        <span>¿Quieres enseñar? Únete como instructor</span>
-        <Link href="/registro-instructor">
-          <button className={styles.registerButton}>Registrarse</button>
-        </Link>
-      </div>
     </div>
   );
-};
-
-export default CursosGrid;
+}
