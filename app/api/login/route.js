@@ -13,7 +13,7 @@ export async function POST(request) {
 
     // Verificar credenciales
     const result = await sql.query`
-      SELECT u.psw, u.user_name, dp.email, CONCAT(dp.ApePat, ' ', dp.ApeMat, ' ', dp.Nombre) AS nombreCompleto
+      SELECT u.Id_user, u.psw, u.user_name, dp.email, CONCAT(dp.ApePat, ' ', dp.ApeMat, ' ', dp.Nombre) AS nombreCompleto
       FROM Usuario u
       JOIN Datos_personales dp ON u.id_dp = dp.id_dp
       WHERE dp.email = ${email}
@@ -31,11 +31,13 @@ export async function POST(request) {
 
     // Guardar en localStorage desde frontend
     return NextResponse.json({
-      token: 'ok', // solo indicativo, no es JWT
+      token: 'ok', // indicativo de éxito
+      id_user: user.Id_user, // ✅ ESTO es lo nuevo
+      user_name: user.user_name,
       email: user.email,
-      nombreCompleto: user.nombreCompleto,
-      user_name: user.user_name
-    }, { status: 200 });
+      nombreCompleto: user.nombreCompleto
+    });
+
 
   } catch (error) {
     console.error('❌ Error al iniciar sesión:', error);

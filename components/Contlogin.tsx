@@ -37,8 +37,21 @@ const Contlogin = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await response.json();
+
+      if (response.ok && data.token === 'ok') {
+        // ✅ Guardamos en localStorage
+        localStorage.setItem('id_user', data.id_user);
+        localStorage.setItem('user_name', data.user_name);
+        localStorage.setItem('email', data.email);
+        localStorage.setItem('nombreCompleto', data.nombreCompleto);
+
+        // ✅ Redirigimos si todo va bien (ajusta ruta si es necesario)
+        window.location.href = "/miscursos";
+      } else {
+        setError(data.message || "Error al iniciar sesión.");
+      }
+
 
       if (response.ok) {
         localStorage.setItem("email", email);
