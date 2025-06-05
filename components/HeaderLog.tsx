@@ -4,11 +4,14 @@ import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './headerySide.module.css';
+
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [nombreCompleto, setNombreCompleto] = useState('');
   const [correoUsuario, setCorreoUsuario] = useState('');
+  const [rolUsuario, setRolUsuario] = useState('');
+  const [loadingRole, setLoadingRole] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -16,6 +19,33 @@ const Header = () => {
     const correo = localStorage.getItem('email');
     if (nombre) setNombreCompleto(nombre);
     if (correo) setCorreoUsuario(correo);
+  }, []);
+
+  // Función para obtener el rol del usuario
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const email = localStorage.getItem('email');
+      if (!email) {
+        setRolUsuario('Estudiante'); // Asignar "Estudiante" por defecto
+        setLoadingRole(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/usuario/rol?email=${encodeURIComponent(email)}`);
+        if (!response.ok) throw new Error('No se pudo obtener el rol');
+        const data = await response.json();
+        // Si no hay rol, es null o es una cadena vacía, asignar "Estudiante" por defecto
+        setRolUsuario(data.rol && data.rol.trim() !== '' ? data.rol : 'Estudiante');
+      } catch (err) {
+        console.error('Error obteniendo el rol:', err);
+        setRolUsuario('Estudiante'); // Asignar "Estudiante" por defecto en caso de error
+      } finally {
+        setLoadingRole(false);
+      }
+    };
+
+    fetchUserRole();
   }, []);
 
   useEffect(() => {
@@ -56,6 +86,9 @@ const Header = () => {
           <div className={styles.userSection} ref={dropdownRef}>
             <div className={styles.userInfo} onClick={toggleDropdown}>
               <p className={styles.userName}>{nombreCompleto || 'Usuario'}</p>
+              <p className={styles.userRole}>
+                {loadingRole ? 'Cargando...' : rolUsuario}
+              </p>
               <p className={styles.userProfile}>Mi Perfil</p>
             </div>
             <div className={styles.userAvatar} onClick={toggleDropdown}>
@@ -77,6 +110,7 @@ const Header = () => {
                       width={40}
                       height={40}
                     />
+                    
                   </div>
                   <div className={styles.dropdownInfo}>
                     <p className={styles.dropdownName}>{nombreCompleto || 'Usuario'}</p>
@@ -105,5 +139,6 @@ const Header = () => {
     </header>
   );
 };
+
 
 export default Header;
