@@ -4,31 +4,28 @@ import React, { useState, useEffect } from 'react';
 import styles from './Gestitu.module.css';
 
 interface Documento {
+  id?: number;
   nombre: string;
-  base64: string; // URL o base64
+  base64: string;
+  tipo: 'certificado' | 'docente';
+  direccion?: string;
 }
 
 interface SolicitudTutor {
-  id: number;
-  usuario: {
-    nombre: string;
-    correo: string;
-    avatar?: string;
-  };
-  departamento: string;
-  ciudad: string;
-  celular: string;
+  id_solicitud: number;
+  user_name: string;
+  nombreCompleto: string;
+  email: string;
+  telefono?: string;
   universidad: string;
-  titulo: string;
-  certificacion: string;
-  entidad: string;
-  año: string;
-  materias: string;
+  profesion: string;
+  certificacion?: string;
+  entidad?: string;
+  anio?: number;
   modalidad: string;
   horarios: string;
   frecuencia: string;
-  documentos: Documento[];
-  certificaciones: Documento[];
+  materias: string;
   estado: 'Pendiente' | 'Aprobado' | 'Rechazado';
 }
 
@@ -37,103 +34,221 @@ const Gestitu: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<string>('Todo');
   const [searchUser, setSearchUser] = useState<string>('');
   const [selectedSolicitud, setSelectedSolicitud] = useState<SolicitudTutor | null>(null);
+  const [documentos, setDocumentos] = useState<Documento[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
+  // Cargar solicitudes al montar el componente
   useEffect(() => {
-    const stored = localStorage.getItem('solicitudesTutor');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setSolicitudes(parsed);
-        }
-      } catch (error) {
-        console.error('Error parsing solicitudesTutor from localStorage:', error);
-      }
-    }
+    fetchSolicitudes();
   }, []);
 
-  const updateLocalStorage = (newSolicitudes: SolicitudTutor[]) => {
+  // Cargar solicitudes desde la API
+  const fetchSolicitudes = async () => {
+    setLoading(true);
+    setError('');
+
     try {
-      localStorage.setItem('solicitudesTutor', JSON.stringify(newSolicitudes));
+      const params = new URLSearchParams();
+      if (filterStatus !== 'Todo') {
+        params.append('estado', filterStatus);
+      }
+      if (searchUser.trim()) {
+        params.append('busqueda', searchUser.trim());
+      }
+
+      const response = await fetch(`/api/gestionar-solicitudes?${params.toString()}`);
+      
+      if (!response.ok) {
+        throw new Error('Error al cargar las solicitudes');
+      }
+
+      const data = await response.json();
+      setSolicitudes(data);
     } catch (error) {
-      console.error('Error saving solicitudesTutor to localStorage:', error);
+      console.error('Error fetching solicitudes:', error);
+      setError('Error al cargar las solicitudes. Intenta nuevamente.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const filtered = solicitudes.filter(s => {
-    const matchesStatus = filterStatus === 'Todo' || s.estado === filterStatus;
-    const matchesSearch =
-      s.usuario.nombre.toLowerCase().includes(searchUser.toLowerCase()) ||
-      s.materias.toLowerCase().includes(searchUser.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+  // Recargar cuando cambien los filtros
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchSolicitudes();
+    }, 500); // Debounce de 500ms
 
-  const handleView = (sol: SolicitudTutor) => setSelectedSolicitud(sol);
+    return () => clearTimeout(timeoutId);
+  }, [filterStatus, searchUser]);
 
-  const handleApprove = () => {
+  // Función para cargar documentos de una solicitud específica
+const fetchDocumentos = async (universidad: string, email: string) => {
+  try {
+    const response = await fetch(
+      `/api/documentos-solicitud?universidad=${encodeURIComponent(universidad)}&email=${encodeURIComponent(email)}`
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      setDocumentos(data);
+    } else {
+      setDocumentos([]);
+    }
+  } catch (error) {
+    console.error('Error fetching documentos:', error);
+    setDocumentos([]);
+  }
+};
+
+  // Manejar visualización de solicitud
+  const handleView = async (solicitud: SolicitudTutor) => {
+  setSelectedSolicitud(solicitud);
+  await fetchDocumentos(solicitud.universidad, solicitud.email);
+};
+  // Aprobar solicitud
+  const handleApprove = async () => {
     if (!selectedSolicitud) return;
 
-    // Actualizar estado solicitud
-    const updatedSolicitudes: SolicitudTutor[] = solicitudes.map(s =>
-      s.id === selectedSolicitud.id ? { ...s, estado: 'Aprobado' } : s
-    );
-    setSolicitudes(updatedSolicitudes);
-    updateLocalStorage(updatedSolicitudes);
-    setSelectedSolicitud(null);
+    setLoading(true);
+    setError('');
 
-    // Actualizar rol en localStorage.rolesUsuarios
-    const storedRoles = localStorage.getItem('rolesUsuarios');
-    const roles: Record<string, string> = storedRoles ? JSON.parse(storedRoles) : {};
-    roles[selectedSolicitud.usuario.correo] = 'Tutor';
-    localStorage.setItem('rolesUsuarios', JSON.stringify(roles));
+    try {
+      const response = await fetch('/api/gestionar-solicitudes', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id_solicitud: selectedSolicitud.id_solicitud,
+          accion: 'aprobar',
+          email: selectedSolicitud.email
+        }),
+      });
 
-    localStorage.setItem('solicitudTutorPendiente', 'false');
-    localStorage.setItem('solicitudTutorEstado', 'Aprobado');
+      const result = await response.json();
 
-    // Guardar datos académicos del tutor aprobado en localStorage
-    const tutorDatos = {
-      universidad: selectedSolicitud.universidad,
-      titulo: selectedSolicitud.titulo,
-      certificacion: selectedSolicitud.certificacion,
-      entidad: selectedSolicitud.entidad,
-      año: selectedSolicitud.año
-    };
-    localStorage.setItem('solicitudTutorAprobada', JSON.stringify(tutorDatos));
-    localStorage.setItem('esTutorAprobado', 'true');
+      if (!response.ok) {
+        throw new Error(result.message || 'Error al aprobar la solicitud');
+      }
+
+      // Actualizar el estado local
+      setSolicitudes(prev => 
+        prev.map(s => 
+          s.id_solicitud === selectedSolicitud.id_solicitud 
+            ? { ...s, estado: 'Aprobado' as const }
+            : s
+        )
+      );
+
+      setSelectedSolicitud(null);
+      setDocumentos([]);
+      
+      // Mostrar mensaje de éxito
+      alert('Solicitud aprobada exitosamente');
+
+    } catch (error) {
+      console.error('Error al aprobar solicitud:', error);
+      setError(error instanceof Error ? error.message : 'Error al aprobar la solicitud');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReject = () => {
+  // Rechazar solicitud
+  const handleReject = async () => {
     if (!selectedSolicitud) return;
 
-    // Actualizar estado solicitud
-    const updatedSolicitudes: SolicitudTutor[] = solicitudes.map(s =>
-      s.id === selectedSolicitud.id ? { ...s, estado: 'Rechazado' } : s
-    );
-    setSolicitudes(updatedSolicitudes);
-    updateLocalStorage(updatedSolicitudes);
-    setSelectedSolicitud(null);
+    setLoading(true);
+    setError('');
 
-    // Actualizar rol en localStorage.rolesUsuarios a Estudiante
-    const storedRoles = localStorage.getItem('rolesUsuarios');
-    const roles: Record<string, string> = storedRoles ? JSON.parse(storedRoles) : {};
-    roles[selectedSolicitud.usuario.correo] = 'Estudiante';
-    localStorage.setItem('rolesUsuarios', JSON.stringify(roles));
+    try {
+      const response = await fetch('/api/gestionar-solicitudes', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id_solicitud: selectedSolicitud.id_solicitud,
+          accion: 'rechazar',
+          email: selectedSolicitud.email
+        }),
+      });
 
-    localStorage.setItem('solicitudTutorPendiente', 'false');
-    localStorage.setItem('solicitudTutorEstado', 'Rechazado');
+      const result = await response.json();
 
-    // Quitar bandera de tutor aprobado si existía
-    localStorage.removeItem('solicitudTutorAprobada');
-    localStorage.setItem('esTutorAprobado', 'false');
+      if (!response.ok) {
+        throw new Error(result.message || 'Error al rechazar la solicitud');
+      }
+
+      // Actualizar el estado local
+      setSolicitudes(prev => 
+        prev.map(s => 
+          s.id_solicitud === selectedSolicitud.id_solicitud 
+            ? { ...s, estado: 'Rechazado' as const }
+            : s
+        )
+      );
+
+      setSelectedSolicitud(null);
+      setDocumentos([]);
+      
+      // Mostrar mensaje de éxito
+      alert('Solicitud rechazada');
+
+    } catch (error) {
+      console.error('Error al rechazar solicitud:', error);
+      setError(error instanceof Error ? error.message : 'Error al rechazar la solicitud');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleClose = () => setSelectedSolicitud(null);
+  const handleClose = () => {
+    setSelectedSolicitud(null);
+    setDocumentos([]);
+  };
+
+  // Función para renderizar documentos
+  const renderDocumento = (doc: Documento, index: number) => {
+    const isBase64 = doc.base64?.startsWith('data:');
+    const filename = doc.nombre || `documento_${index + 1}.pdf`;
+    
+    if (isBase64) {
+      return (
+        <li key={index}>
+          <a
+            href={doc.base64}
+            download={filename}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.documentLink}
+          >
+            📄 {filename}
+          </a>
+        </li>
+      );
+    } else {
+      return (
+        <li key={index}>
+          <span className={styles.documentName}>📄 {filename}</span>
+          <small> (Documento no disponible)</small>
+        </li>
+      );
+    }
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.mainContent}>
         <div className={styles.card}>
           <h2 className={styles.title}>Gestión de Solicitudes de Tutor</h2>
+
+          {error && (
+            <div className={styles.errorMessage}>
+              {error}
+            </div>
+          )}
 
           <div className={styles.filters}>
             <label>
@@ -162,30 +277,43 @@ const Gestitu: React.FC = () => {
             </label>
           </div>
 
+          {loading && (
+            <div className={styles.loadingMessage}>
+              Cargando solicitudes...
+            </div>
+          )}
+
           <div className={styles.table}>
             <div className={styles.tableHeader}>
               <div>Nombre</div>
               <div>Correo</div>
+              <div>Universidad</div>
               <div>Materia</div>
               <div>Estado</div>
               <div>Acciones</div>
             </div>
 
-            {filtered.length === 0 ? (
+            {!loading && solicitudes.length === 0 ? (
               <div className={styles.noResults}>
                 No hay solicitudes que coincidan con la búsqueda.
               </div>
             ) : (
-              filtered.map(solicitud => (
-                <div key={solicitud.id} className={styles.tableRow}>
-                  <div>{solicitud.usuario.nombre}</div>
-                  <div>{solicitud.usuario.correo}</div>
+              solicitudes.map(solicitud => (
+                <div key={solicitud.id_solicitud} className={styles.tableRow}>
+                  <div>{solicitud.nombreCompleto || solicitud.user_name}</div>
+                  <div>{solicitud.email}</div>
+                  <div>{solicitud.universidad}</div>
                   <div>{solicitud.materias}</div>
-                  <div>{solicitud.estado}</div>
+                  <div>
+                    <span className={`${styles.statusBadge} ${styles[solicitud.estado.toLowerCase()]}`}>
+                      {solicitud.estado}
+                    </span>
+                  </div>
                   <div>
                     <button
                       className={styles.viewButton}
                       onClick={() => handleView(solicitud)}
+                      disabled={loading}
                     >
                       Ver
                     </button>
@@ -201,58 +329,68 @@ const Gestitu: React.FC = () => {
         <div className={styles.sidebar}>
           <div className={styles.sidebarContent}>
             <button onClick={handleClose} className={styles.closeButton}>×</button>
+            
             <h3>Detalle de Solicitud</h3>
-            <p><b>Nombre:</b> {selectedSolicitud.usuario.nombre}</p>
-            <p><b>Correo:</b> {selectedSolicitud.usuario.correo}</p>
-            <p><b>Celular:</b> {selectedSolicitud.celular}</p>
-            <p><b>Departamento:</b> {selectedSolicitud.departamento}</p>
-            <p><b>Ciudad:</b> {selectedSolicitud.ciudad}</p>
-            <p><b>Universidad:</b> {selectedSolicitud.universidad}</p>
-            <p><b>Título:</b> {selectedSolicitud.titulo}</p>
-            <p><b>Certificación:</b> {selectedSolicitud.certificacion}</p>
-            <p><b>Entidad emisora:</b> {selectedSolicitud.entidad}</p>
-            <p><b>Año:</b> {selectedSolicitud.año}</p>
-            <p><b>Materias:</b> {selectedSolicitud.materias}</p>
-            <p><b>Modalidad:</b> {selectedSolicitud.modalidad}</p>
-            <p><b>Horarios:</b> {selectedSolicitud.horarios}</p>
-            <p><b>Frecuencia:</b> {selectedSolicitud.frecuencia}</p>
-
-            <h4>Documentos:</h4>
-            <ul>
-              {selectedSolicitud.documentos.map((doc, i) => (
-                <li key={i}>
-                  <a
-                    href={doc.base64}
-                    download={doc.nombre}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {doc.nombre}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <h4>Certificaciones:</h4>
-            <ul>
-              {selectedSolicitud.certificaciones.map((cert, i) => (
-                <li key={i}>
-                  <a
-                    href={cert.base64}
-                    download={cert.nombre}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {cert.nombre}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <div className={styles.buttonGroup}>
-              <button onClick={handleApprove} className={styles.approveButton}>Aprobar</button>
-              <button onClick={handleReject} className={styles.rejectButton}>Rechazar</button>
+            
+            <div className={styles.detailSection}>
+              <h4>Información Personal</h4>
+              <p><b>Nombre:</b> {selectedSolicitud.nombreCompleto || selectedSolicitud.user_name}</p>
+              <p><b>Correo:</b> {selectedSolicitud.email}</p>
+              <p><b>Teléfono:</b> {selectedSolicitud.telefono || 'No proporcionado'}</p>
             </div>
+
+            <div className={styles.detailSection}>
+              <h4>Formación Académica</h4>
+              <p><b>Universidad:</b> {selectedSolicitud.universidad}</p>
+              <p><b>Título:</b> {selectedSolicitud.profesion}</p>
+              <p><b>Certificación:</b> {selectedSolicitud.certificacion || 'No especificada'}</p>
+              <p><b>Entidad emisora:</b> {selectedSolicitud.entidad || 'No especificada'}</p>
+              <p><b>Año:</b> {selectedSolicitud.anio || 'No especificado'}</p>
+            </div>
+
+            <div className={styles.detailSection}>
+              <h4>Perfil como Tutor</h4>
+              <p><b>Materias:</b> {selectedSolicitud.materias}</p>
+              <p><b>Modalidad:</b> {selectedSolicitud.modalidad}</p>
+              <p><b>Horarios:</b> {selectedSolicitud.horarios}</p>
+              <p><b>Frecuencia:</b> {selectedSolicitud.frecuencia}</p>
+            </div>
+
+            <div className={styles.detailSection}>
+              <h4>Documentos:</h4>
+              {documentos.length > 0 ? (
+                <ul className={styles.documentList}>
+                  {documentos.map((doc, i) => renderDocumento(doc, i))}
+                </ul>
+              ) : (
+                <p>No hay documentos disponibles</p>
+              )}
+            </div>
+
+            {selectedSolicitud.estado === 'Pendiente' && (
+              <div className={styles.buttonGroup}>
+                <button 
+                  onClick={handleApprove} 
+                  className={styles.approveButton}
+                  disabled={loading}
+                >
+                  {loading ? 'Procesando...' : 'Aprobar'}
+                </button>
+                <button 
+                  onClick={handleReject} 
+                  className={styles.rejectButton}
+                  disabled={loading}
+                >
+                  {loading ? 'Procesando...' : 'Rechazar'}
+                </button>
+              </div>
+            )}
+
+            {selectedSolicitud.estado !== 'Pendiente' && (
+              <div className={styles.statusInfo}>
+                <p>Estado actual: <strong>{selectedSolicitud.estado}</strong></p>
+              </div>
+            )}
           </div>
         </div>
       )}

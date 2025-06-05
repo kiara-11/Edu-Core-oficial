@@ -1,0 +1,206 @@
+import { connectToDb, sql } from '../../lib/db';
+import { NextResponse } from 'next/server';
+
+// Obtener todas las solicitudes
+export async function GET(request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const estado = searchParams.get('estado');
+    const busqueda = searchParams.get('busqueda');
+
+    await connectToDb();
+
+    let query = `
+      SELECT 
+        s.id_solicitud,
+        s.universidad,
+        s.profesion,
+        s.certificacion,
+        s.entidad,
+        s.anio,
+        s.modalidad,
+        s.horarios,
+        s.frecuencia,
+        s.materias,
+        s.estado,
+        u.user_name,
+        CONCAT(dp.ApePat, ' ', dp.ApeMat, ' ', dp.Nombre) AS nombreCompleto,
+        dp.email,
+        dp.telefono
+      FROM Solicitud_tutor1 s
+      JOIN Usuario u ON s.id_user = u.id_user
+      JOIN Datos_personales dp ON u.id_dp = dp.id_dp
+      WHERE 1=1
+    `;
+
+    const params = [];
+    
+    if (estado && estado !== 'Todo') {
+      query += ` AND s.estado = @estado`;
+      params.push({ name: 'estado', value: estado });
+    }
+
+    if (busqueda) {
+      query += ` AND (
+        CONCAT(dp.ApePat, ' ', dp.ApeMat, ' ', dp.Nombre) LIKE @busqueda 
+        OR s.materias LIKE @busqueda
+      )`;
+      params.push({ name: 'busqueda', value: `%${busqueda}%` });
+    }
+
+    query += ` ORDER BY s.id_solicitud DESC`;
+
+    const request_db = sql.query(query);
+    
+    // Agregar parámetros dinámicamente
+    params.forEach(param => {
+      request_db.input(param.name, param.value);
+    });
+
+    const result = await request_db;
+
+    return NextResponse.json(result.recordset, { status: 200 });
+
+  } catch (error) {
+    console.error('❌ Error al obtener solicitudes:', error);
+    return NextResponse.json({ 
+      message: 'Error interno del servidor.' 
+    }, { status: 500 });
+  }
+}
+
+// Aprobar o rechazar solicitud
+export async function PUT(request) {
+  try {
+    const { id_solicitud, accion, email } = await request.json();
+
+    if (!id_solicitud || !accion || !email) {
+      return NextResponse.json({ 
+        message: 'ID de solicitud, acción y email son requeridos.' 
+      }, { status: 400 });
+    }
+
+    if (!['aprobar', 'rechazar'].includes(accion)) {
+      return NextResponse.json({ 
+        message: 'Acción no válida.' 
+      }, { status: 400 });
+    }
+
+    await connectToDb();
+
+    const nuevoEstado = accion === 'aprobar' ? 'Aprobado' : 'Rechazado';
+
+    // Actualizar estado de la solicitud
+    await sql.query`
+      UPDATE Solicitud_tutor1 
+      SET estado = ${nuevoEstado}
+      WHERE id_solicitud = ${id_solicitud}
+    `;
+
+    // Si se aprueba, actualizar el rol del usuario
+    if (accion === 'aprobar') {
+      // Obtener el id_user del email
+      const userResult = await sql.query`
+        SELECT u.id_user
+        FROM Usuario u
+        JOIN Datos_personales dp ON u.id_dp = dp.id_dp
+        WHERE dp.email = ${email}
+      `;
+
+      if (userResult.recordset.length > 0) {
+        const id_user = userResult.recordset[0].id_user;
+
+        // Verificar si ya tiene un rol asignado
+        const roleResult = await sql.query`
+          SELECT id_Asig FROM User_roles WHERE id_user = ${id_user}
+        `;
+
+        if (roleResult.recordset.length > 0) {
+          // Actualizar rol existente a Tutor (asumiendo que id_rol = 2 es Tutor)
+          await sql.query`
+            UPDATE User_roles 
+            SET id_rol = 2
+            WHERE id_user = ${id_user}
+          `;
+        } else {
+          // Insertar nuevo rol como Tutor
+          await sql.query`
+            INSERT INTO User_roles (id_user, id_rol)
+            VALUES (${id_user}, 2)
+          `;
+        }
+
+        // Obtener datos de la solicitud para guardar en Datos_Academicos
+        const solicitudData = await sql.query`
+          SELECT universidad, profesion, certificacion, entidad, anio
+          FROM Solicitud_tutor1
+          WHERE id_solicitud = ${id_solicitud}
+        `;
+
+        if (solicitudData.recordset.length > 0) {
+          const { universidad, profesion, certificacion, entidad, anio } = solicitudData.recordset[0];
+
+          // Insertar en Datos_Academicos
+          await sql.query`
+            INSERT INTO Datos_Academicos (
+              Profesion,
+              FeInProf,
+              FeFinProf,
+              FeTit,
+              id_grad,
+              id_IF
+            )
+            VALUES (
+              ${profesion},
+              ${anio ? new Date(anio, 0, 1) : null},
+              ${anio ? new Date(anio, 11, 31) : null},
+              ${anio ? new Date(anio, 6, 1) : null},
+              1,
+              1
+            )
+          `;
+        }
+      }
+    } else {
+      // Si se rechaza, asegurar que el rol sea Estudiante
+      const userResult = await sql.query`
+        SELECT u.id_user
+        FROM Usuario u
+        JOIN Datos_personales dp ON u.id_dp = dp.id_dp
+        WHERE dp.email = ${email}
+      `;
+
+      if (userResult.recordset.length > 0) {
+        const id_user = userResult.recordset[0].id_user;
+
+        // Actualizar o insertar rol como Estudiante (asumiendo que id_rol = 1 es Estudiante)
+        const roleResult = await sql.query`
+          SELECT id_Asig FROM User_roles WHERE id_user = ${id_user}
+        `;
+
+        if (roleResult.recordset.length > 0) {
+          await sql.query`
+            UPDATE User_roles 
+            SET id_rol = 1
+            WHERE id_user = ${id_user}
+          `;
+        } else {
+          await sql.query`
+            INSERT INTO User_roles (id_user, id_rol)
+            VALUES (${id_user}, 1)
+          `;
+        }
+      }
+    }
+
+    return NextResponse.json({
+      message: `Solicitud ${nuevoEstado.toLowerCase()} exitosamente`
+    }, { status: 200 });
+
+  } catch (error) {
+    console.error('❌ Error al actualizar solicitud:', error);
+    return NextResponse.json({ 
+      message: 'Error interno del servidor.' 
+    }, { status: 500 });
+  }
+}

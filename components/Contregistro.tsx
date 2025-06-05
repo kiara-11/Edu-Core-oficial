@@ -20,6 +20,7 @@ const Contregistro = () => {
 
   const [mensaje, setMensaje] = useState("");
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [registroExitoso, setRegistroExitoso] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -44,13 +45,17 @@ const Contregistro = () => {
       const data = await res.json();
 
       if (res.ok) {
-        // ✅ Guardar en localStorage para usar en el Header
-        const nombreCompleto = `${formData.apellidoPaterno} ${formData.apellidoMaterno} ${formData.nombres}`;
-        localStorage.setItem("nombreCompleto", nombreCompleto);
-        localStorage.setItem("email", formData.email);
-
-        // ✅ Redirigir al inicio
-        router.push("/Inicio");
+        // ✅ Mostrar mensaje de éxito
+        setRegistroExitoso(true);
+        setMostrarModal(true);
+        
+        // ✅ Redirigir después de 3 segundos
+        setTimeout(() => {
+          const nombreCompleto = `${formData.apellidoPaterno} ${formData.apellidoMaterno} ${formData.nombres}`;
+          localStorage.setItem("nombreCompleto", nombreCompleto);
+          localStorage.setItem("email", formData.email);
+          router.push("/Inicio");
+        }, 3000);
       } else {
         setMensaje(data.message || "Ha ocurrido un error.");
         setMostrarModal(true);
@@ -64,97 +69,109 @@ const Contregistro = () => {
 
   const cerrarModal = () => {
     setMostrarModal(false);
+    setRegistroExitoso(false);
   };
 
   return (
     <div className="contenedorloginreg">
-      <h2 className="titulo-principal">Bienvenido a SIREAP</h2>
-      <p className="subtitulo">Crea tu cuenta y accede a clases particulares personalizadas</p>
+      <div className="contenedor-formulario">
+        <h2 className="titulo-principal">Bienvenido a SIREAP</h2>
+        <p className="subtitulo">Crea tu cuenta y accede a clases particulares personalizadas</p>
 
-      <form className="formulario-registro" onSubmit={handleSubmit}>
-        <label>
-          Nombres:
-          <input type="text" name="nombres" value={formData.nombres} onChange={handleChange} required />
-        </label>
+        <form className="formulario-registro" onSubmit={handleSubmit}>
+          <label>
+            Nombres <span className="campo-obligatorio">*</span>
+            <input type="text" name="nombres" value={formData.nombres} onChange={handleChange} required />
+          </label>
 
-        <label>
-          Apellido Paterno:
-          <input type="text" name="apellidoPaterno" value={formData.apellidoPaterno} onChange={handleChange} required />
-        </label>
+          <label>
+            Apellido Paterno <span className="campo-obligatorio">*</span>
+            <input type="text" name="apellidoPaterno" value={formData.apellidoPaterno} onChange={handleChange} required />
+          </label>
 
-        <label>
-          Apellido Materno:
-          <input type="text" name="apellidoMaterno" value={formData.apellidoMaterno} onChange={handleChange} required />
-        </label>
+          <label>
+            Apellido Materno <span className="campo-obligatorio">*</span>
+            <input type="text" name="apellidoMaterno" value={formData.apellidoMaterno} onChange={handleChange} required />
+          </label>
 
-        <label>
-          Correo Electrónico:
-          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-        </label>
+          <label>
+            Correo Electrónico <span className="campo-obligatorio">*</span>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+          </label>
 
-        <label>
-          Contraseña:
-          <input type="password" name="password" value={formData.password} onChange={handleChange} required />
-        </label>
+          <label>
+            Contraseña <span className="campo-obligatorio">*</span>
+            <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+          </label>
 
-        <label>
-          Confirmar Contraseña:
-          <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
-        </label>
+          <label>
+            Confirmar Contraseña <span className="campo-obligatorio">*</span>
+            <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
+          </label>
 
-        <label className="fecha-label">
-          Fecha de Nacimiento:
-          <div className="fecha-container">
+          <label className="fecha-label">
+            Fecha de Nacimiento <span className="campo-obligatorio">*</span>
+            <div className="fecha-container">
+              <input
+                type="date"
+                name="fechaNacimiento"
+                value={formData.fechaNacimiento}
+                onChange={handleChange}
+                required
+                className="input-fecha"
+              />
+              <span className="icono-calendario">📅</span>
+            </div>
+          </label>
+
+          <label>
+            Teléfono <span className="campo-obligatorio">*</span>
             <input
-              type="date"
-              name="fechaNacimiento"
-              value={formData.fechaNacimiento}
+              type="tel"
+              name="telefono"
+              value={formData.telefono}
               onChange={handleChange}
+              placeholder="+591"
               required
-              className="input-fecha"
             />
-            <span className="icono-calendario">📅</span>
+          </label>
+
+          <label>
+            Género <span className="campo-obligatorio">*</span>
+            <select name="genero" value={formData.genero} onChange={handleChange} required>
+              <option value="1">Femenino</option>
+              <option value="2">Masculino</option>
+            </select>
+          </label>
+
+          <p className="txtterminos">
+            Al crear o utilizar una cuenta, usted acepta nuestros{" "}
+            <a href="#" className="link-terminos">Términos de servicio</a> y{" "}
+            <a href="#" className="link-terminos">Política de privacidad</a>.
+          </p>
+
+          <button className="boton-continuar" type="submit">Continuar</button>
+        </form>
+
+        {mostrarModal && (
+          <div className="modal-overlay">
+            {registroExitoso ? (
+              <div className="modal-exito">
+                <h3>✅ ¡Registro Exitoso!</h3>
+                <p className="bienvenida">¡Bienvenido a EDUCORE!</p>
+                <p>Tu cuenta ha sido creada exitosamente. Serás redirigido automáticamente en unos segundos.</p>
+                <button className="modal-exito-btn" onClick={cerrarModal}>Continuar</button>
+              </div>
+            ) : (
+              <div className="modal">
+                <h3>⚠️ Atención</h3>
+                <p>{mensaje}</p>
+                <button className="modal-btn" onClick={cerrarModal}>Cerrar</button>
+              </div>
+            )}
           </div>
-        </label>
-
-        <label>
-          Teléfono:
-          <input
-            type="tel"
-            name="telefono"
-            value={formData.telefono}
-            onChange={handleChange}
-            placeholder="+591"
-            required
-          />
-        </label>
-
-        <label>
-          Género:
-          <select name="genero" value={formData.genero} onChange={handleChange} required>
-            <option value="1">Femenino</option>
-            <option value="2">Masculino</option>
-          </select>
-        </label>
-
-        <p className="txtterminos">
-          Al crear o utilizar una cuenta, usted acepta nuestros{" "}
-          <a href="#" className="link-terminos">Términos de servicio</a> y{" "}
-          <a href="#" className="link-terminos">Política de privacidad</a>.
-        </p>
-
-        <button className="boton-continuar" type="submit">Continuar</button>
-      </form>
-
-      {mostrarModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>⚠️ Atención</h3>
-            <p>{mensaje}</p>
-            <button className="modal-btn" onClick={cerrarModal}>Cerrar</button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

@@ -1,11 +1,6 @@
 /* components/Certificate.module.css */
 
-:root {
-  --primary-color: #0b7077;
-  --text-color: #333;
-  --border-radius: 6px;
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+
 
 .container {
   padding: 2rem;
