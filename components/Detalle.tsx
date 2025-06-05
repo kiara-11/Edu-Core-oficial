@@ -1,156 +1,280 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './Detalle.module.css';
 
-interface CourseDetailProps {
-  course?: {
-    id: string;
-    title: string;
-    image: string;
-    rating: number;
-    reviewCount: number;
-    price: number;
-    schedule: string;
-    startDate: string;
-    lessons: number;
-    modality: string;
-    level: string;
-    duration: string;
-    description: string;
-    learningTopics: string[];
-    lessonsList: Array<{
-      id: number;
-      title: string;
-      description: string;
-    }>;
-    tutor: {
-      name: string;
-      image: string;
-      description: string;
-      socialLinks: {
-        facebook?: string;
-        pinterest?: string;
-        twitter?: string;
-        email?: string;
-        youtube?: string;
-      };
-    };
-    reviews: Array<{
-      id: number;
-      userName: string;
-      userImage: string;
-      rating: number;
-      comment: string;
-    }>;
-  };
+interface Lesson {
+  id: number;
+  title: string;
+  description: string;
 }
 
-const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
-  const [activeTab, setActiveTab] = useState('resumen');
+interface Review {
+  id: number;
+  userName: string;
+  userImage: string;
+  rating: number;
+  comment: string;
+  date?: string;
+}
 
-  const defaultCourse = {
-    id: '1',
-    title: 'Curso De Python Desde Cero',
-    image: '/detalle.png',
-    rating: 4.7,
-    reviewCount: 120,
-    price: 60,
-    originalPrice: 80,
-    schedule: 'De 16:00 A 18:00',
-    startDate: '25 De Octubre',
-    lessons: 8,
-    modality: 'Virtual',
-    level: 'Principiante',
-    duration: 'Lunes A Viernes',
-    description: 'Este curso de Python está dirigido a estudiantes y profesionales sin experiencia previa en programación. Aprenderás desde los conceptos más básicos hasta estructuras más avanzadas utilizando ejemplos prácticos que podrás aplicar en el mundo real.',
-    learningTopics: [
-      'Sintaxis básica y variables en Python',
-      'Estructuras de control (condicionales y bucles)',
-      'Funciones, listas, diccionarios y tuplas',
-      'Manejo de errores y lectura de archivos',
-      'Introducción a módulos como math, random y datetime',
-      'Proyecto final práctico: programa funcional con Python'
-    ],
-    lessonsList: [
-      {
-        id: 1,
-        title: 'Introducción a Python y configuración del entorno',
-        description: 'Configuración inicial y primeros pasos'
-      },
-      {
-        id: 2,
-        title: 'Variables, operadores y tipos de datos',
-        description: 'Fundamentos básicos del lenguaje'
-      },
-      {
-        id: 3,
-        title: 'Condicionales y estructuras repetitivas',
-        description: 'Control de flujo en Python'
-      },
-      {
-        id: 4,
-        title: 'Funciones y organización del código',
-        description: 'Creación y uso de funciones'
-      },
-      {
-        id: 5,
-        title: 'Estructuras de datos (listas, tuplas, diccionarios)',
-        description: 'Manejo de datos complejos'
-      },
-      {
-        id: 6,
-        title: 'Archivos y manejo de excepciones',
-        description: 'Lectura/escritura de archivos'
-      },
-      {
-        id: 7,
-        title: 'Módulos y bibliotecas básicas',
-        description: 'Uso de librerías estándar'
-      },
-      {
-        id: 8,
-        title: 'Proyecto final: calculadora interactiva / sistema básico',
-        description: 'Aplicación práctica de conocimientos'
+interface Tutor {
+  name: string;
+  image: string;
+  description: string;
+  email?: string;
+}
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  rating: number;
+  reviewCount: number;
+  lessons: number;
+  schedule: string;
+  price: number;
+  startDate: string;
+  modality: string;
+  level: string;
+  duration: string;
+  learningTopics?: string[];
+  lessonsList?: Lesson[];
+  tutor: Tutor;
+  reviews?: Review[];
+  subject?: string;
+  levelDescription?: string;
+  minStudents?: number;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface CourseDetailProps {
+  courseId?: string;
+}
+
+const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
+  const [activeTab, setActiveTab] = useState('resumen');
+  const [course, setCourse] = useState<Course | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [enrolling, setEnrolling] = useState(false);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentCourseId = courseId || searchParams.get('id');
+
+  useEffect(() => {
+    checkUserAuth();
+    
+    if (currentCourseId) {
+      fetchCourseData(currentCourseId);
+    } else {
+      setError('ID del curso no proporcionado');
+      setLoading(false);
+    }
+  }, [currentCourseId]);
+
+  const checkUserAuth = () => {
+    try {
+      if (typeof window !== 'undefined') {
+        const nombreCompleto = localStorage.getItem('nombreCompleto');
+        const email = localStorage.getItem('email');
+        
+        if (nombreCompleto && email) {
+          setUser({
+            id: email,
+            name: nombreCompleto,
+            email: email
+          });
+          setIsLoggedIn(true);
+        } else {
+          const usuarioString = localStorage.getItem('usuario');
+          if (usuarioString) {
+            const usuarioData = JSON.parse(usuarioString);
+            if (usuarioData.nombre && usuarioData.correo) {
+              setUser({
+                id: usuarioData.correo,
+                name: usuarioData.nombre,
+                email: usuarioData.correo
+              });
+              setIsLoggedIn(true);
+            } else {
+              setIsLoggedIn(false);
+              setUser(null);
+            }
+          } else {
+            setIsLoggedIn(false);
+            setUser(null);
+          }
+        }
       }
-    ],
-    tutor: {
-      name: 'Alejandro Torres',
-      image: '/avatar2.png',
-      description: 'Soy estudiante de Ingeniería de Sistemas en la EMI, con experiencia enseñando Python y programación básica a jóvenes y adultos. Me apasiona compartir conocimiento de manera clara, con ejemplos prácticos y un enfoque paso a paso.',
-      socialLinks: {
-        facebook: 'https://www.facebook.com/eric.harris.102871?locale=es_LA',
-        pinterest: '#',
-        twitter: '#',
-        email: '#',
-        youtube: '#'
-      }
-    },
-    reviews: [
-      {
-        id: 1,
-        userName: 'Marycruz Ivonne',
-        userImage: '/avatar.png',
-        rating: 5,
-        comment: 'Muy recomendable!'
-      },
-      {
-        id: 2,
-        userName: 'Marycruz Ivonne',
-        userImage: '/avatar.png',
-        rating: 5,
-        comment: 'Muy recomendable!'
-      },
-      {
-        id: 3,
-        userName: 'Marycruz Ivonne',
-        userImage: '/avatar.png',
-        rating: 5,
-        comment: 'Muy recomendable!'
-      }
-    ]
+    } catch (error) {
+      console.error('Error checking auth:', error);
+      setIsLoggedIn(false);
+      setUser(null);
+    }
   };
 
-  const courseData = course || defaultCourse;
+  const fetchCourseData = async (id: string) => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await fetch(`/api/detalle/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache'
+        }
+      });
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Curso no encontrado');
+        } else if (response.status >= 500) {
+          throw new Error('Error del servidor. Intente más tarde.');
+        } else {
+          throw new Error('Error al cargar el curso');
+        }
+      }
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error || 'Error al cargar el curso');
+      }
+
+      if (!data.course) {
+        throw new Error('Datos del curso no disponibles');
+      }
+
+      setCourse(data.course);
+    } catch (fetchError) {
+      console.error('Error fetching course:', fetchError);
+      setError(fetchError instanceof Error ? fetchError.message : 'Error desconocido al cargar el curso');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEnrollment = async () => {
+    if (!isLoggedIn) {
+      const shouldRedirect = confirm('Debe iniciar sesión para inscribirse al curso. ¿Desea ir a la página de login?');
+      if (shouldRedirect) {
+        router.push('/login');
+      }
+      return;
+    }
+
+    if (!user || !currentCourseId) {
+      alert('Error: información de usuario o curso no disponible');
+      return;
+    }
+
+    const confirmEnroll = confirm(`¿Está seguro que desea inscribirse al curso "${course?.title}"?`);
+    if (!confirmEnroll) return;
+
+    try {
+      setEnrolling(true);
+      
+      const response = await fetch('/api/inscripcion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          courseId: currentCourseId,
+          userId: user.id
+        })
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        alert('¡Inscripción exitosa! Te has inscrito al curso.');
+        router.push('/mis-cursos');
+      } else {
+        throw new Error(responseData.message || responseData.error || 'Error en la inscripción');
+      }
+    } catch (error) {
+      console.error('Error en inscripción:', error);
+      alert(`Error al inscribirse al curso: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    } finally {
+      setEnrolling(false);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!isLoggedIn) {
+      const shouldRedirect = confirm('Debe iniciar sesión para comentar. ¿Desea ir a la página de login?');
+      if (shouldRedirect) {
+        router.push('/login');
+      }
+      return;
+    }
+
+    if (!user || !currentCourseId) {
+      alert('Error: información de usuario o curso no disponible');
+      return;
+    }
+
+    const comment = prompt('Ingrese su comentario:');
+    if (!comment || comment.trim().length === 0) return;
+
+    const ratingInput = prompt('Califique el curso (1-5):');
+    if (!ratingInput) return;
+
+    const rating = parseInt(ratingInput);
+    if (isNaN(rating) || rating < 1 || rating > 5) {
+      alert('Por favor ingrese una calificación válida entre 1 y 5');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/comentarios', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          courseId: currentCourseId,
+          userId: user.id,
+          comment: comment.trim(),
+          rating: rating
+        })
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        alert('Comentario agregado exitosamente');
+        await fetchCourseData(currentCourseId);
+      } else {
+        throw new Error(responseData.message || responseData.error || 'Error al agregar comentario');
+      }
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      alert(`Error al agregar comentario: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    }
+  };
+
+  const handleGoBack = () => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push('/');
+    }
+  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -161,129 +285,282 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
   };
 
   const renderTabContent = () => {
+    if (!course) return null;
+
     switch (activeTab) {
       case 'resumen':
         return (
           <div className={styles.tabContent}>
             <h3>DESCRIPCIÓN DEL CURSO</h3>
-            <p>{courseData.description}</p>
-            <h3>¿QUÉ APRENDERÉ EN ESTE CURSO?</h3>
-            <ul>
-              {courseData.learningTopics.map((topic, index) => (
-                <li key={index}>{topic}</li>
-              ))}
-            </ul>
+            <p>{course.description}</p>
+            
+            {course.subject && (
+              <>
+                <h3>MATERIA</h3>
+                <p>{course.subject}</p>
+              </>
+            )}
+
+            {course.levelDescription && (
+              <>
+                <h3>NIVEL DEL CURSO</h3>
+                <p>{course.levelDescription}</p>
+              </>
+            )}
+
+            {course.learningTopics && course.learningTopics.length > 0 && (
+              <>
+                <h3>¿QUÉ APRENDERÉ EN ESTE CURSO?</h3>
+                <ul>
+                  {course.learningTopics.map((topic, index) => (
+                    <li key={index}>{topic}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {course.minStudents && course.minStudents > 1 && (
+              <>
+                <h3>REQUISITOS</h3>
+                <p>Mínimo {course.minStudents} estudiantes para iniciar el curso.</p>
+              </>
+            )}
           </div>
         );
+
       case 'lecciones':
         return (
           <div className={styles.tabContent}>
+            <h3>CONTENIDO DEL CURSO</h3>
             <div className={styles.lessonsList}>
-              {courseData.lessonsList.map((lesson) => (
-                <div key={lesson.id} className={styles.lessonItem}>
-                  <div className={styles.lessonNumber}>UNIDAD {lesson.id}:</div>
-                  <div className={styles.lessonTitle}>{lesson.title}</div>
+              {course.lessonsList && course.lessonsList.length > 0 ? (
+                course.lessonsList.map((lesson) => (
+                  <div key={lesson.id} className={styles.lessonItem}>
+                    <div className={styles.lessonNumber}>UNIDAD {lesson.id}:</div>
+                    <div className={styles.lessonTitle}>{lesson.title}</div>
+                    <div className={styles.lessonDescription}>{lesson.description}</div>
+                  </div>
+                ))
+              ) : (
+                <div className={styles.noContent}>
+                  <p>No hay lecciones disponibles para este curso.</p>
+                  <p>El contenido será actualizado próximamente.</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         );
+
       case 'tutor':
         return (
           <div className={styles.tabContent}>
             <div className={styles.tutorCard}>
               <div className={styles.tutorHeader}>
                 <div className={styles.tutorImage}>
-                  <img src={courseData.tutor.image} alt={courseData.tutor.name} />
+                  <img 
+                    src={course.tutor.image} 
+                    alt={course.tutor.name}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/avatar2.png';
+                    }}
+                  />
                 </div>
                 <div className={styles.tutorInfo}>
-                  <h3 className={styles.tutorName}>{courseData.tutor.name}</h3>
+                  <h3 className={styles.tutorName}>{course.tutor.name}</h3>
+                  {course.tutor.email && (
+                    <p className={styles.tutorEmail}>✉️ {course.tutor.email}</p>
+                  )}
                   <div className={styles.tutorBadge}>Sobre mí:</div>
                 </div>
               </div>
-              <p className={styles.tutorDescription}>{courseData.tutor.description}</p>
-              <div className={styles.socialLinks}>
-                <span className={styles.socialLabel}>Redes:</span>
-                <div className={styles.socialIcons}>
-                  {courseData.tutor.socialLinks.facebook && (
-                    <a href={courseData.tutor.socialLinks.facebook} className={styles.socialIcon}>f</a>
-                  )}
-                  {courseData.tutor.socialLinks.pinterest && (
-                    <a href={courseData.tutor.socialLinks.pinterest} className={styles.socialIcon}>P</a>
-                  )}
-                  {courseData.tutor.socialLinks.twitter && (
-                    <a href={courseData.tutor.socialLinks.twitter} className={styles.socialIcon}>X</a>
-                  )}
-                  {courseData.tutor.socialLinks.email && (
-                    <a href={courseData.tutor.socialLinks.email} className={styles.socialIcon}>@</a>
-                  )}
-                  {courseData.tutor.socialLinks.youtube && (
-                    <a href={courseData.tutor.socialLinks.youtube} className={styles.socialIcon}>▶</a>
-                  )}
-                </div>
-              </div>
+              <p className={styles.tutorDescription}>{course.tutor.description}</p>
             </div>
           </div>
         );
+
       case 'reseñas':
         return (
           <div className={styles.tabContent}>
             <div className={styles.reviewsSection}>
               <div className={styles.reviewsHeader}>
-                <h3>Reseñas</h3>
-                <button className={styles.commentButton}>Comentar</button>
+                <h3>Reseñas ({course.reviewCount})</h3>
+                <button 
+                  className={styles.commentButton}
+                  onClick={handleAddComment}
+                >
+                  {isLoggedIn ? 'Agregar Comentario' : 'Iniciar Sesión para Comentar'}
+                </button>
               </div>
+              
+              {course.rating > 0 && (
+                <div className={styles.ratingOverview}>
+                  <div className={styles.overallRating}>
+                    <span className={styles.ratingNumber}>{course.rating}</span>
+                    <div className={styles.ratingStars}>
+                      {renderStars(course.rating)}
+                    </div>
+                    <span className={styles.ratingText}>
+                      Basado en {course.reviewCount} reseña{course.reviewCount !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                </div>
+              )}
+
               <div className={styles.reviewsList}>
-                {courseData.reviews.map((review) => (
-                  <div key={review.id} className={styles.reviewItem}>
-                    <div className={styles.reviewUser}>
-                      <img src={review.userImage} alt={review.userName} className={styles.reviewUserImage} />
-                      <div className={styles.reviewUserInfo}>
-                        <div className={styles.reviewStars}>
-                          {renderStars(review.rating)}
+                {!course.reviews || course.reviews.length === 0 ? (
+                  <div className={styles.noReviews}>
+                    <p>No hay reseñas disponibles para este curso.</p>
+                    <p>¡Sé el primero en comentar!</p>
+                  </div>
+                ) : (
+                  course.reviews.map((review) => (
+                    <div key={review.id} className={styles.reviewItem}>
+                      <div className={styles.reviewUser}>
+                        <img 
+                          src={review.userImage} 
+                          alt={review.userName} 
+                          className={styles.reviewUserImage}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/avatar.png';
+                          }}
+                        />
+                        <div className={styles.reviewUserInfo}>
+                          <div className={styles.reviewUserName}>{review.userName}</div>
+                          <div className={styles.reviewStars}>
+                            {renderStars(review.rating)}
+                          </div>
+                          {review.date && (
+                            <div className={styles.reviewDate}>{review.date}</div>
+                          )}
+                          <div className={styles.reviewComment}>{review.comment}</div>
                         </div>
-                        <div className={styles.reviewUserName}>{review.userName}</div>
-                        <div className={styles.reviewComment}>{review.comment}</div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
         );
+
       default:
         return null;
     }
   };
 
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>
+          <div className={styles.spinner}></div>
+          <p>Cargando información del curso...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.error}>
+          <h2>Error</h2>
+          <p>{error}</p>
+          <div className={styles.errorButtons}>
+            <button 
+              className={styles.retryButton}
+              onClick={() => currentCourseId && fetchCourseData(currentCourseId)}
+            >
+              Intentar nuevamente
+            </button>
+            <button 
+              className={styles.backButton}
+              onClick={handleGoBack}
+            >
+              ← Volver Atrás
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!course) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.error}>
+          <h2>Curso no encontrado</h2>
+          <p>El curso que buscas no existe o no está disponible.</p>
+          <div className={styles.errorButtons}>
+            <button 
+              className={styles.retryButton}
+              onClick={() => currentCourseId && fetchCourseData(currentCourseId)}
+            >
+              Intentar nuevamente
+            </button>
+            <button 
+              className={styles.backButton}
+              onClick={handleGoBack}
+            >
+              ← Volver Atrás
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
+      <div className={styles.backButtonContainer}>
+        <button 
+          className={styles.backButton}
+          onClick={handleGoBack}
+        >
+          ← Volver Atrás
+        </button>
+      </div>
+
       <div className={styles.mainContent}>
         <div className={styles.courseImage}>
-          <img src={courseData.image} alt={courseData.title} />
+          <img 
+            src={course.image} 
+            alt={course.title}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = '/detalle.png';
+            }}
+          />
         </div>
         
         <div className={styles.courseInfo}>
           <div className={styles.rating}>
-            {renderStars(courseData.rating)}
-            <span className={styles.ratingNumber}>({courseData.rating})</span>
+            {renderStars(course.rating)}
+            <span className={styles.ratingNumber}>({course.rating})</span>
+            {course.reviewCount > 0 && (
+              <span className={styles.reviewCount}> - {course.reviewCount} reseña{course.reviewCount !== 1 ? 's' : ''}</span>
+            )}
           </div>
           
-          <h1 className={styles.courseTitle}>{courseData.title}</h1>
+          <h1 className={styles.courseTitle}>{course.title}</h1>
           
           <div className={styles.courseDetails}>
             <div className={styles.detailItem}>
               <span className={styles.icon}>📚</span>
-              <span>Lesson {courseData.lessons}</span>
+              <span>Lecciones: {course.lessons}</span>
             </div>
             <div className={styles.detailItem}>
               <span className={styles.icon}>🕐</span>
-              <span>{courseData.schedule}</span>
+              <span>{course.schedule}</span>
             </div>
             <div className={styles.detailItem}>
               <span className={styles.icon}>📖</span>
-              <span>Curso disponible 24/7</span>
+              <span>Modalidad: {course.modality}</span>
+            </div>
+            <div className={styles.detailItem}>
+              <span className={styles.icon}>📊</span>
+              <span>Nivel: {course.level}</span>
             </div>
           </div>
           
@@ -298,7 +575,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
               className={`${styles.tab} ${activeTab === 'lecciones' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('lecciones')}
             >
-              Lecciones
+              Lecciones ({course.lessons})
             </button>
             <button 
               className={`${styles.tab} ${activeTab === 'tutor' ? styles.activeTab : ''}`}
@@ -310,7 +587,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
               className={`${styles.tab} ${activeTab === 'reseñas' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('reseñas')}
             >
-              Reseñas
+              Reseñas ({course.reviewCount})
             </button>
           </div>
           
@@ -324,39 +601,67 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
             <span className={styles.label}>Precio Del Curso</span>
             <div className={styles.priceContainer}>
               <span className={styles.currency}>Bs.</span>
-              <span className={styles.price}>{courseData.price}</span>
+              <span className={styles.price}>{course.price.toFixed(2)}</span>
             </div>
           </div>
           
-          <button className={styles.enrollButton}>
-            INSCRIBIRME AHORA
+          <button 
+            className={`${styles.enrollButton} ${enrolling ? styles.enrolling : ''}`}
+            onClick={handleEnrollment}
+            disabled={enrolling}
+          >
+            {enrolling ? 'PROCESANDO...' : (isLoggedIn ? 'INSCRIBIRME AHORA' : 'INICIAR SESIÓN PARA INSCRIBIRSE')}
           </button>
+
+          {!isLoggedIn && (
+            <div className={styles.authMessage}>
+              <p>Debe iniciar sesión o registrarse para inscribirse al curso</p>
+              <button 
+                className={styles.loginLink}
+                onClick={() => router.push('/login')}
+              >
+                Ir a la página de login
+              </button>
+            </div>
+          )}
           
           <div className={styles.courseMetadata}>
             <div className={styles.metadataRow}>
               <span className={styles.metadataLabel}>Horario</span>
-              <span className={styles.metadataValue}>{courseData.schedule}</span>
+              <span className={styles.metadataValue}>{course.schedule}</span>
             </div>
             <div className={styles.metadataRow}>
               <span className={styles.metadataLabel}>Fecha De Inicio</span>
-              <span className={styles.metadataValue}>{courseData.startDate}</span>
+              <span className={styles.metadataValue}>{course.startDate}</span>
             </div>
             <div className={styles.metadataRow}>
               <span className={styles.metadataLabel}>Lecciones</span>
-              <span className={styles.metadataValue}>{courseData.lessons}</span>
+              <span className={styles.metadataValue}>{course.lessons}</span>
             </div>
             <div className={styles.metadataRow}>
               <span className={styles.metadataLabel}>Modalidad</span>
-              <span className={styles.metadataValue}>{courseData.modality}</span>
+              <span className={styles.metadataValue}>{course.modality}</span>
             </div>
             <div className={styles.metadataRow}>
               <span className={styles.metadataLabel}>Nivel</span>
-              <span className={styles.metadataValue}>{courseData.level}</span>
+              <span className={styles.metadataValue}>{course.level}</span>
             </div>
             <div className={styles.metadataRow}>
               <span className={styles.metadataLabel}>Días De Clase</span>
-              <span className={styles.metadataValue}>{courseData.duration}</span>
+              <span className={styles.metadataValue}>{course.duration}</span>
             </div>
+            {course.subject && (
+              <div className={styles.metadataRow}>
+                <span className={styles.metadataLabel}>Materia</span>
+                <span className={styles.metadataValue}>{course.subject}</span>
+              </div>
+            )}
+            {course.minStudents && course.minStudents > 1 && (
+              <div className={styles.metadataRow}>
+                <span className={styles.metadataLabel}>Mín. Estudiantes</span>
+                <span className={styles.metadataValue}>{course.minStudents}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

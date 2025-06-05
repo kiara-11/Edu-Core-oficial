@@ -1,8 +1,8 @@
 import { connectToDb } from '../../lib/db';
 import { NextResponse } from 'next/server';
 
-// Array de imágenes aleatorias para los cursos
-const courseImages = [
+// Array de imágenes por defecto (solo se usarán si el curso no tiene foto_curso)
+const defaultCourseImages = [
   'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=300&fit=crop',
   'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop',
   'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
@@ -13,14 +13,14 @@ const courseImages = [
   'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&h=300&fit=crop'
 ];
 
-// Función para obtener imagen aleatoria
-function getRandomImage() {
-  return courseImages[Math.floor(Math.random() * courseImages.length)];
+// Función para obtener imagen por defecto aleatoria
+function getRandomDefaultImage() {
+  return defaultCourseImages[Math.floor(Math.random() * defaultCourseImages.length)];
 }
 
 // Función para calcular calificación promedio
 function calculateAverageRating(reviews) {
-  if (!reviews || reviews.length === 0) return 5;
+  if (!reviews || reviews.length === 0) return 0;
   const sum = reviews.reduce((acc, review) => acc + review.calificacion, 0);
   return Math.round(sum / reviews.length);
 }
@@ -36,6 +36,7 @@ export async function GET() {
         c.discripcion,
         c.precio,
         c.cant_est_min,
+        c.foto_curso,
         
         -- Datos del instructor (tutor)
         dp.Nombre + ' ' + ISNULL(dp.ApePat, '') + ' ' + ISNULL(dp.ApeMat, '') as instructor_name,
@@ -106,6 +107,22 @@ export async function GET() {
           }
         }
         
+        // Determinar qué imagen usar
+        let imageUrl;
+        
+        // Debug: mostrar el valor de foto_curso en la consola
+        console.log(`Curso ID ${course.Id_curso}: foto_curso = "${course.foto_curso}"`);
+        
+        if (course.foto_curso && course.foto_curso.trim() !== '') {
+          // Si el curso tiene foto_curso, usarla
+          imageUrl = course.foto_curso;
+          console.log(`Usando imagen de BD: ${imageUrl}`);
+        } else {
+          // Si no tiene foto_curso, usar imagen por defecto aleatoria
+          imageUrl = getRandomDefaultImage();
+          console.log(`Usando imagen por defecto: ${imageUrl}`);
+        }
+        
         return {
           id: course.Id_curso,
           title: course.nom_curso || "Curso sin título",
@@ -115,7 +132,7 @@ export async function GET() {
           rating: averageRating,
           reviews: reviews.length,
           price: course.precio || 0,
-          imageUrl: getRandomImage(),
+          imageUrl: imageUrl,
           category: course.categoria || "General",
           level: course.nivel || "Principiante",
           modality: course.modalidad || "Virtual"

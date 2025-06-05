@@ -481,3 +481,54 @@
     gap: 10px;
   }
 }
+/* Añadir al archivo Detalle.module.css */
+.authMessage {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #fff8e1;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.authMessage p {
+  margin-bottom: 10px;
+}
+
+.loginLink {
+  background: none;
+  border: none;
+  color: #2c5aa0;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+.loginLink:hover {
+  color: #1a4480;
+}
+
+.errorButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.retryButton {
+  background-color: #2c5aa0;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.backButton {
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}

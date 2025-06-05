@@ -19,6 +19,9 @@ interface Course {
   modality: string;
 }
 
+// Imagen por defecto en caso de error
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=300&fit=crop';
+
 export default function CourseExplorer() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,6 +84,12 @@ export default function CourseExplorer() {
         ★
       </span>
     ));
+  };
+
+  // Función para manejar errores de imagen
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    target.src = DEFAULT_IMAGE;
   };
 
   // Obtener opciones únicas para los filtros
@@ -194,7 +203,12 @@ export default function CourseExplorer() {
           filteredCourses.map((course) => (
             <div key={course.id} className={styles.courseCard}>
               <div className={styles.courseImage}>
-                <img src={course.imageUrl} alt={course.title} className={styles.courseImg} />
+                <img 
+                  src={course.imageUrl} 
+                  alt={course.title} 
+                  className={styles.courseImg}
+                  onError={handleImageError}
+                />
               </div>
               
               <div className={styles.courseContent}>
