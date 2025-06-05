@@ -1,7 +1,6 @@
 'use client';
 
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PaymentControl.css';
 
 interface Payment {
@@ -16,47 +15,24 @@ interface Payment {
   avatar: string;
 }
 
-const payments: Payment[] = [
-  {
-    id: 1,
-    name: 'Alejandra Lopez',
-    email: 'alejandralopez@gmail.com',
-    amount: '100 Bs',
-    date: '2025-05-26',
-    method: 'QR',
-    status: 'Pendiente',
-    transactions: [
-      '2025-05-26 - Pago confirmado correctamente',
-      '2025-05-26 - Pago en Revisión',
-    ],
-    avatar: 'https://i.pravatar.cc/100?img=5',
-  },
-  {
-    id: 2,
-    name: 'Alejandra Lopez',
-    email: 'alejandralopez@gmail.com',
-    amount: '100 Bs',
-    date: '2025-05-26',
-    method: 'QR',
-    status: 'Pendiente',
-    transactions: [],
-    avatar: 'https://i.pravatar.cc/100?img=5',
-  },
-  {
-    id: 3,
-    name: 'Alejandra Lopez',
-    email: 'alejandralopez@gmail.com',
-    amount: '100 Bs',
-    date: '2025-05-26',
-    method: 'QR',
-    status: 'Pendiente',
-    transactions: [],
-    avatar: 'https://i.pravatar.cc/100?img=5',
-  },
-];
-
 const PaymentControl: React.FC = () => {
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [selected, setSelected] = useState<Payment | null>(null);
+
+  useEffect(() => {
+    async function fetchPayments() {
+      try {
+        const res = await fetch('/api/pagos');
+        if (!res.ok) throw new Error('Error al obtener los pagos');
+        const data: Payment[] = await res.json();
+        setPayments(data);
+      } catch (error) {
+        console.error('Error al cargar los pagos:', error);
+      }
+    }
+
+    fetchPayments();
+  }, []);
 
   return (
     <div className="container">
@@ -64,14 +40,14 @@ const PaymentControl: React.FC = () => {
         <h2>Control de Pagos Tutor</h2>
 
         <div className="filters">
-        <div className="filter-group">
+          <div className="filter-group">
             <label>Estado de Pago</label>
             <input placeholder="Todo" />
-        </div>
-        <div className="filter-group">
+          </div>
+          <div className="filter-group">
             <label>Método de Pago</label>
             <input placeholder="Todo" />
-        </div>
+          </div>
         </div>
 
         <table>
@@ -85,12 +61,9 @@ const PaymentControl: React.FC = () => {
               <th>Acción</th>
             </tr>
           </thead>
-            <tbody>
+          <tbody>
             {payments.map((p) => (
-                <tr
-                key={p.id}
-                className={p.id === 2 ? 'highlight-row' : ''}
-                >
+              <tr key={p.id}>
                 <td>
                   <img src={p.avatar} alt="avatar" className="avatar" />
                   {p.name}
