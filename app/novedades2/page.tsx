@@ -1,12 +1,12 @@
-import Novedades from '@/components/Novedades'
+import Novedades2 from '@/components/Novedades2'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer';
 
 const page = () => {
   return (
-    <div>
+    <div >
         <Header />
-        <Novedades />
+        <Novedades2 />
         <Footer />
     </div>
   )
