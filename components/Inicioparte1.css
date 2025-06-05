@@ -7,6 +7,13 @@
   flex-shrink: 0;
   align-self: stretch;
 }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 .conttext {
   display: flex;
   width: 670px;
