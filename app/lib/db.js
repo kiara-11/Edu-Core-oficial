@@ -2,8 +2,13 @@ import * as sql from 'mssql';
 
 const config = {
   user: 'sa',
+<<<<<<< HEAD
+  password: '12345678',
+  server: '172.24.240.1',
+=======
   password: 'Kiara1108*',
   server: '192.168.173.101',
+>>>>>>> e9aa4b47b8adf0d4180689c7e09b2b25cf049416
   database: 'educore',
   options: {
     encrypt: true,

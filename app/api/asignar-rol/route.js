@@ -41,6 +41,7 @@ export async function PUT(request) {
       return NextResponse.json({ message: `Rol '${role}' no encontrado en la base de datos` }, { status: 404 });
     }
 
+
     const id_rol = roleResult.recordset[0].id_rol;
 
     // ✅ Verificar si ya existe una asignación en User_roles
@@ -69,11 +70,12 @@ export async function PUT(request) {
       new_role: role
     }, { status: 200 });
 
+
   } catch (error) {
     console.error('❌ Error al asignar rol:', error);
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: 'Error al asignar el rol',
-      error: error.message 
+      error: error.message
     }, { status: 500 });
   }
 }
