@@ -14,44 +14,84 @@ interface User {
   registrationDate: string;
 }
 
+interface NewUserData {
+  nombres: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  fechaNacimiento: string;
+  telefono: string;
+  genero: string;
+  role: string;
+}
+
 const Roladmi: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filterRole, setFilterRole] = useState<string>('Todos');
   const [searchUser, setSearchUser] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [registroExitoso, setRegistroExitoso] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
+  
   const [newRoles, setNewRoles] = useState({
     tutor: false,
-    estudiante: false,
-    ambos: false
+    estudiante: false
   });
 
+  const [newUserData, setNewUserData] = useState<NewUserData>({
+    nombres: "",
+    apellidoPaterno: "",
+    apellidoMaterno: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    fechaNacimiento: "",
+    telefono: "",
+    genero: "1",
+    role: "Estudiante"
+  });
+
+  const [editUserData, setEditUserData] = useState<Partial<User>>({});
+
   useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const res = await fetch('/api/usuarios');
-        if (!res.ok) throw new Error('Error al obtener usuarios');
-        const data: User[] = await res.json();
-
-        // Eliminar usuarios duplicados por email
-        const uniqueUsers = Array.from(new Map(data.map(u => [u.email, u])).values());
-
-        const storedRoles = localStorage.getItem('rolesUsuarios');
-        const roles: Record<string, string> = storedRoles ? JSON.parse(storedRoles) : {};
-
-        const usuariosConRoles = uniqueUsers.map(u => ({
-          ...u,
-          role: roles[u.email] || 'Estudiante',
-          status: roles[u.email] ? 'Activo' : 'Pendiente'
-        }));
-
-        setUsers(usuariosConRoles);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
     fetchUsers();
   }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/usuarios');
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Error al obtener usuarios');
+      }
+      const data: User[] = await res.json();
+
+      // Eliminar duplicados por email y asegurar datos completos
+      const uniqueUsers = Array.from(new Map(data.map(u => [u.email, u])).values());
+      const usuariosConRoles = uniqueUsers.map(u => ({
+        ...u,
+        role: u.role || 'Estudiante',
+        status: u.status || 'Activo',
+        phone: u.phone || 'Sin teléfono',
+        name: u.name || 'Sin nombre'
+      }));
+
+      setUsers(usuariosConRoles);
+    } catch (error) {
+      console.error('❌ Error al obtener usuarios:', error);
+      setMensaje(`Error al cargar usuarios: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+      setMostrarModal(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredUsers = users.filter(user => {
     const matchesRole = filterRole === 'Todos' || user.role === filterRole;
@@ -61,69 +101,214 @@ const Roladmi: React.FC = () => {
     return matchesRole && matchesSearch;
   });
 
+  // Función para manejar cambios en el formulario de nuevo usuario
+  const handleNewUserChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setNewUserData({ ...newUserData, [e.target.name]: e.target.value });
+  };
+
+  // Función para manejar cambios en el formulario de edición
+  const handleEditUserChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setEditUserData({ ...editUserData, [e.target.name]: e.target.value });
+  };
+
+  // Función para crear nuevo usuario
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (newUserData.password !== newUserData.confirmPassword) {
+      setMensaje("❗ Las contraseñas no coinciden.");
+      setMostrarModal(true);
+      return;
+    }
+
+    // Validaciones adicionales
+    if (newUserData.password.length < 6) {
+      setMensaje("❗ La contraseña debe tener al menos 6 caracteres.");
+      setMostrarModal(true);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await fetch("/api/registroa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUserData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setRegistroExitoso(true);
+        setMostrarModal(true);
+        
+        setTimeout(() => {
+          setShowCreateModal(false);
+          setMostrarModal(false);
+          setRegistroExitoso(false);
+          setNewUserData({
+            nombres: "",
+            apellidoPaterno: "",
+            apellidoMaterno: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            fechaNacimiento: "",
+            telefono: "",
+            genero: "1",
+            role: "Estudiante"
+          });
+          fetchUsers(); // Refrescar la lista
+        }, 2000);
+      } else {
+        setMensaje(data.message || "Ha ocurrido un error al crear el usuario.");
+        setMostrarModal(true);
+      }
+    } catch (error) {
+      console.error("❌ Error al crear usuario:", error);
+      setMensaje("Error de conexión al crear usuario. Intenta nuevamente.");
+      setMostrarModal(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleEdit = (user: User) => {
     setSelectedUser(user);
+    setEditUserData({ ...user }); // Crear una copia completa
     setNewRoles({
-      tutor: user.role === 'Tutor' || user.role === 'Ambos',
-      estudiante: user.role === 'Estudiante' || user.role === 'Ambos',
-      ambos: user.role === 'Ambos'
+      tutor: user.role === 'Tutor',
+      estudiante: user.role === 'Estudiante'
     });
   };
 
-  const saveRolesToStorage = (roles: Record<string, string>) => {
-    localStorage.setItem('rolesUsuarios', JSON.stringify(roles));
-  };
+const handleSave = async () => {
+  if (!selectedUser || !editUserData) return;
 
-  const handleSave = () => {
-    if (!selectedUser) return;
+  // Validar rol seleccionado
+  let newRole = '';
+  if (newRoles.tutor) newRole = 'Tutor';
+  else if (newRoles.estudiante) newRole = 'Estudiante';
+  else {
+    setMensaje('❗ Debes seleccionar al menos un rol.');
+    setMostrarModal(true);
+    return;
+  }
 
-    let newRole = '';
-    if (newRoles.ambos) newRole = 'Ambos';
-    else if (newRoles.tutor && newRoles.estudiante) newRole = 'Ambos';
-    else if (newRoles.tutor) newRole = 'Tutor';
-    else if (newRoles.estudiante) newRole = 'Estudiante';
+  // Validar email si se cambió
+  if (editUserData.email && editUserData.email !== selectedUser.email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(editUserData.email)) {
+      setMensaje('❗ El formato del email no es válido.');
+      setMostrarModal(true);
+      return;
+    }
+  }
 
-    const storedRoles = localStorage.getItem('rolesUsuarios');
-    const roles: Record<string, string> = storedRoles ? JSON.parse(storedRoles) : {};
+  try {
+    setSaveLoading(true);
+    let roleUpdated = false;
+    let dataUpdated = false;
 
-    roles[selectedUser.email] = newRole;
-    saveRolesToStorage(roles);
+    // Actualizar rol si cambió
+    if (newRole !== selectedUser.role) {
+      const roleRes = await fetch('/api/asignar-rol', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: selectedUser.email, role: newRole }),
+      });
 
+      if (!roleRes.ok) {
+        const errorData = await roleRes.json();
+        throw new Error(errorData.message || 'Error al asignar rol');
+      }
+      roleUpdated = true;
+    }
+
+    // Actualizar otros datos si cambiaron
+    const dataChanged = 
+      editUserData.name !== selectedUser.name || 
+      editUserData.phone !== selectedUser.phone || 
+      editUserData.email !== selectedUser.email;
+
+    if (dataChanged) {
+      const updateRes = await fetch('/api/actualizar-usuario', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: selectedUser.id,
+          name: editUserData.name,
+          phone: editUserData.phone,
+          email: editUserData.email,
+          originalEmail: selectedUser.email // ✅ Agregar email original como identificador
+        }),
+      });
+
+      if (!updateRes.ok) {
+        const errorData = await updateRes.json();
+        throw new Error(errorData.message || 'Error al actualizar datos del usuario');
+      }
+      dataUpdated = true;
+    }
+
+    // Actualizar estado local
     const updatedUsers = users.map(u =>
-      u.email === selectedUser.email ? { ...u, role: newRole, status: 'Activo' } : u
+      u.id === selectedUser.id ? { 
+        ...u, 
+        ...editUserData,
+        role: newRole
+      } : u
     );
 
     setUsers(updatedUsers);
     setSelectedUser(null);
-  };
+    setEditUserData({});
+    setNewRoles({ tutor: false, estudiante: false });
+
+    // Mostrar mensaje de éxito
+    const updateMessage = [];
+    if (roleUpdated) updateMessage.push('rol');
+    if (dataUpdated) updateMessage.push('datos personales');
+    
+    setMensaje(`✅ Usuario actualizado correctamente: ${updateMessage.join(' y ')}`);
+    setRegistroExitoso(true);
+    setMostrarModal(true);
+
+  } catch (error) {
+    console.error('❌ Error al guardar cambios:', error);
+    setMensaje(`Error al guardar cambios: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    setMostrarModal(true);
+  } finally {
+    setSaveLoading(false);
+  }
+};
 
   const handleCancel = () => {
     setSelectedUser(null);
-    setNewRoles({ tutor: false, estudiante: false, ambos: false });
+    setEditUserData({});
+    setNewRoles({ tutor: false, estudiante: false });
   };
 
-  const handleRoleChange = (roleType: 'tutor' | 'estudiante' | 'ambos', checked: boolean) => {
-    if (roleType === 'ambos') {
-      setNewRoles({
-        tutor: checked,
-        estudiante: checked,
-        ambos: checked
-      });
-    } else {
-      const updatedRoles = {
-        ...newRoles,
-        [roleType]: checked
-      };
-      updatedRoles.ambos = updatedRoles.tutor && updatedRoles.estudiante;
-      setNewRoles(updatedRoles);
-    }
+  const cerrarModal = () => {
+    setMostrarModal(false);
+    setRegistroExitoso(false);
+    setMensaje("");
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.mainContent}>
         <div className={styles.card}>
-          <h2 className={styles.title}>Gestión de Roles</h2>
+          <div className={styles.headerSection}>
+            <h2 className={styles.title}>Gestión de Usuarios</h2>
+            <button 
+              className={styles.createButton}
+              onClick={() => setShowCreateModal(true)}
+              disabled={loading}
+            >
+              + Crear Usuario
+            </button>
+          </div>
 
           <div className={styles.filters}>
             <label>
@@ -132,11 +317,11 @@ const Roladmi: React.FC = () => {
                 value={filterRole}
                 onChange={e => setFilterRole(e.target.value)}
                 className={styles.select}
+                disabled={loading}
               >
                 <option value="Todos">Todos</option>
                 <option value="Estudiante">Estudiante</option>
                 <option value="Tutor">Tutor</option>
-                <option value="Ambos">Ambos</option>
               </select>
             </label>
 
@@ -144,13 +329,20 @@ const Roladmi: React.FC = () => {
               Buscar Usuario:
               <input
                 type="text"
-                placeholder="Buscar"
+                placeholder="Buscar por nombre o email..."
                 value={searchUser}
                 onChange={e => setSearchUser(e.target.value)}
                 className={styles.input}
+                disabled={loading}
               />
             </label>
           </div>
+
+          {loading && (
+            <div className={styles.loadingMessage}>
+              Cargando usuarios...
+            </div>
+          )}
 
           <div className={styles.table}>
             <div className={styles.tableHeader}>
@@ -159,43 +351,305 @@ const Roladmi: React.FC = () => {
               <div>Email</div>
               <div>Rol</div>
               <div>Estado</div>
-              <div>Acción</div>
+              <div>Acciones</div>
             </div>
 
-            {filteredUsers.map(user => (
-              <div key={user.id} className={styles.tableRow}>
-                <div className={styles.avatarCell}>
-                  <img src={user.avatar} alt={user.name} />
-                </div>
-                <div>{user.name}</div>
-                <div>{user.email}</div>
-                <div>{user.role}</div>
-                <div>
-                  <span className={styles.statusActive}>{user.status}</span>
-                </div>
-                <div>
-                  <button className={styles.editButton} onClick={() => handleEdit(user)}>
-                    Editar
-                  </button>
-                </div>
+            {filteredUsers.length === 0 && !loading ? (
+              <div className={styles.noResults}>
+                No se encontraron usuarios con los filtros aplicados.
               </div>
-            ))}
+            ) : (
+              filteredUsers.map(user => (
+                <div key={user.id} className={styles.tableRow}>
+                  <div className={styles.avatarCell}>
+                    <img 
+                      src={user.avatar} 
+                      alt={user.name}
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://ui-avatars.com/api/?name=Usuario&background=0D8ABC&color=fff&size=40';
+                      }}
+                    />
+                  </div>
+                  <div>{user.name}</div>
+                  <div>{user.email}</div>
+                  <div>
+                    <span className={`${styles.roleBadge} ${styles[user.role?.toLowerCase() || 'estudiante']}`}>
+                      {user.role}
+                    </span>
+                  </div>
+                  <div>
+                    <span className={styles.statusActive}>{user.status}</span>
+                  </div>
+                  <div className={styles.actionButtons}>
+                    <button 
+                      className={styles.editButton} 
+                      onClick={() => handleEdit(user)}
+                      disabled={loading}
+                    >
+                      Editar
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
 
+      {/* Modal para crear nuevo usuario */}
+      {showCreateModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.createUserModal}>
+            <button 
+              className={styles.closeModalButton} 
+              onClick={() => setShowCreateModal(false)}
+              disabled={loading}
+            >
+              ×
+            </button>
+            
+            <h2 className={styles.modalTitle}>Crear Nuevo Usuario</h2>
+            
+            <form className={styles.createUserForm} onSubmit={handleCreateUser}>
+              <div className={styles.formGrid}>
+                <label>
+                  Nombres <span className={styles.required}>*</span>
+                  <input 
+                    type="text" 
+                    name="nombres" 
+                    value={newUserData.nombres} 
+                    onChange={handleNewUserChange} 
+                    required 
+                    disabled={loading}
+                    placeholder="Ingresa los nombres"
+                  />
+                </label>
+
+                <label>
+                  Apellido Paterno <span className={styles.required}>*</span>
+                  <input 
+                    type="text" 
+                    name="apellidoPaterno" 
+                    value={newUserData.apellidoPaterno} 
+                    onChange={handleNewUserChange} 
+                    required 
+                    disabled={loading}
+                    placeholder="Ingresa apellido paterno"
+                  />
+                </label>
+
+                <label>
+                  Apellido Materno <span className={styles.required}>*</span>
+                  <input 
+                    type="text" 
+                    name="apellidoMaterno" 
+                    value={newUserData.apellidoMaterno} 
+                    onChange={handleNewUserChange} 
+                    required 
+                    disabled={loading}
+                    placeholder="Ingresa apellido materno"
+                  />
+                </label>
+
+                <label>
+                  Correo Electrónico <span className={styles.required}>*</span>
+                  <input 
+                    type="email" 
+                    name="email" 
+                    value={newUserData.email} 
+                    onChange={handleNewUserChange} 
+                    required 
+                    disabled={loading}
+                    placeholder="ejemplo@correo.com"
+                  />
+                </label>
+
+                <label>
+                  Contraseña <span className={styles.required}>*</span>
+                  <input 
+                    type="password" 
+                    name="password" 
+                    value={newUserData.password} 
+                    onChange={handleNewUserChange} 
+                    required 
+                    disabled={loading}
+                    placeholder="Mínimo 6 caracteres"
+                    minLength={6}
+                  />
+                </label>
+
+                <label>
+                  Confirmar Contraseña <span className={styles.required}>*</span>
+                  <input 
+                    type="password" 
+                    name="confirmPassword" 
+                    value={newUserData.confirmPassword} 
+                    onChange={handleNewUserChange} 
+                    required 
+                    disabled={loading}
+                    placeholder="Confirma la contraseña"
+                  />
+                </label>
+
+                <label>
+                  Fecha de Nacimiento <span className={styles.required}>*</span>
+                  <input 
+                    type="date" 
+                    name="fechaNacimiento" 
+                    value={newUserData.fechaNacimiento} 
+                    onChange={handleNewUserChange} 
+                    required 
+                    disabled={loading}
+                    max={new Date().toISOString().split('T')[0]}
+                  />
+                </label>
+
+                <label>
+                  Teléfono <span className={styles.required}>*</span>
+                  <input 
+                    type="tel" 
+                    name="telefono" 
+                    value={newUserData.telefono} 
+                    onChange={handleNewUserChange} 
+                    placeholder="+591 70000000"
+                    required 
+                    disabled={loading}
+                  />
+                </label>
+
+                <label>
+                  Género <span className={styles.required}>*</span>
+                  <select 
+                    name="genero" 
+                    value={newUserData.genero} 
+                    onChange={handleNewUserChange} 
+                    required
+                    disabled={loading}
+                  >
+                    <option value="1">Femenino</option>
+                    <option value="2">Masculino</option>
+                  </select>
+                </label>
+
+                <label>
+                  Rol <span className={styles.required}>*</span>
+                  <select 
+                    name="role" 
+                    value={newUserData.role} 
+                    onChange={handleNewUserChange} 
+                    required
+                    disabled={loading}
+                  >
+                    <option value="Estudiante">Estudiante</option>
+                    <option value="Tutor">Tutor</option>
+                  </select>
+                </label>
+              </div>
+
+              <div className={styles.modalButtons}>
+                <button 
+                  type="button" 
+                  className={styles.cancelModalButton}
+                  onClick={() => setShowCreateModal(false)}
+                  disabled={loading}
+                >
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  className={styles.submitModalButton}
+                  disabled={loading}
+                >
+                  {loading ? 'Creando...' : 'Crear Usuario'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de mensajes */}
+      {mostrarModal && (
+        <div className={styles.modalOverlay}>
+          {registroExitoso ? (
+            <div className={styles.successModal}>
+              <h3>✅ ¡Operación Exitosa!</h3>
+              <p>{mensaje || 'La operación se completó correctamente.'}</p>
+              <button className={styles.successButton} onClick={cerrarModal}>
+                Continuar
+              </button>
+            </div>
+          ) : (
+            <div className={styles.errorModal}>
+              <h3>⚠️ Atención</h3>
+              <p>{mensaje}</p>
+              <button className={styles.errorButton} onClick={cerrarModal}>
+                Cerrar
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Sidebar para editar usuario */}
       {selectedUser && (
         <div className={styles.sidebar}>
           <div className={styles.sidebarContent}>
-            <button className={styles.closeButton} onClick={handleCancel} aria-label="Cerrar">×</button>
+            <button 
+              className={styles.closeButton} 
+              onClick={handleCancel}
+              disabled={saveLoading}
+            >
+              ×
+            </button>
+            
             <div className={styles.userInfo}>
               <div className={styles.userAvatar}>
-                <img src={selectedUser.avatar} alt={selectedUser.name} />
+                <img 
+                  src={selectedUser.avatar} 
+                  alt={selectedUser.name}
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://ui-avatars.com/api/?name=Usuario&background=0D8ABC&color=fff&size=80';
+                  }}
+                />
               </div>
               <div className={styles.userDetails}>
-                <h3>{selectedUser.name}</h3>
-                <p>{selectedUser.email}</p>
-                <p>{selectedUser.phone}</p>
+                <label>
+                  Nombre:
+                  <input
+                    type="text"
+                    name="name"
+                    value={editUserData.name || ''}
+                    onChange={handleEditUserChange}
+                    className={styles.editInput}
+                    placeholder="Nombre completo"
+                    disabled={saveLoading}
+                  />
+                </label>
+                <label>
+                  Email:
+                  <input
+                    type="email"
+                    name="email"
+                    value={editUserData.email || ''}
+                    onChange={handleEditUserChange}
+                    className={styles.editInput}
+                    placeholder="correo@ejemplo.com"
+                    disabled={saveLoading}
+                  />
+                </label>
+                <label>
+                  Teléfono:
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={editUserData.phone || ''}
+                    onChange={handleEditUserChange}
+                    className={styles.editInput}
+                    placeholder="+591 70000000"
+                    disabled={saveLoading}
+                  />
+                </label>
                 <p>Registrado: {selectedUser.registrationDate}</p>
               </div>
             </div>
@@ -204,33 +658,41 @@ const Roladmi: React.FC = () => {
               <h4>Modificar Rol:</h4>
               <label className={styles.checkboxLabel}>
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name="rol"
                   checked={newRoles.tutor}
-                  onChange={e => handleRoleChange('tutor', e.target.checked)}
+                  onChange={() => setNewRoles({ tutor: true, estudiante: false })}
+                  disabled={saveLoading}
                 />
                 Tutor
               </label>
               <label className={styles.checkboxLabel}>
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name="rol"
                   checked={newRoles.estudiante}
-                  onChange={e => handleRoleChange('estudiante', e.target.checked)}
+                  onChange={() => setNewRoles({ tutor: false, estudiante: true })}
+                  disabled={saveLoading}
                 />
                 Estudiante
-              </label>
-              <label className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={newRoles.ambos}
-                  onChange={e => handleRoleChange('ambos', e.target.checked)}
-                />
-                Ambos
               </label>
             </div>
 
             <div className={styles.buttonGroup}>
-              <button className={styles.cancelButton} onClick={handleCancel}>Cancelar</button>
-              <button className={styles.saveButton} onClick={handleSave}>Guardar</button>
+              <button 
+                className={styles.cancelButton} 
+                onClick={handleCancel}
+                disabled={saveLoading}
+              >
+                Cancelar
+              </button>
+              <button 
+                className={styles.saveButton} 
+                onClick={handleSave}
+                disabled={saveLoading}
+              >
+                {saveLoading ? 'Guardando...' : 'Guardar Cambios'}
+              </button>
             </div>
           </div>
         </div>
