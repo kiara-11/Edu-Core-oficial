@@ -18,7 +18,17 @@
     line-height: 70px;
     /* 175% */
 }
-
+.novdads2 {
+    padding: 32px;
+    background-color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 133px;
+}
 .subtitnovd {
     height: 70px;
     color: var(--Brand-color, #0B7077);
