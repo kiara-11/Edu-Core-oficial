@@ -4,8 +4,6 @@ const config = {
   user: 'sa',
   password: '12345678',
   server: '172.24.240.1',
-
-
   database: 'educore',
   options: {
     encrypt: true,
