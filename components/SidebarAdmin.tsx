@@ -7,7 +7,7 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   const menuItems = [
-    { name: 'Gestión de roles', href: '/adminrol' },
+    { name: 'Gestión de Estudiantes/Tutores', href: '/adminrol' },
     { name: 'Aprobación de tutores', href: '/admintutor' },
     { name: 'Aprobación de certificados', href: '/Certificado' },
     { name: 'Control de pagos', href: '/miscursos' }//cambiar links por el correspondiente page

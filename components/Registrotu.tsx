@@ -4,14 +4,16 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './Registrotu.module.css';
 
-type Documento = {
-  nombre: string;
-  base64: string;
-};
+// MODIFICACIÓN: Este tipo ya no es necesario ya que no usaremos un array de objetos.
+// type Documento = {
+//   nombre: string;
+//   base64: string;
+// };
 
 const Registrotu = () => {
   const router = useRouter();
 
+  // MODIFICACIÓN: Se añaden los campos para los archivos directamente al formData.
   const [formData, setFormData] = useState({
     departamento: '',
     ciudad: '',
@@ -21,17 +23,23 @@ const Registrotu = () => {
     certificacion: '',
     entidad: '',
     año: '',
-    fe_in_prof: '',      // Nueva fecha inicio profesión
-    fe_fin_prof: '',     // Nueva fecha fin profesión  
-    fe_tit: '',          // Nueva fecha título
+    fe_in_prof: '',
+    fe_fin_prof: '',
+    fe_tit: '',
     materias: '',
     modalidad: '',
     horarios: '',
-    frecuencia: ''
+    frecuencia: '',
+    documento_nombre: '',     // Nombre del archivo de documento
+    documento_pdf: '',         // Base64 del archivo de documento
+    certificacion_nombre: '',  // Nombre del archivo de certificación
+    certificacion_pdf: ''      // Base64 del archivo de certificación
   });
 
-  const [documentos, setDocumentos] = useState<Documento[]>([]);
-  const [certificaciones, setCertificaciones] = useState<Documento[]>([]);
+  // MODIFICACIÓN: Estos estados ya no son necesarios. La información está en formData.
+  // const [documentos, setDocumentos] = useState<Documento[]>([]);
+  // const [certificaciones, setCertificaciones] = useState<Documento[]>([]);
+  
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -51,19 +59,18 @@ const Registrotu = () => {
     }));
   };
 
+  // MODIFICACIÓN: La lógica cambia para actualizar el estado formData.
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, tipo: 'documento' | 'certificacion') => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
 
     const file = files[0];
     
-    // Validar que sea PDF
     if (file.type !== 'application/pdf') {
       setError('Solo se permiten archivos PDF');
       return;
     }
 
-    // Validar tamaño (máximo 5MB)
     if (file.size > 5 * 1024 * 1024) {
       setError('El archivo no debe superar los 5MB');
       return;
@@ -73,30 +80,107 @@ const Registrotu = () => {
 
     reader.onload = () => {
       const base64String = reader.result as string;
-      const nuevoArchivo: Documento = {
-        nombre: file.name,
-        base64: base64String
-      };
-
+      
       if (tipo === 'documento') {
-        setDocumentos(prev => [...prev, nuevoArchivo]);
+        setFormData(prev => ({
+          ...prev,
+          documento_nombre: file.name,
+          documento_pdf: base64String
+        }));
       } else {
-        setCertificaciones(prev => [...prev, nuevoArchivo]);
+        setFormData(prev => ({
+          ...prev,
+          certificacion_nombre: file.name,
+          certificacion_pdf: base64String
+        }));
       }
       
       setError('');
     };
 
     reader.readAsDataURL(file);
+    e.target.value = ''; // Limpiar para poder subir el mismo archivo de nuevo
+  };
+  
+  // MODIFICACIÓN: Nueva función para eliminar un archivo del estado formData.
+  const removeDocument = (tipo: 'documento' | 'certificacion') => {
+    if (tipo === 'documento') {
+      setFormData(prev => ({
+        ...prev,
+        documento_nombre: '',
+        documento_pdf: ''
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        certificacion_nombre: '',
+        certificacion_pdf: ''
+      }));
+    }
   };
 
-  // Función de validación mejorada
+  // Función para hacer scroll al primer campo vacío (RESTAURADA DEL CÓDIGO ORIGINAL)
+  const scrollToFirstEmptyField = () => {
+    const requiredFields = [
+      { field: 'departamento', name: 'departamento' },
+      { field: 'ciudad', name: 'ciudad' },
+      { field: 'universidad', name: 'universidad' },
+      { field: 'titulo', name: 'titulo' },
+      { field: 'fe_tit', name: 'fe_tit' },
+      { field: 'fe_in_prof', name: 'fe_in_prof' },
+      { field: 'fe_fin_prof', name: 'fe_fin_prof' },
+      { field: 'certificacion', name: 'certificacion' },
+      { field: 'entidad', name: 'entidad' },
+      { field: 'año', name: 'año' },
+      { field: 'materias', name: 'materias' },
+      { field: 'modalidad', name: 'modalidad' },
+      { field: 'horarios', name: 'horarios' },
+      { field: 'frecuencia', name: 'frecuencia' }
+    ];
+
+    for (const { field, name } of requiredFields) {
+      const fieldValue = formData[field as keyof typeof formData];
+      if (!fieldValue || fieldValue.trim() === '') {
+        // Para campos select y input normales
+        const element = document.querySelector(`[name="${name}"]`) as HTMLElement;
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+          element.focus();
+          return true;
+        }
+        
+        // Para campos de botones (materias, modalidad, horarios, frecuencia)
+        if (['materias', 'modalidad', 'horarios', 'frecuencia'].includes(field)) {
+          const buttonSection = document.querySelector(`[data-field="${field}"]`) as HTMLElement;
+          if (buttonSection) {
+            buttonSection.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' 
+            });
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
+
+  // Función de validación mejorada (RESTAURADA DEL CÓDIGO ORIGINAL)
   const validateForm = () => {
     const requiredFields = [
       { field: 'departamento', label: 'Departamento' },
       { field: 'ciudad', label: 'Ciudad' },
       { field: 'universidad', label: 'Universidad/Instituto' },
       { field: 'titulo', label: 'Título obtenido' },
+      { field: 'fe_tit', label: 'Fecha de obtención del título' },
+      { field: 'fe_in_prof', label: 'Fecha de inicio como profesional' },
+      { field: 'fe_fin_prof', label: 'Fecha de fin como profesional' },
+      { field: 'certificacion', label: 'Nombre de la certificación' },
+      { field: 'entidad', label: 'Entidad emisora' },
+      { field: 'año', label: 'Año' },
       { field: 'materias', label: 'Materia que enseñas' },
       { field: 'modalidad', label: 'Modalidad' },
       { field: 'horarios', label: 'Horarios' },
@@ -108,11 +192,9 @@ const Registrotu = () => {
     );
 
     if (missingFields.length > 0) {
-      const fieldNames = missingFields.map(({ label }) => label).join(', ');
-      setError(`Los siguientes campos son obligatorios: ${fieldNames}`);
+      setError(`Por favor, completa los siguientes campos obligatorios: ${missingFields.map(f => f.label).join(', ')}.`);
       return false;
     }
-
     return true;
   };
 
@@ -120,9 +202,9 @@ const Registrotu = () => {
     setLoading(true);
     setError('');
 
-    // Validar campos obligatorios
     if (!validateForm()) {
       setLoading(false);
+      scrollToFirstEmptyField();
       return;
     }
 
@@ -134,13 +216,15 @@ const Registrotu = () => {
         return;
       }
 
+      // MODIFICACIÓN: El objeto a enviar es simplemente el formData, que ya lo contiene todo.
+      // Se crea un objeto sin los campos de nombre de archivo para no enviarlos al backend.
+      const { documento_nombre, certificacion_nombre, ...dataParaEnviar } = formData;
+
       const solicitudData = {
         email,
-        ...formData,
-        documentos,
-        certificaciones
+        ...dataParaEnviar
       };
-
+      
       const response = await fetch('/api/solicitud-tutor', {
         method: 'POST',
         headers: {
@@ -155,7 +239,6 @@ const Registrotu = () => {
         throw new Error(result.message || 'Error al enviar la solicitud');
       }
 
-      // Guardar estado local para mantener compatibilidad
       localStorage.setItem('solicitudTutorPendiente', 'true');
       localStorage.setItem('solicitudTutorEstado', 'Pendiente');
 
@@ -168,15 +251,7 @@ const Registrotu = () => {
       setLoading(false);
     }
   };
-
-  const removeDocument = (index: number, tipo: 'documento' | 'certificacion') => {
-    if (tipo === 'documento') {
-      setDocumentos(prev => prev.filter((_, i) => i !== index));
-    } else {
-      setCertificaciones(prev => prev.filter((_, i) => i !== index));
-    }
-  };
-
+  
   const closeModal = () => {
     setModalVisible(false);
     router.push('/notificaciones');
@@ -192,9 +267,9 @@ const Registrotu = () => {
             {error}
           </div>
         )}
-
+        
         <div className={styles.formWrapper}>
-          {/* Sección 1: Ubicación */}
+          {/* Sección 1: Ubicación (RESTAURADA DEL CÓDIGO ORIGINAL) */}
           <section className={styles.formSection}>
             <h2 className={styles.sectionTitle}>Sección 1: Ubicación</h2>
             <div className={styles.formGroup}>
@@ -237,7 +312,7 @@ const Registrotu = () => {
             </div>
 
             <div className={styles.formGroup}>
-              <label>Número de celular <span style={{color: '#F67766'}}>*</span></label>
+              <label>Número de celular</label>
               <input
                 type="tel"
                 name="celular"
@@ -249,7 +324,7 @@ const Registrotu = () => {
             </div>
           </section>
 
-          {/* Sección 2: Formación académica */}
+          {/* Sección 2: Formación académica (RESTAURADA DEL CÓDIGO ORIGINAL) */}
           <section className={styles.formSection}>
             <h2 className={styles.sectionTitle}>Sección 2: Formación académica</h2>
             <div className={styles.formGroup}>
@@ -278,7 +353,6 @@ const Registrotu = () => {
               />
             </div>
 
-            {/* NUEVOS CAMPOS DE FECHA */}
             <div className={styles.formGroup}>
               <label>Fecha de obtención del título <span style={{color: '#F67766'}}>*</span></label>
               <input
@@ -313,7 +387,7 @@ const Registrotu = () => {
             </div>
           </section>
 
-          {/* Sección 3: Certificación (Opcional) */}
+          {/* Sección 3: Certificación (RESTAURADA DEL CÓDIGO ORIGINAL) */}
           <section className={styles.formSection}>
             <h2 className={styles.sectionTitle}>Sección 3: Certificación <span style={{color: '#F67766'}}>*</span></h2>
             <div className={styles.formGroup}>
@@ -360,6 +434,7 @@ const Registrotu = () => {
           <section className={styles.formSection}>
             <h2 className={styles.sectionTitle}>Documentos (PDF) <span style={{color: '#999', fontSize: '18px'}}>(Opcional)</span></h2>
 
+            {/* --- PRIMER ARCHIVO --- */}
             <div className={styles.formGroup}>
               <label>Agregar Documento (PDF) de certificados <span style={{color: '#999', fontSize: '14px'}}>(opcional)</span>:</label>
               <input
@@ -367,29 +442,30 @@ const Registrotu = () => {
                 accept="application/pdf"
                 onChange={e => handleFileChange(e, 'documento')}
                 className={styles.formInput}
+                // Deshabilitar si ya hay un archivo cargado para evitar confusiones
+                disabled={!!formData.documento_nombre} 
               />
             </div>
 
-            {documentos.length > 0 && (
+            {/* MODIFICACIÓN: Mostrar el archivo cargado desde formData */}
+            {formData.documento_nombre && (
               <div className={styles.documentList}>
-                <h4>Documentos cargados:</h4>
                 <ul>
-                  {documentos.map((doc, i) => (
-                    <li key={i} className={styles.documentItem}>
-                      <span>{doc.nombre}</span>
-                      <button 
-                        type="button"
-                        onClick={() => removeDocument(i, 'documento')}
-                        className={styles.removeBtn}
-                      >
-                        ❌
-                      </button>
-                    </li>
-                  ))}
+                  <li className={styles.documentItem}>
+                    <span>{formData.documento_nombre}</span>
+                    <button 
+                      type="button"
+                      onClick={() => removeDocument('documento')}
+                      className={styles.removeBtn}
+                    >
+                      ❌
+                    </button>
+                  </li>
                 </ul>
               </div>
             )}
 
+            {/* --- SEGUNDO ARCHIVO --- */}
             <div className={styles.formGroup}>
               <label>Agregar Certificaciones adicionales (PDF) <span style={{color: '#999', fontSize: '14px'}}>(opcional)</span>:</label>
               <input
@@ -397,35 +473,34 @@ const Registrotu = () => {
                 accept="application/pdf"
                 onChange={e => handleFileChange(e, 'certificacion')}
                 className={styles.formInput}
+                disabled={!!formData.certificacion_nombre}
               />
             </div>
-
-            {certificaciones.length > 0 && (
+            
+            {/* MODIFICACIÓN: Mostrar el segundo archivo cargado desde formData */}
+            {formData.certificacion_nombre && (
               <div className={styles.documentList}>
-                <h4>Certificaciones cargadas:</h4>
                 <ul>
-                  {certificaciones.map((cert, i) => (
-                    <li key={i} className={styles.documentItem}>
-                      <span>{cert.nombre}</span>
-                      <button 
-                        type="button"
-                        onClick={() => removeDocument(i, 'certificacion')}
-                        className={styles.removeBtn}
-                      >
-                        ❌
-                      </button>
-                    </li>
-                  ))}
+                  <li className={styles.documentItem}>
+                    <span>{formData.certificacion_nombre}</span>
+                    <button 
+                      type="button"
+                      onClick={() => removeDocument('certificacion')}
+                      className={styles.removeBtn}
+                    >
+                      ❌
+                    </button>
+                  </li>
                 </ul>
               </div>
             )}
           </section>
 
-          {/* Sección 4: Perfil como tutor */}
+          {/* Sección 4: Perfil como tutor (RESTAURADA DEL CÓDIGO ORIGINAL) */}
           <section className={styles.formSection}>
             <h2 className={styles.sectionTitle}>Sección 4: Perfil como tutor</h2>
             
-            <div className={styles.formGroup}>
+            <div className={styles.formGroup} data-field="materias">
               <label style={{textAlign: 'center', display: 'block'}}>¿Qué materia enseñas? <span style={{color: '#F67766'}}>*</span></label>
               <div className={styles.subjectGrid}>
                 {['Matemáticas', 'Programas', 'Idiomas', 'Otro'].map(subject => (
@@ -449,7 +524,7 @@ const Registrotu = () => {
 
             <div className={styles.questionSection}>
               <h3>¿Cuándo puedes impartir clases?</h3>
-              <div className={styles.subQuestion}>
+              <div className={styles.subQuestion} data-field="modalidad">
                 <h4>Modalidad <span style={{color: '#F67766'}}>*</span></h4>
                 <div className={styles.optionGroup}>
                   {['Virtual', 'Presencial', 'Ambos'].map(option => (
@@ -465,7 +540,7 @@ const Registrotu = () => {
                 </div>
               </div>
 
-              <div className={styles.subQuestion}>
+              <div className={styles.subQuestion} data-field="horarios">
                 <h4>Horarios <span style={{color: '#F67766'}}>*</span></h4>
                 <div className={styles.optionGroup}>
                   {['Mañana', 'Tarde', 'Por confirmar'].map(option => (
@@ -481,7 +556,7 @@ const Registrotu = () => {
                 </div>
               </div>
 
-              <div className={styles.subQuestion}>
+              <div className={styles.subQuestion} data-field="frecuencia">
                 <h4>Frecuencia <span style={{color: '#F67766'}}>*</span></h4>
                 <div className={styles.optionGroup}>
                   {['Una vez por semana', 'Dos veces por semana', 'Por confirmar'].map(option => (
@@ -510,7 +585,7 @@ const Registrotu = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal (RESTAURADO DEL CÓDIGO ORIGINAL) */}
       {modalVisible && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
