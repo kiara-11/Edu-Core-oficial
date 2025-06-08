@@ -102,3 +102,10 @@
   overflow-x: auto;
 
 }
+
+.mensaje-vacio {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+  padding: 1rem;
+}

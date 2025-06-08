@@ -9,6 +9,18 @@
     margin: 0 auto;
 }
 
+.novdads2 {
+    padding: 32px;
+    background-color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 133px;
+}
+
 .titnovd {
     color: #FD661F;
     font-family: Raleway;
@@ -79,9 +91,13 @@
     gap: 20px;
     align-self: stretch;
 
-    overflow-x: auto;   /* scroll horizontal */
-    overflow-y: hidden; /* sin scroll vertical */
+    overflow-x: auto;
+    /* scroll horizontal */
+    overflow-y: hidden;
+    /* sin scroll vertical */
 
-    flex-wrap: nowrap;  /* una sola fila */
-    -webkit-overflow-scrolling: touch; /* suavidad en iOS */
+    flex-wrap: nowrap;
+    /* una sola fila */
+    -webkit-overflow-scrolling: touch;
+    /* suavidad en iOS */
 }
