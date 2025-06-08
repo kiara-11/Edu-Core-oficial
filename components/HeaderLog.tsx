@@ -1,32 +1,58 @@
+// components/Header.tsx
 'use client';
 
 import Image from 'next/image';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './headerySide.module.css';
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [nombreCompleto, setNombreCompleto] = useState('');
   const [correoUsuario, setCorreoUsuario] = useState('');
   const [rolUsuario, setRolUsuario] = useState('');
   const [loadingRole, setLoadingRole] = useState(true);
+  const [userAvatarUrl, setUserAvatarUrl] = useState('/default_avatar.png');
+  const [uploading, setUploading] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
-    const nombre = localStorage.getItem('nombreCompleto');
-    const correo = localStorage.getItem('email');
-    if (nombre) setNombreCompleto(nombre);
-    if (correo) setCorreoUsuario(correo);
+  const nombre = localStorage.getItem('nombreCompleto');
+  const correo = localStorage.getItem('email');
+
+  if (nombre) setNombreCompleto(nombre); // <--- Corrected: removed the extra 'p'
+  if (correo) setCorreoUsuario(correo);
+
+    const fetchAvatar = async (userEmail: string) => {
+      try {
+        const response = await fetch(`/api/perfil-photo?email=${encodeURIComponent(userEmail)}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUserAvatarUrl(data.photoUrl || '/default_avatar.png');
+        } else {
+          console.error('Failed to fetch avatar:', response.status, response.statusText);
+          setUserAvatarUrl('/default_avatar.png');
+        }
+      } catch (error) {
+        console.error('Error fetching avatar:', error);
+        setUserAvatarUrl('/default_avatar.png');
+      }
+    };
+
+    if (correo) {
+      fetchAvatar(correo);
+    }
   }, []);
 
-  // Función para obtener el rol del usuario
   useEffect(() => {
     const fetchUserRole = async () => {
       const email = localStorage.getItem('email');
       if (!email) {
-        setRolUsuario('Estudiante'); // Asignar "Estudiante" por defecto
+        setRolUsuario('Estudiante');
         setLoadingRole(false);
         return;
       }
@@ -35,11 +61,10 @@ const Header = () => {
         const response = await fetch(`/api/usuario/rol?email=${encodeURIComponent(email)}`);
         if (!response.ok) throw new Error('No se pudo obtener el rol');
         const data = await response.json();
-        // Si no hay rol, es null o es una cadena vacía, asignar "Estudiante" por defecto
         setRolUsuario(data.rol && data.rol.trim() !== '' ? data.rol : 'Estudiante');
       } catch (err) {
         console.error('Error obteniendo el rol:', err);
-        setRolUsuario('Estudiante'); // Asignar "Estudiante" por defecto en caso de error
+        setRolUsuario('Estudiante');
       } finally {
         setLoadingRole(false);
       }
@@ -67,6 +92,53 @@ const Header = () => {
     router.push('/');
   };
 
+  // Modified handleAvatarClick to open file input directly
+  const handleAvatarClick = () => {
+    if (fileInputRef.current && !uploading && !isDropdownOpen) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!correoUsuario) {
+      alert('Error: No se encontró el correo del usuario logueado para subir la foto.');
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('email', correoUsuario);
+
+    try {
+      const response = await fetch('/api/perfil-photo', {
+        method: 'PUT',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUserAvatarUrl(data.photoUrl);
+        // alert('Foto de perfil actualizada con éxito!'); // Removed redundant alert, visual feedback is better
+      } else {
+        const errorData = await response.json();
+        alert(`Error al subir la foto: ${errorData.message || 'Error desconocido'}`);
+        console.error('Upload error:', errorData);
+      }
+    } catch (error) {
+      alert('Error de red al subir la foto.');
+      console.error('Network error during upload:', error);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.headerContainer}>
@@ -91,26 +163,50 @@ const Header = () => {
               </p>
               <p className={styles.userProfile}>Mi Perfil</p>
             </div>
-            <div className={styles.userAvatar} onClick={toggleDropdown}>
+            {/* Start of enhanced user avatar section */}
+            <div
+              className={styles.userAvatarContainer} // New container for styling
+              onClick={handleAvatarClick}
+            >
+              {uploading && (
+                <div className={styles.avatarOverlay}>
+                  <div className={styles.loadingSpinner}></div>
+                </div>
+              )}
+              {!uploading && ( // Show change icon only when not uploading
+                <div className={styles.avatarOverlay}>
+                  <span className={styles.changePhotoText}>Cambiar Foto</span>
+                  {/* You could also use an icon here, e.g., a camera icon */}
+                </div>
+              )}
               <Image
-                src="/Imagen de WhatsApp 2024-11-13 a las 19.33.07_84c43483.png"
-                alt="Avatar"
+                src={userAvatarUrl}
+                alt="Avatar de Usuario"
                 width={60}
                 height={60}
+                priority
+                className={styles.avatarImage}
+              />
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                accept="image/jpeg,image/png,image/gif"
+                onChange={handleFileChange}
               />
             </div>
+            {/* End of enhanced user avatar section */}
 
             {isDropdownOpen && (
               <div className={styles.dropdownMenu}>
                 <div className={styles.dropdownHeader}>
                   <div className={styles.dropdownAvatar}>
                     <Image
-                      src="/Imagen de WhatsApp 2024-11-13 a las 19.33.07_84c43483.png"
+                      src={userAvatarUrl}
                       alt="Avatar"
                       width={40}
                       height={40}
                     />
-                    
                   </div>
                   <div className={styles.dropdownInfo}>
                     <p className={styles.dropdownName}>{nombreCompleto || 'Usuario'}</p>
@@ -139,6 +235,5 @@ const Header = () => {
     </header>
   );
 };
-
 
 export default Header;

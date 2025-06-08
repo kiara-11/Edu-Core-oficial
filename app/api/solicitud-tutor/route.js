@@ -3,10 +3,11 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
+    // MODIFICACIÓN: Se ajusta la desestructuración para recibir los nuevos campos de PDF en Base64.
     const {
       email,
-      departamento,
-      ciudad,
+      departamento, // Este dato no se usa en el backend, pero lo recibimos.
+      ciudad,       // Este dato no se usa en el backend, pero lo recibimos.
       celular,
       universidad,
       titulo,
@@ -20,8 +21,8 @@ export async function POST(request) {
       modalidad,
       horarios,
       frecuencia,
-      documentos,
-      certificaciones
+      documento_pdf,       // Nuevo campo para el primer archivo PDF
+      certificacion_pdf    // Nuevo campo para el segundo archivo PDF
     } = await request.json();
 
     if (!email || !universidad || !titulo) {
@@ -32,7 +33,7 @@ export async function POST(request) {
 
     await connectToDb();
 
-    // Obtener ID del usuario y de datos personales
+    // Obtener ID del usuario y de datos personales (sin cambios)
     const userResult = await sql.query`
       SELECT u.id_user, dp.id_dp
       FROM Usuario u
@@ -46,13 +47,16 @@ export async function POST(request) {
 
     const { id_user, id_dp } = userResult.recordset[0];
 
-    // Actualizar número de celular
-    await sql.query`
-      UPDATE Datos_personales 
-      SET telefono = ${celular}
-      WHERE id_dp = ${id_dp}
-    `;
+    // Actualizar número de celular (sin cambios)
+    if (celular) {
+        await sql.query`
+          UPDATE Datos_personales 
+          SET telefono = ${celular}
+          WHERE id_dp = ${id_dp}
+        `;
+    }
 
+    // Función para parsear fechas (sin cambios)
     const parseDate = (fecha) => {
       if (!fecha) return null;
       try {
@@ -62,74 +66,27 @@ export async function POST(request) {
       }
     };
 
-    // Insertar solicitud del tutor
-    const solicitudResult = await sql.query`
+    // MODIFICACIÓN: Se actualiza la consulta INSERT para incluir las columnas 'documento' y 'doccertificacion'.
+    await sql.query`
       INSERT INTO Solicitud_tutor1 (
         id_user, universidad, profesion, certificacion, entidad,
         anio, fe_in_prof, fe_fin_prof, fe_tit,
-        modalidad, horarios, frecuencia, materias, estado
+        modalidad, horarios, frecuencia, materias, estado,
+        documento, doccertificacion 
       )
-      OUTPUT INSERTED.id_solicitud
       VALUES (
         ${id_user}, ${universidad}, ${titulo}, ${certificacion || null}, ${entidad || null},
         ${año ? parseInt(año) : null}, ${parseDate(fe_in_prof)}, ${parseDate(fe_fin_prof)}, ${parseDate(fe_tit)},
-        ${modalidad}, ${horarios}, ${frecuencia}, ${materias}, 'Pendiente'
+        ${modalidad}, ${horarios}, ${frecuencia}, ${materias}, 'Pendiente',
+        ${documento_pdf || null}, ${certificacion_pdf || null}
       )
     `;
 
-    const id_solicitud = solicitudResult.recordset[0].id_solicitud;
-
-    // Insertar DOCUMENTOS (como certificado)
-    if (documentos && documentos.length > 0) {
-      for (const doc of documentos) {
-        if (!doc.base64 || !doc.nombre) {
-          console.warn('⚠️ Documento inválido:', doc);
-          continue;
-        }
-        await sql.query`
-          INSERT INTO Ins_Form (
-            archivo_certificado,
-            Detalle,
-            direc_form,
-            id_user
-          )
-          VALUES (
-            ${doc.base64},
-            ${doc.nombre},
-            ${universidad},
-            ${id_user}
-          )
-        `;
-      }
-    }
-
-    // Insertar CERTIFICACIONES (como docente)
-    if (certificaciones && certificaciones.length > 0) {
-      for (const cert of certificaciones) {
-        if (!cert.base64 || !cert.nombre) {
-          console.warn('⚠️ Certificación inválida:', cert);
-          continue;
-        }
-        await sql.query`
-          INSERT INTO Ins_Form (
-            archivo_docente,
-            Detalle,
-            direc_form,
-            id_user
-          )
-          VALUES (
-            ${cert.base64},
-            ${cert.nombre},
-            ${universidad},
-            ${id_user}
-          )
-        `;
-      }
-    }
+    // MODIFICACIÓN: Se elimina toda la lógica anterior que insertaba en la tabla 'Ins_Form'.
+    // El código que estaba aquí ha sido borrado porque los archivos ya se guardan en la consulta principal.
 
     return NextResponse.json({
-      message: 'Solicitud creada exitosamente',
-      id_solicitud
+      message: 'Solicitud creada exitosamente'
     }, { status: 201 });
 
   } catch (error) {

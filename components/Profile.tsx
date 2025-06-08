@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, ChangeEvent } from 'react'; // Import useRef and ChangeEvent
 import "./Profile.css";
 
 const Perfil = () => {
@@ -12,8 +12,13 @@ const Perfil = () => {
     email: '',
     telefono: '',
     bio: '',
-    avatar: '/Imagen de WhatsApp 2024-11-13 a las 19.33.07_84c43483.png',
+    // This initial avatar path will be immediately overwritten by the fetch
+    avatar: '/default_avatar.png', // Set a more generic default
   });
+
+  // Ref for the hidden file input
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false); // State for upload loading
 
   // Datos académicos tutor aprobado (solo lectura)
   const [tutorData, setTutorData] = useState<{
@@ -28,7 +33,7 @@ const Perfil = () => {
   const [showTutorSection, setShowTutorSection] = useState(false);
 
   const [editData, setEditData] = useState(profileData);
-  const [showImageUpload, setShowImageUpload] = useState(false);
+  // const [showImageUpload, setShowImageUpload] = useState(false); // No longer needed
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -51,8 +56,40 @@ const Perfil = () => {
             user_name: data.user_name || '',
             bio: data.bio || '',
           }));
+          setEditData(prev => ({ // Also initialize editData with fetched data
+            ...prev,
+            nombreCompleto: data.nombreCompleto,
+            email: data.email,
+            telefono: data.telefono || '',
+            user_name: data.user_name || '',
+            bio: data.bio || '',
+          }));
         }
       });
+
+    // Fetch user avatar (similar to Header)
+    const fetchAvatar = async (userEmail: string) => {
+      try {
+        const response = await fetch(`/api/perfil-photo?email=${encodeURIComponent(userEmail)}`);
+        if (response.ok) {
+          const data = await response.json();
+          setProfileData(prev => ({ ...prev, avatar: data.photoUrl || '/default_avatar.png' }));
+          setEditData(prev => ({ ...prev, avatar: data.photoUrl || '/default_avatar.png' })); // Also update editData
+        } else {
+          console.error('Failed to fetch avatar:', response.status, response.statusText);
+          setProfileData(prev => ({ ...prev, avatar: '/default_avatar.png' }));
+          setEditData(prev => ({ ...prev, avatar: '/default_avatar.png' }));
+        }
+      } catch (error) {
+        console.error('Error fetching avatar:', error);
+        setProfileData(prev => ({ ...prev, avatar: '/default_avatar.png' }));
+        setEditData(prev => ({ ...prev, avatar: '/default_avatar.png' }));
+      }
+    };
+
+    if (email) {
+      fetchAvatar(email);
+    }
 
     // Verificar si usuario es tutor aprobado
     const esTutor = localStorage.getItem('esTutorAprobado');
@@ -73,7 +110,7 @@ const Perfil = () => {
   }, []);
 
   const handleEdit = () => {
-    setEditData(profileData);
+    setEditData(profileData); // Ensure editData is fresh with current profileData
     setIsEditing(true);
   };
 
@@ -91,6 +128,7 @@ const Perfil = () => {
       setIsEditing(false);
       localStorage.setItem('nombreCompleto', updated.nombreCompleto);
       localStorage.setItem('email', updated.email);
+      alert("¡Cambios de perfil guardados con éxito!"); // Feedback for general profile updates
     } else {
       alert("❌ Error al guardar los cambios.");
     }
@@ -108,21 +146,55 @@ const Perfil = () => {
     }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setEditData(prev => ({
-          ...prev,
-          avatar: result
-        }));
-      };
-      reader.readAsDataURL(file);
+  // --- NEW: handleAvatarClick and handleFileChange for direct upload ---
+  const handleAvatarClick = () => {
+    if (fileInputRef.current && !uploading) { // Only allow click if not already uploading
+      fileInputRef.current.click(); // Trigger click on hidden file input
     }
-    setShowImageUpload(false);
   };
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const email = localStorage.getItem("email"); // Get current user email
+    if (!email) {
+      alert('Error: No se encontró el correo del usuario logueado para subir la foto.');
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('email', email); // Send email to the API route
+
+    try {
+      const response = await fetch('/api/perfil-photo', {
+        method: 'PUT',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProfileData(prev => ({ ...prev, avatar: data.photoUrl })); // Update profileData
+        setEditData(prev => ({ ...prev, avatar: data.photoUrl })); // Also update editData
+        // alert('Foto de perfil actualizada con éxito!'); // Visual feedback is better than alert here
+      } else {
+        const errorData = await response.json();
+        alert(`Error al subir la foto: ${errorData.message || 'Error desconocido'}`);
+        console.error('Upload error:', errorData);
+      }
+    } catch (error) {
+      alert('Error de red al subir la foto.');
+      console.error('Network error during upload:', error);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // Clear the file input for subsequent uploads
+      }
+    }
+  };
+  // --- END NEW ---
 
   const handlePasswordChange = async () => {
     try {
@@ -150,41 +222,36 @@ const Perfil = () => {
       </div>
 
       <div className="profile-content">
-        {/* Avatar */}
+        {/* Avatar Section */}
         <div className="avatar-section">
-          <div className="avatar-container">
-            <div className="avatar-wrapper">
-              <Image
-                src={isEditing ? editData.avatar : profileData.avatar}
-                alt="Avatar"
-                width={120}
-                height={120}
-                className="profile-avatar"
-              />
-              {isEditing && (
-                <div className="avatar-overlay" onClick={() => setShowImageUpload(true)}>
-                  📷
-                </div>
-              )}
-            </div>
-            {isEditing && showImageUpload && (
-              <div className="image-upload-modal">
-                <div className="upload-content">
-                  <h3>Cambiar foto de perfil</h3>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="file-input"
-                    id="avatar-upload"
-                  />
-                  <label htmlFor="avatar-upload" className="upload-button">
-                    Seleccionar imagen
-                  </label>
-                  <button onClick={() => setShowImageUpload(false)} className="cancel-upload">Cancelar</button>
-                </div>
+          {/* New container for styling and click handling */}
+          <div className="profile-avatar-container" onClick={handleAvatarClick}>
+            {uploading && ( // Show spinner when uploading
+              <div className="profile-avatar-overlay">
+                <div className="loading-spinner"></div> {/* Use a specific class for this context */}
               </div>
             )}
+            {!uploading && ( // Show "Cambiar Foto" overlay when not uploading
+              <div className="profile-avatar-overlay">
+                <span className="change-photo-text">Cambiar Foto</span>
+              </div>
+            )}
+            <Image
+              src={profileData.avatar} // Display the fetched or newly uploaded avatar
+              alt="Avatar"
+              width={120}
+              height={120}
+              className="profile-avatar-image" // New class for the Image tag
+              priority // Or remove if not critical for LCP
+            />
+            {/* Hidden file input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              accept="image/jpeg,image/png,image/gif"
+              onChange={handleFileChange}
+            />
           </div>
         </div>
 

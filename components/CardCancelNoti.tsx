@@ -1,8 +1,11 @@
+'use client';
+
 import React from 'react';
-import "./CardNoti.css";
 import Image from 'next/image';
 import Link from 'next/link';
+import './CardNoti.css';
 
+// ✅ MODIFICADO: Agregar motivoRechazo a la interface
 interface CardProps {
   titulo: string;
   detalle: string;
@@ -10,6 +13,7 @@ interface CardProps {
   estadoTexto?: string;
   botonTexto?: string;
   botonLink?: string;
+  motivoRechazo?: string; // ✅ NUEVO: Motivo de rechazo
 }
 
 const CardCancelNoti: React.FC<CardProps> = ({
@@ -18,7 +22,8 @@ const CardCancelNoti: React.FC<CardProps> = ({
   fecha,
   estadoTexto,
   botonTexto,
-  botonLink
+  botonLink,
+  motivoRechazo // ✅ NUEVO: Recibir motivo de rechazo
 }) => {
   return (
     <div className='cardcontent'>
@@ -28,26 +33,28 @@ const CardCancelNoti: React.FC<CardProps> = ({
           src="/cancel.png"
           width={46}
           height={46}
-          alt={"Cancelado"}
+          alt="Solicitud Cancelada/Rechazada"
         />
       </div>
       <div className='infocanoti'>
         <p className='titnoti'>{titulo}</p>
         <p className='detanoti'>{detalle}</p>
+        
+        {/* ✅ NUEVO: Mostrar motivo de rechazo si existe */}
+        {motivoRechazo && (
+          <div className='motivorechazo'>
+            <p className='motivotitulo'>Motivo del rechazo:</p>
+            <p className='motivodetalle'>{motivoRechazo}</p>
+          </div>
+        )}
+        
         <div className='infxtra'>
           {fecha && <p className='datenoti'>{fecha}</p>}
           <div className='contestadnoti'>
-            <p className='estnotif'>{estadoTexto || 'Cancelado'}</p>
+            <p className='estnotif'>{estadoTexto || 'Rechazado'}</p>
           </div>
         </div>
       </div>
-      {botonTexto && botonLink && (
-        <div className='xtracanoti'>
-          <Link href={botonLink} className="buttnnoti">
-            <p className="txtbtnnoti">{botonTexto}</p>
-          </Link>
-        </div>
-      )}
     </div>
   );
 };

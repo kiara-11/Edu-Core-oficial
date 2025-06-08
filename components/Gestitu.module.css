@@ -37,15 +37,13 @@
   background: #D2E6E4;
   border-radius: 15px;
   border: 1px solid #0B7077;
+  align-items: end;
 }
 
-.filterGroup {
-  flex: 1;
-}
-
-.label {
-  display: block;
-  margin-bottom: 8px;
+.filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   font-size: 14px;
   color: #0B7077;
   font-weight: 600;
@@ -56,6 +54,7 @@
 .select,
 .input {
   width: 100%;
+  min-width: 200px;
   padding: 12px 16px;
   border: 2px solid transparent;
   border-radius: 12px;
@@ -86,24 +85,20 @@
   background-color: #0B7077;
   padding: 20px;
   display: grid;
-  grid-template-columns: 2fr 2.5fr 2fr 1fr 1fr;
+  grid-template-columns: 1.8fr 2.2fr 1.5fr 1.2fr 1fr 0.8fr;
   gap: 15px;
   font-weight: 600;
   font-size: 14px;
   color: white;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.headerCell {
-  display: flex;
   align-items: center;
 }
 
 .tableRow {
   padding: 20px;
   display: grid;
-  grid-template-columns: 2fr 2.5fr 2fr 1fr 1fr;
+  grid-template-columns: 1.8fr 2.2fr 1.5fr 1.2fr 1fr 0.8fr;
   gap: 15px;
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -133,86 +128,44 @@
   opacity: 1;
 }
 
-.avatarCell {
-  display: flex;
-  justify-content: center;
-}
-
-.avatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #0B7077;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(11, 112, 119, 0.15);
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.cell {
-  display: flex;
-  align-items: center;
-}
-
-.nameCell {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-}
-
-.nameCell > div:first-child {
+.statusBadge {
   font-weight: 600;
-  color: #0B7077;
-  font-size: 15px;
-}
-
-.nameCell > div:last-child {
-  font-size: 12px;
-  color: #666;
-}
-
-.status {
-  font-weight: 600;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 20px;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: center;
-  min-width: 80px;
+  min-width: fit-content;
+  white-space: nowrap;
 }
 
 .pendiente {
-  color: #0B7077;
-  background: rgba(11, 112, 119, 0.1);
+  color: #856404;
+  background: rgba(255, 193, 7, 0.2);
+  border: 1px solid rgba(255, 193, 7, 0.3);
 }
 
 .aprobado {
-  color: #0B7077;
-  background: rgba(210, 230, 228, 0.8);
+  color: #155724;
+  background: rgba(40, 167, 69, 0.2);
+  border: 1px solid rgba(40, 167, 69, 0.3);
 }
 
 .rechazado {
-  color: #FD661F;
-  background: rgba(253, 102, 31, 0.1);
+  color: #721c24;
+  background: rgba(220, 53, 69, 0.2);
+  border: 1px solid rgba(220, 53, 69, 0.3);
 }
 
 .viewButton {
   background-color: #FD661F;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 18px;
   border-radius: 25px;
   font-size: 12px;
   font-weight: 600;
@@ -222,7 +175,9 @@
   letter-spacing: 0.5px;
   box-shadow: 0 4px 15px rgba(253, 102, 31, 0.3);
   width: 100%;
-  max-width: 80px;
+  max-width: 70px;
+  min-width: 60px;
+  justify-self: center;
 }
 
 .viewButton:hover {
@@ -233,6 +188,13 @@
 
 .viewButton:active {
   transform: translateY(0);
+}
+
+.viewButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .sidebar {
@@ -301,7 +263,6 @@
   transform: scale(0.95) rotate(90deg);
 }
 
-/* Estilos mejorados para la información de la solicitud */
 .sidebar h3 {
   margin: 0 0 35px 0;
   font-size: 26px;
@@ -385,13 +346,13 @@
   letter-spacing: 0.5px;
 }
 
-.sidebar ul {
+.documentList {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.sidebar li {
+.documentList li {
   margin-bottom: 12px;
   background: white;
   border-radius: 12px;
@@ -401,13 +362,13 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.sidebar li:hover {
+.documentList li:hover {
   background: #D2E6E4;
   transform: translateX(8px);
   box-shadow: 0 4px 15px rgba(11, 112, 119, 0.15);
 }
 
-.sidebar a {
+.documentLink {
   color: #0B7077;
   text-decoration: none;
   font-weight: 600;
@@ -417,103 +378,14 @@
   gap: 12px;
 }
 
-.sidebar a:hover {
+.documentLink:hover {
   color: #FD661F;
 }
 
-.sidebar a::before {
-  content: '📄';
-  font-size: 18px;
-}
-
-.userInfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 15px;
-  margin-bottom: 25px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
-  margin-top: 10px;
-}
-
-.userAvatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #0B7077;
-  flex-shrink: 0;
-  border: 4px solid #D2E6E4;
-  box-shadow: 0 10px 30px rgba(11, 112, 119, 0.3);
-}
-
-.userAvatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.userDetails {
-  flex: 1;
-}
-
-.userName {
-  margin: 0 0 5px 0;
-  font-size: 18px;
-  color: #0B7077;
-  font-weight: 700;
-}
-
-.userEmail {
-  margin: 0 0 3px 0;
-  color: #0B7077;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.userPhone {
-  margin: 0 0 3px 0;
-  color: #4a5568;
-  font-size: 12px;
-}
-
-.userDate {
-  margin: 0;
-  color: #4a5568;
-  font-size: 12px;
-}
-
-.section {
-  margin-bottom: 20px;
-}
-
-.sectionTitle {
-  margin: 0 0 10px 0;
-  font-size: 14px;
+.documentName {
   color: #0B7077;
   font-weight: 600;
-}
-
-.biography {
-  margin: 0;
-  font-size: 13px;
-  color: #4a5568;
-  line-height: 1.4;
-}
-
-.documentList {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.documentItem {
-  font-size: 13px;
-  color: #4a5568;
-  margin-bottom: 5px;
-  padding-left: 0;
+  font-size: 15px;
 }
 
 .buttonGroup {
@@ -570,6 +442,14 @@
   transform: translateY(0);
 }
 
+.approveButton:disabled,
+.rejectButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .statusInfo {
   margin-top: 25px;
   padding: 20px;
@@ -603,6 +483,27 @@
   border: 1px solid #D2E6E4;
 }
 
+.loadingMessage {
+  padding: 40px 20px;
+  text-align: center;
+  color: #0B7077;
+  font-size: 16px;
+  background: #F8F3E9;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 1px solid #D2E6E4;
+}
+
+.errorMessage {
+  padding: 15px 20px;
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #721c24;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
 /* Scrollbar personalizado */
 .sidebar::-webkit-scrollbar {
   width: 8px;
@@ -623,6 +524,13 @@
 }
 
 /* Responsive design */
+@media (max-width: 1400px) {
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1.5fr 2fr 1.3fr 1fr 0.8fr 0.7fr;
+  }
+}
+
 @media (max-width: 1200px) {
   .sidebar {
     position: fixed;
@@ -632,9 +540,15 @@
     max-height: calc(100vh - 40px);
     width: 420px;
   }
+  
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1.3fr 1.8fr 1.2fr 1fr 0.8fr 0.6fr;
+    font-size: 13px;
+  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .filters {
     flex-direction: column;
     gap: 20px;
@@ -642,12 +556,12 @@
   
   .tableHeader,
   .tableRow {
-    grid-template-columns: 1.5fr 2fr 1.5fr 1fr 80px;
+    grid-template-columns: 1.2fr 1.5fr 1fr 0.8fr 0.7fr 0.5fr;
     font-size: 12px;
-    padding: 15px;
-    gap: 10px;
   }
-  
+}
+
+@media (max-width: 768px) {
   .container {
     padding: 15px;
   }
@@ -657,10 +571,52 @@
     border-radius: 16px;
   }
   
+  .filters {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .select,
+  .input {
+    min-width: 100%;
+  }
+  
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr 1.5fr 1fr 0.8fr 0.6fr;
+    font-size: 11px;
+    padding: 12px;
+    gap: 8px;
+  }
+  
+  /* Ocultar la columna de universidad en móviles */
+  .tableHeader > div:nth-child(3),
+  .tableRow > div:nth-child(3) {
+    display: none;
+  }
+  
+  .tableHeader {
+    grid-template-columns: 1fr 1.5fr 1fr 0.6fr;
+  }
+  
+  .tableRow {
+    grid-template-columns: 1fr 1.5fr 1fr 0.6fr;
+  }
+  
+  .viewButton {
+    padding: 8px 12px;
+    font-size: 10px;
+    max-width: 50px;
+    min-width: 45px;
+  }
+  
   .sidebar {
     width: calc(100% - 30px);
     right: 15px;
     left: 15px;
+    top: 20px;
+    transform: none;
   }
   
   .sidebarContent {
@@ -674,24 +630,212 @@
     top: 15px;
     right: 15px;
   }
-  
-  .detailSection {
-    padding: 20px;
-    margin-bottom: 25px;
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 22px;
   }
   
-  .detailSection h4 {
-    font-size: 16px;
-    margin-bottom: 15px;
+  .tableHeader,
+  .tableRow {
+    font-size: 10px;
+    padding: 10px;
+    gap: 5px;
   }
   
-  .detailSection p {
-    padding: 12px 15px;
-    font-size: 14px;
+  .viewButton {
+    padding: 6px 8px;
+    font-size: 9px;
+    max-width: 40px;
+    min-width: 35px;
   }
   
-  .detailSection p b {
-    min-width: 120px;
-    font-size: 13px;
+  .statusBadge {
+    font-size: 10px;
+    padding: 4px 8px;
   }
+}
+.messageModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.messageModal {
+    background-color: #ffffff; /* White background for the modal */
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Soft shadow */
+    width: 90%;
+    max-width: 400px;
+    overflow: hidden; /* Ensures border-radius applies to children */
+    animation: fadeInScale 0.3s ease-out forwards; /* Simple animation */
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.messageModalHeader {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee; /* Light border */
+}
+
+.messageModal.success .messageModalHeader {
+    background-color: #e6ffe6; /* Light green for success header */
+    color: #1a7f37; /* Darker green text */
+}
+
+.messageModal.error .messageModalHeader {
+    background-color: #ffe6e6; /* Light red for error header */
+    color: #cc0000; /* Darker red text */
+}
+
+.messageModalHeader h3 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.messageModalCloseButton {
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: #888; /* Grey for close button */
+    padding: 0 5px;
+    line-height: 1; /* For better vertical alignment */
+    transition: color 0.2s ease;
+}
+
+.messageModalCloseButton:hover {
+    color: #555;
+}
+
+.messageModalBody {
+    padding: 25px 20px;
+    font-size: 1.1em;
+    color: #333; /* Dark grey for body text */
+    text-align: center;
+}
+
+.messageModalBody p {
+    margin: 0;
+}
+
+.messageModalFooter {
+    padding: 15px 20px;
+    border-top: 1px solid #eee; /* Light border */
+    text-align: center;
+}
+
+.messageModalButton {
+    background-color: #4CAF50; /* Green for success (or a primary action color) */
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.messageModal.error .messageModalButton {
+    background-color: #f44336; /* Red for error */
+}
+
+.messageModalButton:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: translateY(-1px);
+}
+
+.messageModal.error .messageModalButton:hover {
+    background-color: #da190b; /* Darker red on hover */
+}
+
+.messageModalButton:active {
+    transform: translateY(0);
+}
+.rejectReasonTextarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  margin-bottom: 5px;
+}
+
+.rejectReasonTextarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.characterCount {
+  color: #666;
+  font-size: 12px;
+}
+
+.cancelButton {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
+
+.confirmRejectButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirmRejectButton:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.confirmRejectButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.rejectReason {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
+  margin-top: 5px;
 }

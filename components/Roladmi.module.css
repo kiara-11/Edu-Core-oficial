@@ -1,3 +1,4 @@
+
 .container {
   font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: #F8F3E9;
@@ -12,6 +13,7 @@
   flex: 1;
   transition: max-width 0.3s ease;
 }
+
 
 .card {
   background: white;

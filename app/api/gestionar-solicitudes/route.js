@@ -22,6 +22,7 @@ export async function GET(request) {
         s.frecuencia,
         s.materias,
         s.estado,
+        s.motivo_rechazo,
         u.user_name,
         CONCAT(dp.ApePat, ' ', dp.ApeMat, ' ', dp.Nombre) AS nombreCompleto,
         dp.email,
@@ -63,7 +64,8 @@ export async function GET(request) {
 
 export async function PUT(request) {
   try {
-    const { id_solicitud, accion, email } = await request.json();
+    // ✅ CORRECCIÓN: Extraer motivo_rechazo del request body
+    const { id_solicitud, accion, email, motivo_rechazo } = await request.json();
 
     if (!id_solicitud || !accion || !email) {
       return NextResponse.json({ message: 'ID de solicitud, acción y email son requeridos.' }, { status: 400 });
@@ -73,14 +75,28 @@ export async function PUT(request) {
       return NextResponse.json({ message: 'Acción no válida.' }, { status: 400 });
     }
 
+    // ✅ CORRECCIÓN: Validar motivo_rechazo cuando es necesario
+    if (accion === 'rechazar' && (!motivo_rechazo || !motivo_rechazo.trim())) {
+      return NextResponse.json({ message: 'El motivo de rechazo es requerido.' }, { status: 400 });
+    }
+
     await connectToDb();
     const nuevoEstado = accion === 'aprobar' ? 'Aprobado' : 'Rechazado';
 
-    await sql.query`
-      UPDATE Solicitud_tutor1 
-      SET estado = ${nuevoEstado}
-      WHERE id_solicitud = ${id_solicitud}
-    `;
+    // Actualizar solicitud con motivo de rechazo si aplica
+    if (accion === 'rechazar') {
+      await sql.query`
+        UPDATE Solicitud_tutor1 
+        SET estado = ${nuevoEstado}, motivo_rechazo = ${motivo_rechazo.trim()}
+        WHERE id_solicitud = ${id_solicitud}
+      `;
+    } else {
+      await sql.query`
+        UPDATE Solicitud_tutor1 
+        SET estado = ${nuevoEstado}
+        WHERE id_solicitud = ${id_solicitud}
+      `;
+    }
 
     const userResult = await sql.query`
       SELECT u.id_user
