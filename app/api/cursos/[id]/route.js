@@ -146,9 +146,6 @@ export async function DELETE(request, { params }) {
           { status: 500 }
         );
       }
-
-      console.log('Curso eliminado exitosamente');
-
       // Eliminar horario si existe
       if (horarioId) {
         try {
