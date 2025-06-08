@@ -159,7 +159,7 @@ export async function POST(request) {
     try {
       await transaction.begin();
 
-      // 1. Buscar el usuario por email
+      // 1. Buscar el usuario por email (ahora es el tutor seleccionado)
       let userId = null;
       const usuarioPorEmail = await transaction.request()
         .input('email', sql.VarChar(100), email)
@@ -221,7 +221,7 @@ export async function POST(request) {
       if (!userId) {
         await transaction.rollback();
         return NextResponse.json(
-          { error: 'No se encontró un usuario registrado con estos datos. Verifique su información.' },
+          { error: 'No se encontró el tutor seleccionado en la base de datos. Verifique la información.' },
           { status: 400 }
         );
       }

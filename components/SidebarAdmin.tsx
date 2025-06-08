@@ -10,6 +10,9 @@ const Sidebar = () => {
     { name: 'Gestión de Estudiantes/Tutores', href: '/adminrol' },
     { name: 'Aprobación de tutores', href: '/admintutor' },
     { name: 'Aprobación de certificados', href: '/Certificado' },
+    { name: 'Publicar Curso', href: '/publicarcursoadmi' },
+    { name: 'Administrar Curso', href: '/Certificado' },
+    { name: 'Explorar Cursos', href: '/explorarAdmi' },
     { name: 'Control de pagos', href: '/miscursos' }//cambiar links por el correspondiente page
   ];
 

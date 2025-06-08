@@ -1,727 +1,595 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import styles from './EditarCurso.module.css';
-
-interface Horario {
-  dia: string;
-  inicio: string;
-  fin: string;
-}
-
-interface Leccion {
-  titulo: string;
-  descripcion: string;
-  duracion: number;
-}
-
-interface Prerequisito {
-  descripcion: string;
-}
 
 interface Curso {
   Id_curso: number;
-  Nombre: string;
-  ApePat: string;
-  ApeMat: string;
-  email: string;
   nom_curso: string;
   discripcion: string;
+  precio: number;
+  Id_mod?: number;
+  Id_nivel?: number;
+  Id_materia?: number;
+  nom_materia?: string;
+  cant_est_min: number;
   resumen?: string;
   que_aprendere?: string;
-  cant_est_min: number;
-  precio: number;
-  modalidad: string;
-  nivel: string;
-  nom_materia: string;
-  horario: string;
-  foto_curso?: string;
-  Id_nivel?: number;
-  Id_mod?: number;
-  Id_materia?: number;
+  horario?: string;
+  modalidad?: string;
+  nivel?: string;
 }
 
-interface EditarCursoProps {
-  curso: Curso;
+export default function EditarCurso({ 
+  cursoId, 
+  onClose, 
+  onCursoEditado 
+}: {
+  cursoId: number;
   onClose: () => void;
   onCursoEditado: () => void;
-}
-
-export default function EditarCurso({ curso, onClose, onCursoEditado }: EditarCursoProps) {
-  // Estados para el formulario
+}) {
+  const [curso, setCurso] = useState<Curso | null>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     nombreCurso: '',
-    nivel: '',
     descripcion: '',
+    precio: '',
+    modalidad: '',
+    nivel: '',
+    materia: '',
+    cantMinEstudiantes: '',
     resumen: '',
     queAprendere: '',
-    precio: '',
-    duracion: '',
-    modalidad: '',
-    materia: '',
-    cantMinEstudiantes: ''
+    horario: '',
+    // Nuevos campos
+    dia: '',
+    horaInicio: '',
+    horaFin: ''
   });
 
-  const [horarios, setHorarios] = useState<Horario[]>([]);
-  const [lecciones, setLecciones] = useState<Leccion[]>([]);
-  const [prerequisitos, setPrerequisitos] = useState<Prerequisito[]>([]);
-  
-  // Estados temporales para agregar elementos
-  const [horarioTemp, setHorarioTemp] = useState({ dia: '', inicio: '', fin: '' });
-  const [leccionTemp, setLeccionTemp] = useState({ titulo: '', descripcion: '', duracion: 0 });
-  const [prerequisitoTemp, setPrerequisitoTemp] = useState({ descripcion: '' });
-  
-  const [fotoCurso, setFotoCurso] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  // Función para parsear horario existente - MEJORADA
+  const parseHorario = (horarioString: string | null | undefined) => {
+    console.log('Parseando horario:', horarioString);
+    
+    if (!horarioString || horarioString.trim() === '') {
+      console.log('Horario vacío o nulo');
+      return { dia: '', horaInicio: '', horaFin: '' };
+    }
+    
+    // Limpiar el string
+    const horarioLimpio = horarioString.trim();
+    
+    // Múltiples patrones para diferentes formatos
+    const patrones = [
+      // Formato: "Lunes, 08:00 - 10:00" o "jueves, 17:28 - 17:34"
+      /^(.+?),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/i,
+      // Formato: "Lunes 08:00 - 10:00" (sin coma)
+      /^(.+?)\s+(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/i,
+      // Formato: "Lunes: 08:00 - 10:00" (con dos puntos)
+      /^(.+?):\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/i
+    ];
+    
+    for (const patron of patrones) {
+      const match = horarioLimpio.match(patron);
+      if (match) {
+        const resultado = {
+          dia: match[1].trim(),
+          horaInicio: match[2],
+          horaFin: match[3]
+        };
+        console.log('Horario parseado exitosamente:', resultado);
+        return resultado;
+      }
+    }
+    
+    console.log('No se pudo parsear el horario, usando valores vacíos');
+    return { dia: '', horaInicio: '', horaFin: '' };
+  };
 
-  // Opciones para los selectores
-  const nivelesOptions = [
-    { value: '1', label: 'Principiante' },
-    { value: '2', label: 'Intermedio' },
-    { value: '3', label: 'Avanzado' }
-  ];
+  // Función para construir horario combinado
+  const construirHorario = (dia: string, horaInicio: string, horaFin: string) => {
+    if (dia && horaInicio && horaFin) {
+      return `${dia}, ${horaInicio} - ${horaFin}`;
+    }
+    return '';
+  };
 
-  const modalidadesOptions = [
-    { value: '1', label: 'Online' },
-    { value: '2', label: 'Presencial' },
-    { value: '3', label: 'Híbrido' }
-  ];
+  // Función para obtener el nombre de modalidad
+  const obtenerModalidad = (idMod: number | undefined) => {
+    switch(idMod) {
+      case 1: return 'Online';
+      case 2: return 'Presencial';
+      case 3: return 'Híbrido';
+      default: return 'No especificado';
+    }
+  };
 
-  const diasSemana = [
-    'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
-  ];
+  // Función para obtener el nombre de nivel
+  const obtenerNivel = (idNivel: number | undefined) => {
+    switch(idNivel) {
+      case 1: return 'Principiante';
+      case 2: return 'Intermedio';
+      case 3: return 'Avanzado';
+      default: return 'No especificado';
+    }
+  };
 
-  // Cargar datos del curso al inicializar
   useEffect(() => {
-    const cargarDatosCurso = async () => {
+    const cargarCurso = async () => {
       try {
-        setLoading(true);
+        setError('');
+        console.log('=== INICIO CARGA CURSO ===');
+        console.log('Cargando curso con ID:', cursoId);
         
-        // Cargar datos básicos del curso
-        setFormData({
-          nombreCurso: curso.nom_curso || '',
-          nivel: curso.Id_nivel?.toString() || '',
-          descripcion: curso.discripcion || '',
-          resumen: curso.resumen || '',
-          queAprendere: curso.que_aprendere || '',
-          precio: curso.precio?.toString() || '',
-          duracion: '',
-          modalidad: curso.Id_mod?.toString() || '',
-          materia: curso.nom_materia || '',
-          cantMinEstudiantes: curso.cant_est_min?.toString() || ''
-        });
-
-        // Cargar datos completos del curso desde la API
-        const response = await fetch(`/api/cursos?id=${curso.Id_curso}`);
+        const response = await fetch(`/api/editar?id=${cursoId}`);
+        console.log('Response status:', response.status);
         
         if (!response.ok) {
-          throw new Error('Error al cargar datos del curso');
+          const errorData = await response.json();
+          throw new Error(errorData.error || `Error ${response.status}: ${response.statusText}`);
         }
-
-        const data = await response.json();
         
-        // Cargar horarios
-        if (data.horarios) {
-          const horariosFormateados = data.horarios.map((h: any) => ({
-            dia: h.dia,
-            inicio: h.fe_inicio ? new Date(h.fe_inicio).toLocaleTimeString('es-ES', { 
-              hour: '2-digit', 
-              minute: '2-digit',
-              hour12: false 
-            }) : '',
-            fin: h.fe_fin ? new Date(h.fe_fin).toLocaleTimeString('es-ES', { 
-              hour: '2-digit', 
-              minute: '2-digit',
-              hour12: false 
-            }) : ''
-          }));
-          setHorarios(horariosFormateados);
+        const data = await response.json();
+        console.log('=== DATOS COMPLETOS RECIBIDOS ===');
+        console.log('Data completa:', JSON.stringify(data, null, 2));
+        console.log('Horario específico:', data.horario);
+        console.log('Tipo de horario:', typeof data.horario);
+        console.log('Horario es null?', data.horario === null);
+        console.log('Horario es undefined?', data.horario === undefined);
+        console.log('Horario es string vacío?', data.horario === '');
+        console.log('================================');
+        
+        if (!data || !data.Id_curso) {
+          throw new Error('Datos del curso incompletos');
         }
-
-        // Cargar lecciones
-        if (data.lecciones) {
-          setLecciones(data.lecciones.map((l: any) => ({
-            titulo: l.titulo_leccion,
-            descripcion: l.descripcion_leccion || '',
-            duracion: l.duracion_minutos || 0
-          })));
-        }
-
-        // Cargar prerequisitos
-        if (data.prerequisitos) {
-          setPrerequisitos(data.prerequisitos.map((p: any) => ({
-            descripcion: p.descripcion_prerequisito
-          })));
-        }
-
-      } catch (error) {
-        console.error('Error cargando datos del curso:', error);
-        setError('Error al cargar datos del curso');
+        
+        setCurso(data);
+        
+        // Parsear horario - DEBUGGING EXTENDIDO
+        const horarioValue = data.horario;
+        console.log('=== PARSEO DE HORARIO ===');
+        console.log('Valor original:', horarioValue);
+        console.log('Tipo:', typeof horarioValue);
+        console.log('Es null:', horarioValue === null);
+        console.log('Es undefined:', horarioValue === undefined);
+        console.log('Es string vacío:', horarioValue === '');
+        console.log('Longitud si es string:', typeof horarioValue === 'string' ? horarioValue.length : 'N/A');
+        
+        const horarioParsed = parseHorario(horarioValue);
+        console.log('Resultado del parseo:', horarioParsed);
+        console.log('========================');
+        
+        setFormData({
+          nombreCurso: data.nom_curso || '',
+          descripcion: data.discripcion || '',
+          precio: data.precio?.toString() || '',
+          modalidad: data.Id_mod?.toString() || '',
+          nivel: data.Id_nivel?.toString() || '',
+          materia: data.nom_materia || '',
+          cantMinEstudiantes: data.cant_est_min?.toString() || '',
+          resumen: data.resumen || '',
+          queAprendere: data.que_aprendere || '',
+          horario: horarioValue || '',
+          // Nuevos campos para horario
+          dia: horarioParsed.dia,
+          horaInicio: horarioParsed.horaInicio,
+          horaFin: horarioParsed.horaFin
+        });
+        
+        console.log('=== FORM DATA FINAL ===');
+        console.log('FormData horario:', horarioValue || '');
+        console.log('FormData dia:', horarioParsed.dia);
+        console.log('FormData horaInicio:', horarioParsed.horaInicio);
+        console.log('FormData horaFin:', horarioParsed.horaFin);
+        console.log('======================');
+        
+      } catch (err) {
+        console.error('Error al cargar curso:', err);
+        setError(err instanceof Error ? err.message : 'Error desconocido al cargar el curso');
       } finally {
         setLoading(false);
       }
     };
 
-    if (curso.Id_curso) {
-      cargarDatosCurso();
+    if (cursoId) {
+      cargarCurso();
+    } else {
+      setError('ID de curso no válido');
+      setLoading(false);
     }
-  }, [curso]);
+  }, [cursoId]);
 
-  // Manejar cambios en el formulario
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Funciones para manejar horarios
-  const agregarHorario = () => {
-    if (horarioTemp.dia && horarioTemp.inicio && horarioTemp.fin) {
-      if (horarioTemp.inicio >= horarioTemp.fin) {
-        setError('La hora de inicio debe ser menor que la hora de fin');
-        return;
-      }
+  const handleHorarioChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => {
+      const newData = { ...prev, [name]: value };
       
-      setHorarios([...horarios, { ...horarioTemp }]);
-      setHorarioTemp({ dia: '', inicio: '', fin: '' });
-      setError('');
-    } else {
-      setError('Debe completar todos los campos del horario');
-    }
+      // Actualizar el campo horario combinado
+      const horarioActualizado = construirHorario(
+        name === 'dia' ? value : newData.dia,
+        name === 'horaInicio' ? value : newData.horaInicio,
+        name === 'horaFin' ? value : newData.horaFin
+      );
+      
+      newData.horario = horarioActualizado;
+      
+      console.log('Horario actualizado:', horarioActualizado);
+      
+      return newData;
+    });
   };
 
-  const quitarHorario = (index: number) => {
-    setHorarios(horarios.filter((_, i) => i !== index));
-  };
-
-  // Funciones para manejar lecciones
-  const agregarLeccion = () => {
-    if (leccionTemp.titulo.trim()) {
-      setLecciones([...lecciones, { ...leccionTemp }]);
-      setLeccionTemp({ titulo: '', descripcion: '', duracion: 0 });
-    } else {
-      setError('Debe ingresar un título para la lección');
-    }
-  };
-
-  const quitarLeccion = (index: number) => {
-    setLecciones(lecciones.filter((_, i) => i !== index));
-  };
-
-  // Funciones para manejar prerequisitos
-  const agregarPrerequisito = () => {
-    if (prerequisitoTemp.descripcion.trim()) {
-      setPrerequisitos([...prerequisitos, { ...prerequisitoTemp }]);
-      setPrerequisitoTemp({ descripcion: '' });
-    } else {
-      setError('Debe ingresar una descripción para el prerequisito');
-    }
-  };
-
-  const quitarPrerequisito = (index: number) => {
-    setPrerequisitos(prerequisitos.filter((_, i) => i !== index));
-  };
-
-  // Validar formulario
-  const validarFormulario = () => {
-    const { nombreCurso, nivel, descripcion, precio, modalidad, materia } = formData;
-    
-    if (!nombreCurso || !nivel || !descripcion || !precio || !modalidad || !materia) {
-      setError('Por favor completa todos los campos obligatorios');
-      return false;
-    }
-
-    if (horarios.length === 0) {
-      setError('Debe agregar al menos un horario');
-      return false;
-    }
-
-    const precioNum = parseFloat(precio);
-    if (isNaN(precioNum) || precioNum <= 0) {
-      setError('El precio debe ser un número válido mayor a 0');
-      return false;
-    }
-
-    return true;
-  };
-
-  // Actualizar curso
-  const actualizarCurso = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
-    if (!validarFormulario()) {
-      return;
-    }
-
     setLoading(true);
-    setError('');
-
+    
     try {
-      const formDataToSend = new FormData();
+      // Construir el horario final antes de enviar
+      const horarioFinal = construirHorario(formData.dia, formData.horaInicio, formData.horaFin);
       
-      // Datos básicos
-      formDataToSend.append('nombreCompleto', `${curso.Nombre} ${curso.ApePat} ${curso.ApeMat}`);
-      formDataToSend.append('email', curso.email);
-      formDataToSend.append('nombreCurso', formData.nombreCurso);
-      formDataToSend.append('nivel', formData.nivel);
-      formDataToSend.append('descripcion', formData.descripcion);
-      formDataToSend.append('precio', formData.precio);
-      formDataToSend.append('modalidad', formData.modalidad);
-      formDataToSend.append('materia', formData.materia);
-      
-      // Datos opcionales
-      if (formData.resumen) formDataToSend.append('resumen', formData.resumen);
-      if (formData.queAprendere) formDataToSend.append('queAprendere', formData.queAprendere);
-      if (formData.cantMinEstudiantes) formDataToSend.append('cantMinEstudiantes', formData.cantMinEstudiantes);
-      if (formData.duracion) formDataToSend.append('duracion', formData.duracion);
-      
-      // Arrays como JSON
-      formDataToSend.append('horarios', JSON.stringify(horarios));
-      formDataToSend.append('lecciones', JSON.stringify(lecciones));
-      formDataToSend.append('prerequisitos', JSON.stringify(prerequisitos));
-      
-      // Foto del curso
-      if (fotoCurso) {
-        formDataToSend.append('fotoCurso', fotoCurso);
-      }
-      
-      const response = await fetch(`/api/cursos?id=${curso.Id_curso}`, {
+      const dataToSend = {
+        ...formData,
+        horario: horarioFinal
+      };
+
+      console.log('Datos a enviar:', dataToSend);
+      console.log('Horario final a enviar:', horarioFinal);
+
+      const response = await fetch(`/api/editar?id=${cursoId}`, {
         method: 'PUT',
-        body: formDataToSend,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.error || 'Error al actualizar el curso');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al actualizar el curso');
       }
 
-      alert('Curso actualizado exitosamente');
-      onCursoEditado();
-      onClose();
-
-    } catch (error) {
-      console.error('Error actualizando curso:', error);
-      setError(error instanceof Error ? error.message : 'Error al actualizar el curso');
+      const result = await response.json();
+      if (result.success) {
+        onCursoEditado();
+        setEditMode(false);
+        // Recargar los datos del curso para mostrar los cambios
+        const updatedResponse = await fetch(`/api/editar?id=${cursoId}`);
+        if (updatedResponse.ok) {
+          const updatedData = await updatedResponse.json();
+          setCurso(updatedData);
+        }
+      } else {
+        throw new Error(result.message || 'Error al actualizar');
+      }
+    } catch (err) {
+      console.error('Error al actualizar:', err);
+      setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading && !formData.nombreCurso) {
+  if (loading && !curso) {
     return (
       <div className={styles.container}>
-        <div className={styles.loading}>Cargando datos del curso...</div>
+        <div className={styles.loading}>Cargando curso...</div>
+      </div>
+    );
+  }
+
+  if (!curso) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h2>Error al cargar curso</h2>
+          <button onClick={onClose} className={styles.closeBtn}>×</button>
+        </div>
+        <div className={styles.error}>
+          <p><strong>Error:</strong> {error || 'No se pudo cargar el curso'}</p>
+          <p><strong>ID del curso:</strong> {cursoId}</p>
+          <p>Por favor, verifica que el curso existe y que tienes permisos para acceder a él.</p>
+        </div>
+        <div className={styles.actions}>
+          <button onClick={onClose} className={styles.cancelarBtn}>Cerrar</button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className={styles.container}>
-      <form onSubmit={actualizarCurso} className={styles.form}>
-        {error && (
-          <div className={styles.error}>
-            {error}
+      <div className={styles.header}>
+        <h2>{editMode ? 'Editar Curso' : 'Detalles del Curso'}</h2>
+        <button onClick={onClose} className={styles.closeBtn}>×</button>
+      </div>
+
+      {error && <div className={styles.error}>{error}</div>}
+
+      {!editMode ? (
+        <div className={styles.detalles}>
+          <div className={styles.detalleItem}>
+            <h3>Nombre del Curso</h3>
+            <p>{curso.nom_curso}</p>
           </div>
-        )}
-        
-        {/* Información básica */}
-        <div className={styles.formGroup}>
-          <h3 className={styles.sectionTitle}>Información Básica</h3>
-          
-          <div className={styles.row}>
-            <div className={styles.field}>
-              <label htmlFor="nombreCurso">Nombre del curso *</label>
-              <input
-                id="nombreCurso"
-                type="text"
-                placeholder="Nombre del curso"
-                value={formData.nombreCurso}
-                onChange={(e) => handleInputChange('nombreCurso', e.target.value)}
-                className={styles.input}
-                required
-              />
+
+          <div className={styles.detalleItem}>
+            <h3>Descripción</h3>
+            <p>{curso.discripcion}</p>
+          </div>
+
+          <div className={styles.detalleRow}>
+            <div className={styles.detalleItem}>
+              <h3>Precio</h3>
+              <p>Bs. {curso.precio}</p>
             </div>
-            <div className={styles.field}>
-              <label htmlFor="nivel">Nivel *</label>
-              <select
-                id="nivel"
-                value={formData.nivel}
-                onChange={(e) => handleInputChange('nivel', e.target.value)}
-                className={styles.select}
-                required
-              >
-                <option value="">Seleccionar nivel</option>
-                {nivelesOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+            <div className={styles.detalleItem}>
+              <h3>Modalidad</h3>
+              <p>{obtenerModalidad(curso.Id_mod)}</p>
             </div>
           </div>
 
-          <div className={styles.row}>
-            <div className={styles.field}>
-              <label htmlFor="descripcion">Descripción del curso *</label>
-              <textarea
-                id="descripcion"
-                placeholder="Descripción del curso"
-                value={formData.descripcion}
-                onChange={(e) => handleInputChange('descripcion', e.target.value)}
-                className={styles.textarea}
-                rows={3}
-                required
-              />
+          <div className={styles.detalleRow}>
+            <div className={styles.detalleItem}>
+              <h3>Nivel</h3>
+              <p>{obtenerNivel(curso.Id_nivel)}</p>
             </div>
-            <div className={styles.field}>
-              <label htmlFor="precio">Precio *</label>
-              <div className={styles.priceContainer}>
-                <input
-                  id="precio"
-                  type="number"
-                  placeholder="250"
-                  value={formData.precio}
-                  onChange={(e) => handleInputChange('precio', e.target.value)}
-                  className={styles.priceInput}
-                  min="0"
-                  step="0.01"
-                  required
-                />
-                <span className={styles.currency}>Bs.</span>
-              </div>
+            <div className={styles.detalleItem}>
+              <h3>Materia</h3>
+              <p>{curso.nom_materia || 'No especificado'}</p>
             </div>
           </div>
 
-          <div className={styles.row}>
-            <div className={styles.field}>
-              <label htmlFor="modalidad">Modalidad *</label>
-              <select
-                id="modalidad"
-                value={formData.modalidad}
-                onChange={(e) => handleInputChange('modalidad', e.target.value)}
-                className={styles.select}
-                required
-              >
-                <option value="">Seleccionar modalidad</option>
-                {modalidadesOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+          <div className={styles.detalleRow}>
+            <div className={styles.detalleItem}>
+              <h3>Cupos mínimos</h3>
+              <p>{curso.cant_est_min}</p>
             </div>
-            <div className={styles.field}>
-              <label htmlFor="materia">Materia *</label>
-              <input
-                id="materia"
-                type="text"
-                placeholder="Materia del curso"
-                value={formData.materia}
-                onChange={(e) => handleInputChange('materia', e.target.value)}
-                className={styles.input}
-                required
-              />
+            <div className={styles.detalleItem}>
+              <h3>Horario</h3>
+              <p>
+                {(() => {
+                  console.log('=== RENDERIZADO HORARIO ===');
+                  console.log('curso.horario:', curso.horario);
+                  console.log('tipo:', typeof curso.horario);
+                  console.log('es null:', curso.horario === null);
+                  console.log('es undefined:', curso.horario === undefined);
+                  console.log('es string vacío:', curso.horario === '');
+                  console.log('trim !== "":', curso.horario && curso.horario.trim() !== '');
+                  console.log('==========================');
+                  
+                  if (curso.horario && typeof curso.horario === 'string' && curso.horario.trim() !== '') {
+                    return curso.horario;
+                  } else {
+                    return 'No especificado';
+                  }
+                })()}
+              </p>
+              
             </div>
           </div>
 
-          <div className={styles.row}>
-            <div className={styles.field}>
-              <label htmlFor="cantMinEstudiantes">Cantidad mínima de estudiantes</label>
-              <input
-                id="cantMinEstudiantes"
-                type="number"
-                placeholder="Opcional"
-                value={formData.cantMinEstudiantes}
-                onChange={(e) => handleInputChange('cantMinEstudiantes', e.target.value)}
-                className={styles.input}
-                min="1"
-              />
+          {curso.resumen && (
+            <div className={styles.detalleItem}>
+              <h3>Resumen</h3>
+              <p>{curso.resumen}</p>
             </div>
-            <div className={styles.field}>
-              <label htmlFor="duracion">Duración del curso</label>
-              <select
-                id="duracion"
-                value={formData.duracion}
-                onChange={(e) => handleInputChange('duracion', e.target.value)}
-                className={styles.select}
-              >
-                <option value="">Seleccionar duración</option>
-                <option value="20">20 horas</option>
-                <option value="40">40 horas</option>
-                <option value="60">60 horas</option>
-                <option value="80">80 horas</option>
-                <option value="100">100 horas</option>
-              </select>
+          )}
+
+          {curso.que_aprendere && (
+            <div className={styles.detalleItem}>
+              <h3>¿Qué aprenderán?</h3>
+              <p>{curso.que_aprendere}</p>
             </div>
+          )}
+
+          <div className={styles.actions}>
+            <button onClick={() => setEditMode(true)} className={styles.publicarBtn}>
+              Editar Curso
+            </button>
+            <button onClick={onClose} className={styles.cancelarBtn}>
+              Cerrar
+            </button>
           </div>
         </div>
-
-        {/* Información adicional */}
-        <div className={styles.formGroup}>
-          <h3 className={styles.sectionTitle}>Información Adicional</h3>
-          
-          <div className={styles.field}>
-            <label htmlFor="resumen">Resumen del curso</label>
-            <textarea
-              id="resumen"
-              placeholder="Resumen breve del curso"
-              value={formData.resumen}
-              onChange={(e) => handleInputChange('resumen', e.target.value)}
-              className={styles.textarea}
-              rows={2}
+      ) : (
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label>Nombre del Curso *</label>
+            <input
+              type="text"
+              name="nombreCurso"
+              value={formData.nombreCurso}
+              onChange={handleInputChange}
+              required
             />
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="queAprendere">¿Qué aprenderán los estudiantes?</label>
+          <div className={styles.formGroup}>
+            <label>Descripción *</label>
             <textarea
-              id="queAprendere"
-              placeholder="Describe qué conocimientos y habilidades adquirirán los estudiantes"
-              value={formData.queAprendere}
-              onChange={(e) => handleInputChange('queAprendere', e.target.value)}
-              className={styles.textarea}
+              name="descripcion"
+              value={formData.descripcion}
+              onChange={handleInputChange}
+              required
               rows={4}
             />
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="fotoCurso">Foto del curso</label>
-            <input
-              id="fotoCurso"
-              type="file"
-              accept="image/jpeg,image/jpg,image/png,image/webp"
-              onChange={(e) => setFotoCurso(e.target.files?.[0] || null)}
-              className={styles.fileInput}
-            />
-            <small className={styles.helpText}>
-              Formatos permitidos: JPG, JPEG, PNG, WEBP. Tamaño máximo: 5MB
-            </small>
-          </div>
-        </div>
-
-        {/* Horarios */}
-        <div className={styles.formGroup}>
-          <h3 className={styles.sectionTitle}>Horarios *</h3>
-          
-          <div className={styles.horarioForm}>
-            <div className={styles.horarioInputs}>
-              <div className={styles.horarioField}>
-                <label htmlFor="dia">Día</label>
-                <select
-                  id="dia"
-                  value={horarioTemp.dia}
-                  onChange={(e) => setHorarioTemp({...horarioTemp, dia: e.target.value})}
-                  className={styles.select}
-                >
-                  <option value="">Seleccionar día</option>
-                  {diasSemana.map(dia => (
-                    <option key={dia} value={dia}>
-                      {dia}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className={styles.horarioField}>
-                <label htmlFor="inicio">Hora de inicio</label>
-                <input
-                  id="inicio"
-                  type="time"
-                  value={horarioTemp.inicio}
-                  onChange={(e) => setHorarioTemp({...horarioTemp, inicio: e.target.value})}
-                  className={styles.timeInput}
-                />
-              </div>
-              <div className={styles.horarioField}>
-                <label htmlFor="fin">Hora de fin</label>
-                <input
-                  id="fin"
-                  type="time"
-                  value={horarioTemp.fin}
-                  onChange={(e) => setHorarioTemp({...horarioTemp, fin: e.target.value})}
-                  className={styles.timeInput}
-                />
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={agregarHorario}
-              className={styles.agregarBtn}
-            >
-              AGREGAR HORARIO
-            </button>
-          </div>
-
-          {horarios.length > 0 && (
-            <div className={styles.itemsTable}>
-              <div className={styles.tableHeader}>
-                <span>Día</span>
-                <span>Inicio</span>
-                <span>Fin</span>
-                <span>Acciones</span>
-              </div>
-              {horarios.map((horario, index) => (
-                <div key={index} className={styles.tableRow}>
-                  <span>{horario.dia}</span>
-                  <span>{horario.inicio}</span>
-                  <span>{horario.fin}</span>
-                  <button
-                    type="button"
-                    onClick={() => quitarHorario(index)}
-                    className={styles.quitarBtn}
-                  >
-                    Quitar 🗑️
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Lecciones */}
-        <div className={styles.formGroup}>
-          <h3 className={styles.sectionTitle}>Lecciones</h3>
-          
-          <div className={styles.leccionForm}>
-            <div className={styles.leccionInputs}>
-              <div className={styles.field}>
-                <label htmlFor="tituloLeccion">Título de la lección</label>
-                <input
-                  id="tituloLeccion"
-                  type="text"
-                  placeholder="Título de la lección"
-                  value={leccionTemp.titulo}
-                  onChange={(e) => setLeccionTemp({...leccionTemp, titulo: e.target.value})}
-                  className={styles.input}
-                />
-              </div>
-              <div className={styles.field}>
-                <label htmlFor="descripcionLeccion">Descripción</label>
-                <textarea
-                  id="descripcionLeccion"
-                  placeholder="Descripción de la lección"
-                  value={leccionTemp.descripcion}
-                  onChange={(e) => setLeccionTemp({...leccionTemp, descripcion: e.target.value})}
-                  className={styles.textarea}
-                  rows={2}
-                />
-              </div>
-              <div className={styles.field}>
-                <label htmlFor="duracionLeccion">Duración (minutos)</label>
-                <input
-                  id="duracionLeccion"
-                  type="number"
-                  placeholder="60"
-                  value={leccionTemp.duracion}
-                  onChange={(e) => setLeccionTemp({...leccionTemp, duracion: parseInt(e.target.value) || 0})}
-                  className={styles.input}
-                  min="0"
-                />
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={agregarLeccion}
-              className={styles.agregarBtn}
-            >
-              AGREGAR LECCIÓN
-            </button>
-          </div>
-
-          {lecciones.length > 0 && (
-            <div className={styles.itemsTable}>
-              <div className={styles.tableHeader}>
-                <span>Título</span>
-                <span>Descripción</span>
-                <span>Duración</span>
-                <span>Acciones</span>
-              </div>
-              {lecciones.map((leccion, index) => (
-                <div key={index} className={styles.tableRow}>
-                  <span>{leccion.titulo}</span>
-                  <span>{leccion.descripcion || 'Sin descripción'}</span>
-                  <span>{leccion.duracion} min</span>
-                  <button
-                    type="button"
-                    onClick={() => quitarLeccion(index)}
-                    className={styles.quitarBtn}
-                  >
-                    Quitar 🗑️
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Prerequisitos */}
-        <div className={styles.formGroup}>
-          <h3 className={styles.sectionTitle}>Prerequisitos</h3>
-          
-          <div className={styles.prerequisitoForm}>
-            <div className={styles.field}>
-              <label htmlFor="prerequisito">Prerequisito</label>
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label>Precio (Bs.) *</label>
               <input
-                id="prerequisito"
-                type="text"
-                placeholder="Describe un prerequisito del curso"
-                value={prerequisitoTemp.descripcion}
-                onChange={(e) => setPrerequisitoTemp({descripcion: e.target.value})}
-                className={styles.input}
+                type="number"
+                name="precio"
+                value={formData.precio}
+                onChange={handleInputChange}
+                required
+                min="0"
+                step="0.01"
               />
             </div>
-            <button
-              type="button"
-              onClick={agregarPrerequisito}
-              className={styles.agregarBtn}
-            >
-              AGREGAR PREREQUISITO
-            </button>
+            <div className={styles.formGroup}>
+              <label>Modalidad *</label>
+              <select
+                name="modalidad"
+                value={formData.modalidad}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Seleccionar</option>
+                <option value="1">Online</option>
+                <option value="2">Presencial</option>
+                <option value="3">Híbrido</option>
+              </select>
+            </div>
           </div>
 
-          {prerequisitos.length > 0 && (
-            <div className={styles.itemsTable}>
-              <div className={styles.tableHeader}>
-                <span>Prerequisito</span>
-                <span>Acciones</span>
-              </div>
-              {prerequisitos.map((prerequisito, index) => (
-                <div key={index} className={styles.tableRow}>
-                  <span>{prerequisito.descripcion}</span>
-                  <button
-                    type="button"
-                    onClick={() => quitarPrerequisito(index)}
-                    className={styles.quitarBtn}
-                  >
-                    Quitar 🗑️
-                  </button>
-                </div>
-              ))}
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label>Nivel *</label>
+              <select
+                name="nivel"
+                value={formData.nivel}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Seleccionar</option>
+                <option value="1">Principiante</option>
+                <option value="2">Intermedio</option>
+                <option value="3">Avanzado</option>
+              </select>
             </div>
-          )}
-        </div>
+            <div className={styles.formGroup}>
+              <label>Materia *</label>
+              <input
+                type="text"
+                name="materia"
+                value={formData.materia}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
 
-        {/* Botones de acción */}
-        <div className={styles.actions}>
-          <button
-            type="submit"
-            className={styles.publicarBtn}
-            disabled={loading}
-          >
-            {loading ? 'ACTUALIZANDO...' : 'ACTUALIZAR CURSO'}
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className={styles.cancelarBtn}
-            disabled={loading}
-          >
-            CANCELAR
-          </button>
-        </div>
-      </form>
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label>Cupos mínimos *</label>
+              <input
+                type="number"
+                name="cantMinEstudiantes"
+                value={formData.cantMinEstudiantes}
+                onChange={handleInputChange}
+                required
+                min="1"
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label>Horario *</label>
+              <div className={styles.horarioContainer}>
+                <div className={styles.horarioRow}>
+                  <div className={styles.horarioField}>
+                    <label className={styles.smallLabel}>Día</label>
+                    <select
+                      name="dia"
+                      value={formData.dia}
+                      onChange={handleHorarioChange}
+                      required
+                      className={styles.selectField}
+                    >
+                      <option value="">Seleccionar día</option>
+                      <option value="Lunes">Lunes</option>
+                      <option value="Martes">Martes</option>
+                      <option value="Miércoles">Miércoles</option>
+                      <option value="Jueves">Jueves</option>
+                      <option value="Viernes">Viernes</option>
+                      <option value="Sábado">Sábado</option>
+                      <option value="Domingo">Domingo</option>
+                    </select>
+                  </div>
+                  
+                  <div className={styles.horarioField}>
+                    <label className={styles.smallLabel}>Hora inicio</label>
+                    <input
+                      type="time"
+                      name="horaInicio"
+                      value={formData.horaInicio}
+                      onChange={handleHorarioChange}
+                      required
+                      className={styles.timeField}
+                    />
+                  </div>
+                  
+                  <div className={styles.horarioField}>
+                    <label className={styles.smallLabel}>Hora fin</label>
+                    <input
+                      type="time"
+                      name="horaFin"
+                      value={formData.horaFin}
+                      onChange={handleHorarioChange}
+                      required
+                      className={styles.timeField}
+                    />
+                  </div>
+                </div>
+                
+                <div className={styles.horarioPreview}>
+                  <span className={styles.previewLabel}>Vista previa:</span>
+                  <span className={styles.previewText}>
+                    {formData.dia && formData.horaInicio && formData.horaFin 
+                      ? `${formData.dia}, ${formData.horaInicio} - ${formData.horaFin}`
+                      : 'Selecciona día y horarios'
+                    }
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Resumen</label>
+            <textarea
+              name="resumen"
+              value={formData.resumen}
+              onChange={handleInputChange}
+              rows={3}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>¿Qué aprenderán?</label>
+            <textarea
+              name="queAprendere"
+              value={formData.queAprendere}
+              onChange={handleInputChange}
+              rows={3}
+            />
+          </div>
+
+          <div className={styles.actions}>
+            <button 
+              type="submit" 
+              className={styles.publicarBtn}
+              disabled={loading}
+            >
+              {loading ? 'Guardando...' : 'Guardar Cambios'}
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setEditMode(false)}
+              className={styles.cancelarBtn}
+              disabled={loading}
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }
