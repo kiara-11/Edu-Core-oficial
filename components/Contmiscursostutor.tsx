@@ -24,7 +24,12 @@ const Contmiscursostutor = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
-  const [cursoAEditar, setCursoAEditar] = useState<Curso | null>(null);
+  const [cursoIdAEditar, setCursoIdAEditar] = useState<number | null>(null);
+  
+  // Estados para el modal de confirmación de eliminar
+  const [modalEliminarAbierto, setModalEliminarAbierto] = useState(false);
+  const [cursoAEliminar, setCursoAEliminar] = useState<{id: number, nombre: string} | null>(null);
+  const [eliminandoCurso, setEliminandoCurso] = useState(false);
 
   const fetchCursos = async () => {
     try {
@@ -64,46 +69,86 @@ const Contmiscursostutor = () => {
     fetchCursos();
   }, []);
 
+  useEffect(() => {
+    if (modalEditarAbierto && cursoIdAEditar) {
+      console.log('Modal abierto con curso ID:', cursoIdAEditar);
+    }
+  }, [modalEditarAbierto, cursoIdAEditar]);
+
   const handleEditar = (curso: Curso) => {
-    setCursoAEditar(curso);
+    console.log('Curso completo:', curso);
+    console.log('ID del curso:', curso.Id_curso);
+    console.log('Tipo del ID:', typeof curso.Id_curso);
+    setCursoIdAEditar(curso.Id_curso);
     setModalEditarAbierto(true);
   };
 
-  const handleEliminar = async (cursoId: number, nombreCurso: string) => {
-    if (window.confirm(`¿Estás seguro de que deseas eliminar el curso "${nombreCurso}"? Esta acción no se puede deshacer.`)) {
+  // Función para abrir el modal de confirmación
+  const handleEliminar = (cursoId: number, nombreCurso: string) => {
+    setCursoAEliminar({ id: cursoId, nombre: nombreCurso });
+    setModalEliminarAbierto(true);
+  };
+
+  // Función para confirmar la eliminación
+  const confirmarEliminacion = async () => {
+    if (!cursoAEliminar) return;
+    
+    setEliminandoCurso(true);
+    
+    try {
+      const response = await fetch(`/api/cursos/${cursoAEliminar.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Intentar parsear la respuesta como JSON
+      let result;
       try {
-        const response = await fetch(`/api/cursos/${cursoId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        // Verificar si la respuesta es JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          const text = await response.text();
-          throw new Error(text || 'Respuesta no válida del servidor');
-        }
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.error || 'Error al eliminar el curso');
-        }
-
-        alert('Curso eliminado exitosamente');
-        fetchCursos(); // Actualizar la lista
-      } catch (error) {
-        console.error('Error al eliminar curso:', error);
-        alert(error || 'Error al eliminar el curso. Inténtalo nuevamente.');
+        result = await response.json();
+      } catch (parseError) {
+        // Si no se puede parsear como JSON, obtener el texto
+        const text = await response.text();
+        throw new Error(text || 'Respuesta no válida del servidor');
       }
+
+      // Verificar si la respuesta fue exitosa
+      if (!response.ok) {
+        // Manejar diferentes tipos de errores
+        if (response.status === 409) {
+          // Error de integridad referencial
+          alert('No se puede eliminar el curso porque tiene estudiantes inscritos, valoraciones u otros datos relacionados. Contacte al administrador si necesita eliminar este curso.');
+        } else if (response.status === 404) {
+          alert('El curso no existe o ya fue eliminado.');
+        } else {
+          // Otros errores
+          alert(result.error || 'Error al eliminar el curso');
+        }
+        return; // Salir sin cerrar el modal para que el usuario pueda intentar de nuevo
+      }
+
+      fetchCursos(); // Actualizar la lista
+      cerrarModalEliminar();
+      
+    } catch (error) {
+      console.error('Error al eliminar curso:', error);
+      alert('Error de conexión. Verifica tu conexión a internet e inténtalo nuevamente.');
+    } finally {
+      setEliminandoCurso(false);
     }
+  };
+
+  // Función para cerrar el modal de eliminación
+  const cerrarModalEliminar = () => {
+    setModalEliminarAbierto(false);
+    setCursoAEliminar(null);
+    setEliminandoCurso(false);
   };
 
   const cerrarModal = () => {
     setModalEditarAbierto(false);
-    setCursoAEditar(null);
+    setCursoIdAEditar(null);
   };
 
   const onCursoEditado = () => {
@@ -134,8 +179,10 @@ const Contmiscursostutor = () => {
             No tienes cursos publicados aún.
           </div>
         ) : (
-          cursos.map((curso, index) => (
-            <div key={index} className={styles.cursoCard}>
+          cursos.map((curso, index) => {
+          console.log(`Curso ${index}:`, curso);
+          return (
+            <div key={curso.Id_curso || index} className={styles.cursoCard}> 
               <div className={styles.cursoInfo}>
                 <div className={styles.avatarContainer}>
                   <div className={styles.avatarPlaceholder}></div>
@@ -191,25 +238,68 @@ const Contmiscursostutor = () => {
                 </button>
               </div>
             </div>
-          ))
+            );
+          })
         )}
       </div>
 
       {/* Modal para editar curso */}
-      {modalEditarAbierto && cursoAEditar && (
+      {modalEditarAbierto && cursoIdAEditar !== null && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>Editar Curso</h2>
-              <button className={styles.closeBtn} onClick={cerrarModal}>
-                ×
-              </button>
-            </div>
             <EditarCurso 
-              curso={cursoAEditar} 
+              cursoId={cursoIdAEditar} 
               onClose={cerrarModal}
               onCursoEditado={onCursoEditado}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmación para eliminar - JSX corregido */}
+      {modalEliminarAbierto && cursoAEliminar && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalEliminar}>
+            <div className={styles.iconContainer}>
+              <svg className={styles.deleteIcon} viewBox="0 0 24 24">
+                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z"/>
+                <path d="M10 11v6M14 11v6"/>
+              </svg>
+            </div>
+            
+            <h3 className={styles.modalTitle}>
+              ¿Confirmar eliminación?
+            </h3>
+            
+            <p className={styles.modalMessage}>
+              ¿Estás seguro de que deseas eliminar el curso{' '}
+              <span className={styles.courseName}>"{cursoAEliminar.nombre}"</span>?
+            </p>
+            
+            <div className={styles.warningText}>
+              Esta acción no se puede deshacer.
+            </div>
+            
+            <div className={styles.buttonContainer}>
+              <button
+                className={styles.btnCancelar}
+                onClick={cerrarModalEliminar}
+                disabled={eliminandoCurso}
+              >
+                Cancelar
+              </button>
+              
+              <button
+                className={styles.btnEliminar}
+                onClick={confirmarEliminacion}
+                disabled={eliminandoCurso}
+              >
+                {eliminandoCurso && (
+                  <div className={styles.spinner}></div>
+                )}
+                {eliminandoCurso ? 'Eliminando...' : 'Sí, eliminar'}
+              </button>
+            </div>
           </div>
         </div>
       )}

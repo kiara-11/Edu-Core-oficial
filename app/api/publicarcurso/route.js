@@ -478,11 +478,13 @@ export async function POST(request) {
         fotoGuardada: urlFotoCurso ? true : false
       }, { status: 200 });
 
-    } catch (transactionError) {
+    } 
+    catch (transactionError) {
       console.error('Error en la transacción:', transactionError);
       try {
         await transaction.rollback();
-      } catch (rollbackError) {
+      } 
+      catch (rollbackError) {
         console.error('Error en rollback:', rollbackError);
       }
       
