@@ -9,7 +9,11 @@ h2 {
 }
 
 .centro {
-  text-align: center; /* Centra el texto dentro del h4 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0px;
 }
 
 .tarjeta-inscripcion {
@@ -109,5 +113,6 @@ h2 {
 .dimimgest {
   width: 3.5cm;
   height: 2cm;
-  object-fit: cover; /* Asegura que la imagen se recorte bien si es necesario */
+  object-fit: cover;
+  /* Asegura que la imagen se recorte bien si es necesario */
 }

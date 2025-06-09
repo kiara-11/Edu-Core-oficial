@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './Detalle.module.css';
+import Link from 'next/link';
+
 
 interface Lesson {
   id: number;
@@ -73,7 +75,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
 
   useEffect(() => {
     checkUserAuth();
-    
+
     if (currentCourseId) {
       fetchCourseData(currentCourseId);
     } else {
@@ -87,7 +89,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
       if (typeof window !== 'undefined') {
         const nombreCompleto = localStorage.getItem('nombreCompleto');
         const email = localStorage.getItem('email');
-        
+
         if (nombreCompleto && email) {
           setUser({
             id: email,
@@ -135,7 +137,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
           'Cache-Control': 'no-cache'
         }
       });
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error('Curso no encontrado');
@@ -184,7 +186,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
 
     try {
       setEnrolling(true);
-      
+
       const response = await fetch('/api/inscripcion', {
         method: 'POST',
         headers: {
@@ -293,7 +295,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
           <div className={styles.tabContent}>
             <h3>DESCRIPCIÓN DEL CURSO</h3>
             <p>{course.description}</p>
-            
+
             {course.subject && (
               <>
                 <h3>MATERIA</h3>
@@ -357,8 +359,8 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
             <div className={styles.tutorCard}>
               <div className={styles.tutorHeader}>
                 <div className={styles.tutorImage}>
-                  <img 
-                    src={course.tutor.image} 
+                  <img
+                    src={course.tutor.image}
                     alt={course.tutor.name}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -385,14 +387,14 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
             <div className={styles.reviewsSection}>
               <div className={styles.reviewsHeader}>
                 <h3>Reseñas ({course.reviewCount})</h3>
-                <button 
+                <button
                   className={styles.commentButton}
                   onClick={handleAddComment}
                 >
                   {isLoggedIn ? 'Agregar Comentario' : 'Iniciar Sesión para Comentar'}
                 </button>
               </div>
-              
+
               {course.rating > 0 && (
                 <div className={styles.ratingOverview}>
                   <div className={styles.overallRating}>
@@ -417,9 +419,9 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
                   course.reviews.map((review) => (
                     <div key={review.id} className={styles.reviewItem}>
                       <div className={styles.reviewUser}>
-                        <img 
-                          src={review.userImage} 
-                          alt={review.userName} 
+                        <img
+                          src={review.userImage}
+                          alt={review.userName}
                           className={styles.reviewUserImage}
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
@@ -468,13 +470,13 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
           <h2>Error</h2>
           <p>{error}</p>
           <div className={styles.errorButtons}>
-            <button 
+            <button
               className={styles.retryButton}
               onClick={() => currentCourseId && fetchCourseData(currentCourseId)}
             >
               Intentar nuevamente
             </button>
-            <button 
+            <button
               className={styles.backButton}
               onClick={handleGoBack}
             >
@@ -493,13 +495,13 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
           <h2>Curso no encontrado</h2>
           <p>El curso que buscas no existe o no está disponible.</p>
           <div className={styles.errorButtons}>
-            <button 
+            <button
               className={styles.retryButton}
               onClick={() => currentCourseId && fetchCourseData(currentCourseId)}
             >
               Intentar nuevamente
             </button>
-            <button 
+            <button
               className={styles.backButton}
               onClick={handleGoBack}
             >
@@ -514,7 +516,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
   return (
     <div className={styles.container}>
       <div className={styles.backButtonContainer}>
-        <button 
+        <button
           className={styles.backButton}
           onClick={handleGoBack}
         >
@@ -524,8 +526,8 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
 
       <div className={styles.mainContent}>
         <div className={styles.courseImage}>
-          <img 
-            src={course.image} 
+          <img
+            src={course.image}
             alt={course.title}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
@@ -533,7 +535,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
             }}
           />
         </div>
-        
+
         <div className={styles.courseInfo}>
           <div className={styles.rating}>
             {renderStars(course.rating)}
@@ -542,9 +544,9 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
               <span className={styles.reviewCount}> - {course.reviewCount} reseña{course.reviewCount !== 1 ? 's' : ''}</span>
             )}
           </div>
-          
+
           <h1 className={styles.courseTitle}>{course.title}</h1>
-          
+
           <div className={styles.courseDetails}>
             <div className={styles.detailItem}>
               <span className={styles.icon}>📚</span>
@@ -563,38 +565,38 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
               <span>Nivel: {course.level}</span>
             </div>
           </div>
-          
+
           <div className={styles.tabs}>
-            <button 
+            <button
               className={`${styles.tab} ${activeTab === 'resumen' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('resumen')}
             >
               Resumen
             </button>
-            <button 
+            <button
               className={`${styles.tab} ${activeTab === 'lecciones' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('lecciones')}
             >
               Lecciones ({course.lessons})
             </button>
-            <button 
+            <button
               className={`${styles.tab} ${activeTab === 'tutor' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('tutor')}
             >
               Tutor
             </button>
-            <button 
+            <button
               className={`${styles.tab} ${activeTab === 'reseñas' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('reseñas')}
             >
               Reseñas ({course.reviewCount})
             </button>
           </div>
-          
+
           {renderTabContent()}
         </div>
       </div>
-      
+
       <div className={styles.sidebar}>
         <div className={styles.priceCard}>
           <div className={styles.priceSection}>
@@ -604,19 +606,20 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
               <span className={styles.price}>{course.price.toFixed(2)}</span>
             </div>
           </div>
-          
-          <button 
-            className={`${styles.enrollButton} ${enrolling ? styles.enrolling : ''}`}
-            onClick={handleEnrollment}
-            disabled={enrolling}
-          >
-            {enrolling ? 'PROCESANDO...' : (isLoggedIn ? 'INSCRIBIRME AHORA' : 'INICIAR SESIÓN PARA INSCRIBIRSE')}
-          </button>
+
+          <Link href={`/InscribirseCursoEst?id=${course.id}`}>
+            <button
+              className={`${styles.enrollButton} ${enrolling ? styles.enrolling : ''}`}
+              disabled={enrolling}
+            >
+              {enrolling ? 'PROCESANDO...' : (isLoggedIn ? 'INSCRIBIRME AHORA' : 'INICIAR SESIÓN PARA INSCRIBIRSE')}
+            </button>
+          </Link>
 
           {!isLoggedIn && (
             <div className={styles.authMessage}>
               <p>Debe iniciar sesión o registrarse para inscribirse al curso</p>
-              <button 
+              <button
                 className={styles.loginLink}
                 onClick={() => router.push('/login')}
               >
@@ -624,7 +627,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ courseId }) => {
               </button>
             </div>
           )}
-          
+
           <div className={styles.courseMetadata}>
             <div className={styles.metadataRow}>
               <span className={styles.metadataLabel}>Horario</span>
