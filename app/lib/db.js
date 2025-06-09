@@ -2,13 +2,19 @@ import * as sql from 'mssql';
 
 const config = {
   user: 'sa',
-  password: 'apazaeric1',
-  server: 'localhost',
+  password: '12345678',
+  server: '172.24.240.1',
   database: 'educore',
   options: {
     encrypt: true,
     trustServerCertificate: true,
   },
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000
+  },
+  requestTimeout: 15000 // ⏱️ Aumenta a 15 segundos
 };
 
 
