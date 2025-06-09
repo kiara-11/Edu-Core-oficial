@@ -1,12 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .contenedor-principal {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 80px;
-  padding: 30px 40px;
-  padding-top: 160px;
-  min-height: 80vh;
+  padding: 40px;
+  max-width: 1400px;
+  width: 100%;
+  min-height: 100vh;
   background: #ffffff;
   box-sizing: border-box;
   font-family: "Plus Jakarta Sans", sans-serif;
@@ -18,8 +33,9 @@
   max-width: 480px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding-left: 140px;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
 }
 
 /* Título principal */
@@ -30,12 +46,13 @@
   margin-bottom: 40px;
   margin-top: 0px;
   line-height: 1.2;
-  text-align: left;
+  text-align: center;
 }
 
 /* Formulario en columna */
 .formulario-login {
   width: 100%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -52,53 +69,67 @@
 .txtcampllen {
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   color: #4a4a4a;
+  text-align: left;
 }
 
 /* Input estilo moderno */
 .txtbox {
-  padding: 12px 16px;
+  padding: 14px 18px;
   font-size: 15px;
-  border: 1.5px solid #d1d5db; /* gris claro */
-  border-radius: 8px;
-  outline-offset: 2px;
-  transition: border-color 0.3s ease;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s ease;
   font-family: "Plus Jakarta Sans", sans-serif;
+  background: #fafafa;
 }
 
 /* Cambio color borde al hacer focus */
 .txtbox:focus {
-  border-color: #f97316; /* naranja vivo */
-  outline: none;
+  border-color: #f97316;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }
 
 /* Texto de error */
 .error-texto {
-  color: #dc2626; /* rojo vivo */
+  color: #dc2626;
   font-size: 14px;
-  margin-top: -10px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  text-align: center;
+  background: #fef2f2;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border-left: 4px solid #dc2626;
 }
 
 /* Botón iniciar sesión */
 .botoninicioses {
   width: 100%;
-  background-color: #f97316; /* naranja vivo */
+  background: linear-gradient(135deg, #f97316, #ea580c);
   color: white;
-  padding: 14px 0;
+  padding: 16px 0;
   font-weight: 700;
   font-size: 16px;
   border: none;
-  border-radius: 30px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   font-family: "Plus Jakarta Sans", sans-serif;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
 }
 
 /* Hover para botón */
 .botoninicioses:hover {
-  background-color: #ea580c; /* naranja más oscuro */
+  background: linear-gradient(135deg, #ea580c, #dc2626);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+}
+
+.botoninicioses:active {
+  transform: translateY(0);
 }
 
 /* Texto dentro del botón */
@@ -108,50 +139,83 @@
 
 /* Texto "¿Olvidaste tu contraseña?" */
 .olvidastependejo {
-  font-size: 13px;
-  color: #78716c;
-  margin-top: 12px;
-  margin-bottom: 10px;
-  cursor: default;
+  font-size: 14px;
+  color: #f97316;
+  margin: 15px 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-align: center;
   user-select: none;
+}
+
+.olvidastependejo:hover {
+  color: #ea580c;
+  text-decoration: underline;
 }
 
 /* Link "Crear una cuenta" */
 .crearcuenta {
   display: inline-block;
-  padding: 6px 16px; /* reduce el padding para que sea más compacto */
-  background-color: #f3f4f6; /* gris muy claro */
-  border-radius: 20px;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-radius: 12px;
   font-weight: 600;
-  color: #171412;
+  color: #374151;
   font-size: 14px;
   text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
   font-family: "Plus Jakarta Sans", sans-serif;
-  text-align: center; /* centra el texto */
-  width: fit-content; /* ancho ajustado al contenido */
-  margin-top: 12px; /* separa del texto anterior */
-  letter-spacing: 0.02em; /* para un poco de espaciado en letras */
-  font-size: 14px; /* tamaño ligeramente menor */
-  cursor: pointer;
-  margin-left: 130px;
-  padding-left: 70px;
-  padding-right: 70px;
+  text-align: center;
+  border: 2px solid transparent;
+  margin-top: 10px;
 }
 
 /* Hover para link */
 .crearcuenta:hover {
-  background-color: #f97316;
+  background: linear-gradient(135deg, #f97316, #ea580c);
   color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
 }
+
+.txtcrear {
+  letter-spacing: 0.02em;
+}
+
+/* Lado derecho: imagen */
+.lado-derecho {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Ajustar imagen del búho para que no se distorsione */
+.Buh {
+  width: 500px !important;
+  height: auto !important;
+  max-width: 100%;
+  user-select: none;
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease;
+}
+
+.Buh:hover {
+  transform: scale(1.02);
+}
+
+/* Modal overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(20, 20, 20, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -161,21 +225,21 @@
 /* Contenedor del modal */
 .modal {
   background: #fff;
-  padding: 30px;
-  border-radius: 12px;
+  padding: 40px;
+  border-radius: 20px;
   width: 90%;
-  max-width: 420px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-  animation: fadeIn 0.3s ease-in-out;
+  max-width: 450px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.4s ease-out;
   text-align: center;
   position: relative;
 }
 
 /* Animación suave */
-@keyframes fadeIn {
+@keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+    transform: translateY(-30px) scale(0.9);
   }
   to {
     opacity: 1;
@@ -183,59 +247,82 @@
   }
 }
 
-/* Título */
+/* Título del modal */
 .modal h3 {
-  font-size: 22px;
-  margin-bottom: 10px;
-  color: #007C8C;
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #f97316;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
-/* Párrafo */
+/* Párrafo del modal */
 .modal p {
-  font-size: 15px;
-  color: #444;
-  margin-bottom: 20px;
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 25px;
+  line-height: 1.5;
 }
 
-/* Input */
+/* Input del modal */
 .modal input[type="email"] {
   width: 100%;
-  padding: 12px;
+  padding: 14px 18px;
   font-size: 15px;
-  margin-bottom: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
   outline: none;
-  transition: border 0.2s;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .modal input[type="email"]:focus {
-  border-color: #FF6B00;
+  border-color: #f97316;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }
 
 /* Botones del modal */
 .modal-btn {
-  background-color: #FF6B00;
+  background: linear-gradient(135deg, #f97316, #ea580c);
   color: white;
   border: none;
-  padding: 10px 18px;
-  margin: 6px 5px;
+  padding: 12px 24px;
+  margin: 8px;
   font-size: 14px;
-  border-radius: 6px;
+  font-weight: 600;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .modal-btn:hover {
-  background-color: #e35c00;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
 }
+
+.modal-btn:last-child {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.modal-btn:last-child:hover {
+  background: linear-gradient(135deg, #4b5563, #374151);
+}
+
+/* Admin modal overlay */
 .admin-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -244,48 +331,71 @@
 
 .admin-modal {
   background-color: #fff;
-  padding: 2rem;
-  border-radius: 15px;
+  padding: 40px;
+  border-radius: 20px;
   text-align: center;
-  animation: fadein 0.4s ease-out;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  animation: modalSlideIn 0.4s ease-out;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
 }
 
 .admin-modal .emoji {
-  font-size: 2.8rem;
+  font-size: 60px;
+  margin-bottom: 20px;
+  display: block;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
 .mensaje-admin {
-  font-size: 1.2rem;
-  margin-top: 0.7rem;
-  font-weight: bold;
-  color: #007a5e;
+  font-size: 20px;
+  font-weight: 600;
+  color: #10b981;
+  margin: 0;
+  line-height: 1.4;
 }
 
-@keyframes fadein {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
 /* Texto del mensaje */
 .mensaje-texto {
-  margin-top: 12px;
+  margin-top: 15px;
   font-size: 14px;
-  color: #333;
-}
-/* Lado derecho: imagen */
-.lado-derecho {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  color: #6b7280;
+  background: #f0fdf4;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border-left: 4px solid #10b981;
 }
 
-/* Ajustar imagen del búho para que no se distorsione */
-.Buh {
-  width: 600px !important; /* fuerza ancho fijo */
-  height: auto !important;
-  user-select: none;
+/* Responsive: en pantallas medianas */
+@media (max-width: 1200px) {
+  .contenedor-principal {
+    gap: 60px;
+    padding: 30px;
+  }
+  
+  .Buh {
+    width: 450px !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .contenedor-principal {
+    gap: 40px;
+    padding: 25px;
+  }
+  
+  .Buh {
+    width: 400px !important;
+  }
+  
+  .titulo-principal {
+    font-size: 38px;
+  }
 }
 
 /* Responsive: en pantallas pequeñas se apila todo */
@@ -294,6 +404,7 @@
     flex-direction: column;
     padding: 30px 20px;
     min-height: auto;
+    gap: 40px;
   }
 
   .lado-izquierdo,
@@ -302,13 +413,18 @@
     align-items: center;
   }
 
+  .lado-izquierdo {
+    padding: 0;
+  }
+
   .titulo-principal {
     text-align: center;
-    
+    font-size: 36px;
   }
 
   .formulario-login {
     gap: 20px;
+    max-width: 100%;
   }
 
   .campollenado {
@@ -316,7 +432,7 @@
   }
 
   .txtcampllen {
-    text-align: center;
+    text-align: left;
   }
 
   .olvidastependejo {
@@ -325,6 +441,51 @@
 
   .crearcuenta {
     text-align: center;
-    
+    align-self: center;
+  }
+  
+  .Buh {
+    width: 350px !important;
+    order: -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .contenedor-principal {
+    padding: 20px 15px;
+    gap: 30px;
+  }
+  
+  .titulo-principal {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+  
+  .Buh {
+    width: 280px !important;
+  }
+  
+  .modal {
+    padding: 30px 20px;
+    margin: 20px;
+  }
+  
+  .admin-modal {
+    padding: 30px 20px;
+    margin: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo-principal {
+    font-size: 24px;
+  }
+
+  .formulario-login {
+    max-width: 100%;
+  }
+  
+  .Buh {
+    width: 250px !important;
   }
 }
