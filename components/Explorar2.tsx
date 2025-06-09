@@ -43,7 +43,7 @@ export default function CourseExplorer() {
       setLoading(true);
       const response = await fetch('/api/explorarcurso');
       const data = await response.json();
-      
+
       if (data.success) {
         setCourses(data.courses);
       } else {
@@ -59,11 +59,11 @@ export default function CourseExplorer() {
 
   const filteredCourses = courses.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         course.instructor.toLowerCase().includes(searchTerm.toLowerCase());
+      course.instructor.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !categoryFilter || course.category === categoryFilter;
     const matchesLevel = !levelFilter || course.level === levelFilter;
     const matchesModality = !modalityFilter || course.modality === modalityFilter;
-    
+
     let matchesPrice = true;
     if (priceFilter) {
       if (priceFilter === '0-50') {
@@ -74,7 +74,7 @@ export default function CourseExplorer() {
         matchesPrice = course.price > 100;
       }
     }
-    
+
     return matchesSearch && matchesCategory && matchesLevel && matchesModality && matchesPrice;
   });
 
@@ -123,7 +123,7 @@ export default function CourseExplorer() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Explorar Cursos</h1>
-      
+
       <div className={styles.searchSection}>
         <div className={styles.searchContainer}>
           <input
@@ -137,8 +137,8 @@ export default function CourseExplorer() {
             🔍
           </button>
         </div>
-        
-        <button 
+
+        <button
           className={styles.filterButton}
           onClick={() => setShowFilters(!showFilters)}
         >
@@ -203,36 +203,36 @@ export default function CourseExplorer() {
           filteredCourses.map((course) => (
             <div key={course.id} className={styles.courseCard}>
               <div className={styles.courseImage}>
-                <img 
-                  src={course.imageUrl} 
-                  alt={course.title} 
+                <img
+                  src={course.imageUrl}
+                  alt={course.title}
                   className={styles.courseImg}
                   onError={handleImageError}
                 />
               </div>
-              
+
               <div className={styles.courseContent}>
                 <h3 className={styles.courseTitle}>{course.title}</h3>
-                
+
                 <div className={styles.instructorInfo}>
                   <img src="/avatar.png" alt="Instructor" className={styles.instructorAvatar} />
                   <span className={styles.instructorName}>{course.instructor}</span>
                 </div>
-                
+
                 <p className={styles.courseDescription}>{course.description}</p>
-                
+
                 <div className={styles.courseDetails}>
                   <div className={styles.detailItem}>
                     <span className={styles.icon}>🕒</span>
                     <span>{course.duration}</span>
                   </div>
-                  
+
                   <div className={styles.detailItem}>
                     <span className={styles.icon}>📋</span>
                     <span>{course.modality}</span>
                   </div>
                 </div>
-                
+
                 <div className={styles.courseFooter}>
                   <div className={styles.rating}>
                     <div className={styles.stars}>
@@ -240,15 +240,15 @@ export default function CourseExplorer() {
                     </div>
                     <span className={styles.reviewCount}>({course.reviews})</span>
                   </div>
-                  
+
                   <div className={styles.price}>
                     <span className={styles.priceAmount}>Bs. {course.price}</span>
                   </div>
                 </div>
-                
+
                 <Link href={`/explorarcurso/detalles?id=${course.id}`}>
                   <button className={styles.viewMoreButton}>
-                    VER MÁS
+                    MÁS INFORMACIÓN
                   </button>
                 </Link>
               </div>

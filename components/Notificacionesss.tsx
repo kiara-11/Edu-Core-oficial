@@ -1,4 +1,4 @@
-'use client'; // This is a client component
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import CardCheckNoti from './CardCheckNoti';
@@ -6,15 +6,23 @@ import CardCancelNoti from './CardCancelNoti';
 import CardTimeNoti from './CardTimeNoti';
 import './CardNoti.css';
 
-// ✅ AGREGADO: Interface para el estado de solicitud
 interface SolicitudStatus {
     status: string;
-    motivo_rechazo?: string;
+    motivo_rechazo?: string | null;
+}
+
+interface NotificacionEstudiante {
+    idSolcur: number; // 👈 agregado este campo
+    estudiante: string;
+    curso: string;
+    mensaje: string;
+    fecha: string;
+    estado: string;
 }
 
 const Notificacionesss = () => {
-    // ✅ MODIFICADO: Cambiar el tipo de estado para incluir motivo de rechazo
     const [estadoSolicitud, setEstadoSolicitud] = useState<SolicitudStatus | null>(null);
+    const [notificacionesEstudiantes, setNotificacionesEstudiantes] = useState<NotificacionEstudiante[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [localUserId, setLocalUserId] = useState<string | null>(null);
@@ -30,47 +38,68 @@ const Notificacionesss = () => {
     }, []);
 
     useEffect(() => {
-        const fetchUserApplicationStatus = async () => {
-            if (localUserId === null) {
-                return;
-            }
+        const fetchData = async () => {
+            if (!localUserId) return;
 
             setLoading(true);
             setError(null);
 
             try {
-                const response = await fetch(`/api/user-solicitud-status?userId=${localUserId}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch application status.');
-                }
-                const data = await response.json();
+                const estadoRes = await fetch(`/api/user-solicitud-status?userId=${localUserId}`);
+                const estadoData = await estadoRes.json();
+                setEstadoSolicitud({
+                    status: estadoData.status,
+                    motivo_rechazo: estadoData.motivo_rechazo || null,
+                });
 
-                // ✅ MODIFICADO: Guardar tanto el status como el motivo de rechazo
-                if (data.status) {
-                    setEstadoSolicitud({
-                        status: data.status,
-                        motivo_rechazo: data.motivo_rechazo || undefined
-                    });
+                const notiRes = await fetch(`/api/solicitudnotif2?userId=${localUserId}`);
+                const notiData = await notiRes.json();
+
+                if (notiData.notificacionesEstudiantes) {
+                    setNotificacionesEstudiantes(notiData.notificacionesEstudiantes);
                 } else {
-                    setEstadoSolicitud(null);
+                    setNotificacionesEstudiantes([]);
                 }
             } catch (err) {
-                console.error("Error fetching application status:", err);
-                setError('Error al cargar el estado de la solicitud.');
-                setEstadoSolicitud(null);
+                console.error("Error fetching notifications:", err);
+                setError("Error al cargar las notificaciones.");
             } finally {
                 setLoading(false);
             }
         };
 
-        if (localUserId) {
-            fetchUserApplicationStatus();
-        }
+        fetchData();
     }, [localUserId]);
 
     const aceptarNotificacion = () => {
         console.log("Notificación pendiente reconocida.");
     };
+
+    const gestionarSolicitud = async (idSolcur: number, decision: 'aceptar' | 'rechazar') => {
+        try {
+            const res = await fetch('/api/gestionar-solicitud', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Id_solcur: idSolcur, decision }),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                // Eliminar la notificación de la lista local
+                setNotificacionesEstudiantes(prev =>
+                    prev.filter(n => n.idSolcur !== idSolcur)
+                );
+            } else {
+                console.error('Error en respuesta del servidor:', data.error);
+                alert('Ocurrió un error al procesar la solicitud.');
+            }
+        } catch (error) {
+            console.error('Error al gestionar solicitud:', error);
+            alert('Error al gestionar la solicitud.');
+        }
+    };
+
 
     const mensajes = {
         aprobado: {
@@ -119,24 +148,10 @@ const Notificacionesss = () => {
         );
     }
 
-    if (!localUserId && !loading) {
-        return (
-            <div className="containernotif">
-                <p className="notititl">Notificaciones</p>
-                <div className="notifcards">
-                    <div className="cardcontent">
-                        <p>Inicia sesión para ver tus notificaciones.</p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="containernotif">
             <p className="notititl">Notificaciones</p>
             <div className="notifcards">
-                {/* ✅ MODIFICADO: Actualizar las condiciones para usar el nuevo formato */}
                 {estadoSolicitud?.status === 'Pendiente' && (
                     <CardTimeNoti
                         titulo={mensajes.pendiente.titulo}
@@ -153,19 +168,35 @@ const Notificacionesss = () => {
                         botonLink={mensajes.aprobado.botonLink}
                     />
                 )}
-                {/* ✅ MODIFICADO: Pasar el motivo de rechazo al componente */}
                 {estadoSolicitud?.status === 'Rechazado' && (
                     <CardCancelNoti
                         titulo={mensajes.rechazado.titulo}
                         detalle={mensajes.rechazado.detalle}
-                        motivoRechazo={estadoSolicitud.motivo_rechazo} // ✅ NUEVO: Pasar motivo
+                        motivoRechazo={estadoSolicitud.motivo_rechazo ?? undefined}
                         botonTexto={mensajes.rechazado.botonTexto}
                         botonLink={mensajes.rechazado.botonLink}
                     />
                 )}
-                {!estadoSolicitud && ( 
+
+                {notificacionesEstudiantes.length > 0 && (
+                    notificacionesEstudiantes.map((notif, index) => (
+                        <div className="cardcontent" key={index}>
+                            <p><strong>{notif.estudiante}</strong> solicitó unirse al curso <strong>{notif.curso}</strong>.</p>
+                            <p><em>{notif.mensaje}</em></p>
+                            <p>{new Date(notif.fecha).toLocaleString()}</p>
+                            <p>Estado: {notif.estado}</p>
+
+                            <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
+                                <button onClick={() => gestionarSolicitud(notif.idSolcur, 'aceptar')}>Aceptar</button>
+                                <button onClick={() => gestionarSolicitud(notif.idSolcur, 'rechazar')}>Rechazar</button>
+                            </div>
+                        </div>
+                    ))
+                )}
+
+                {((!estadoSolicitud || estadoSolicitud.status === null) && notificacionesEstudiantes.length === 0) && (
                     <div className="cardcontent">
-                        <p>No tienes solicitudes de tutor pendientes ni finalizadas.</p>
+                        <p>No tienes notificaciones recientes.</p>
                     </div>
                 )}
             </div>

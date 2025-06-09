@@ -24,12 +24,11 @@ export async function GET(request) {
         // ✅ MODIFICADO: Incluir motivo_rechazo en la consulta
         const result = await sql.query`
             SELECT 
-                estado,
-                motivo_rechazo
-            FROM educore.dbo.Solicitud_tutor1
-            WHERE id_user = ${userId}
-            ORDER BY id_solicitud DESC
-            OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY; -- Standard SQL Server syntax for LIMIT 1
+        estado
+    FROM educore.dbo.Solicitud_tutor1
+    WHERE id_user = ${userId}
+    ORDER BY id_solicitud DESC
+    OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY;
         `;
 
         // mssql returns results in 'recordset' (an array of rows)

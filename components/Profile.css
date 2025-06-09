@@ -548,6 +548,146 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
+/* Estilos uniformes para la sección de tutor */
+.tutor-section {
+  background: #f8fafc; /* Mismo fondo que otras secciones */
+  border: 1px solid #e2e8f0; /* Mismo borde */
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  position: relative;
+}
+
+/* Borde sutil superior para diferenciación */
+.tutor-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6b7280, #9ca3af, #6b7280);
+  border-radius: 12px 12px 0 0;
+}
+
+.tutor-section .info-header {
+  background: rgba(107, 114, 128, 0.05); /* Tono gris sutil */
+  margin: -32px -32px 32px -32px;
+  padding: 24px 32px;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tutor-section .info-header h2 {
+  color: #374151; /* Color gris oscuro consistente */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px; /* Mismo tamaño que otras secciones */
+  margin: 0;
+  font-weight: 600;
+}
+
+.tutor-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.approved {
+  background: linear-gradient(135deg, #6b7280, #4b5563); /* Tonos grises */
+  color: white;
+  box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+}
+
+.tutor-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.tutor-section .info-field {
+  background: white;
+  padding: 20px;
+  border-radius: 8px; /* Consistente con otros campos */
+  border: 2px solid #f3f4f6; /* Consistente con otros campos */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.tutor-section .info-field:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-color: #e5e7eb;
+}
+
+.tutor-section .info-field label {
+  color: #374151; /* Color consistente */
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.tutor-section .info-field p {
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 400; /* Peso normal para consistencia */
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tutor-section .info-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.tutor-loading {
+  text-align: center;
+  padding: 40px;
+  background: #f8fafc;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+}
+
+.tutor-loading p {
+  color: #6b7280;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Responsive para la sección tutor */
+@media (max-width: 768px) {
+  .tutor-info-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .tutor-section .info-header {
+    margin: -16px -16px 24px -16px;
+    padding: 20px 16px;
+  }
+  
+  .tutor-section .info-header h2 {
+    font-size: 20px;
+  }
+  
+  .tutor-status {
+    margin-top: 12px;
+  }
+}
+
 .security-options {
   display: flex;
   flex-direction: column;
@@ -611,5 +751,125 @@
     flex-direction: column;
     align-items: stretch;
     gap: 16px;
+  }
+}
+/* Modal de éxito - Agregar al final del archivo Profile.css */
+.success-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.success-modal {
+  background: white;
+  padding: 40px 32px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease-out;
+  border: 1px solid #e2e8f0;
+}
+
+.success-modal-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  animation: scaleIn 0.5s ease-out 0.2s both;
+}
+
+.success-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+}
+
+.success-modal-message {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.success-modal-button {
+  background: linear-gradient(135deg, #0891b2, #0e7490);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+  min-width: 120px;
+}
+
+.success-modal-button:hover {
+  background: linear-gradient(135deg, #0e7490, #155e75);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(8, 145, 178, 0.4);
+}
+
+.success-modal-button:active {
+  transform: translateY(0);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive para modal de éxito */
+@media (max-width: 480px) {
+  .success-modal {
+    margin: 16px;
+    padding: 32px 24px;
+  }
+  
+  .success-modal-title {
+    font-size: 20px;
+  }
+  
+  .success-modal-message {
+    font-size: 14px;
   }
 }

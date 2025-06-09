@@ -31,21 +31,23 @@
 
 .curso-detalle p {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
-  gap: 10px 40px; /* Espacio entre filas y columnas */
-  justify-content: center; /* Centra el grid dentro del contenedor */
-  text-align: center; /* Centra el texto dentro de cada celda */
-  font-size: 14px; /* Puedes ajustar este valor */
-  line-height: 1.8; /* Aumenta la separación entre líneas */
-
-
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 40px;
+  justify-content: center;
+  text-align: left;
+  /* <-- Aquí está el centrado */
+  font-size: 14px;
+  line-height: 1.8;
 }
 
+
 .curso-detalle h3 {
-  grid-column: span 2; /* Ocupa las dos columnas */
+  grid-column: span 2;
+  /* Ocupa las dos columnas */
   text-align: center;
   margin-bottom: 20px;
-  font-size: 12px; /* Puedes ajustar este valor */
+  font-size: 12px;
+  /* Puedes ajustar este valor */
 
 }
 
@@ -133,11 +135,37 @@ input[type="text"] {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 26px; /* Puedes ajustar este valor */
-  color: #3d4546;   /* Cambia este valor por el color que desees */
+  font-size: 26px;
+  /* Puedes ajustar este valor */
+  color: #3d4546;
+  /* Cambia este valor por el color que desees */
 }
+
 .icono-titulo {
   width: 24px;
   height: 24px;
 }
 
+
+.boton-volver {
+  background-color: transparent;
+  border: none;
+  color: #0070f3;
+  /* Azul tipo Next.js */
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
+  margin-top: 10px;
+}
+
+.boton-volver:hover {
+  color: #0051a3;
+  /* Azul más oscuro al pasar el mouse */
+  text-decoration: underline;
+}
+
+.boton-volver:focus {
+  outline: none;
+}

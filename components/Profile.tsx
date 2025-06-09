@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState, useRef, ChangeEvent } from 'react'; // Import useRef and ChangeEvent
+import { useEffect, useState, useRef, ChangeEvent } from 'react';
 import "./Profile.css";
 
 const Perfil = () => {
@@ -12,32 +12,41 @@ const Perfil = () => {
     email: '',
     telefono: '',
     bio: '',
-    // This initial avatar path will be immediately overwritten by the fetch
-    avatar: '/default_avatar.png', // Set a more generic default
+    avatar: '/default_avatar.png',
   });
 
   // Ref for the hidden file input
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false); // State for upload loading
+  const [uploading, setUploading] = useState(false);
 
-  // Datos académicos tutor aprobado (solo lectura)
+  // Estados para datos académicos de tutor
   const [tutorData, setTutorData] = useState<{
     universidad: string;
-    titulo: string;
+    profesion: string;
     certificacion: string;
     entidad: string;
-    año: string;
+    anio: string;
+    fechaInicioProfesion: string;
+    fechaFinProfesion: string;
+    fechaTitulacion: string;
+    modalidad: string;
+    horarios: string;
+    frecuencia: string;
+    materias: string;
+    estado: string;
   } | null>(null);
 
-  // Control para mostrar sección tutor
   const [showTutorSection, setShowTutorSection] = useState(false);
+  const [loadingTutorData, setLoadingTutorData] = useState(true);
 
   const [editData, setEditData] = useState(profileData);
-  // const [showImageUpload, setShowImageUpload] = useState(false); // No longer needed
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
+
+  // Estado para el modal de éxito
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     const email = localStorage.getItem("email");
@@ -56,7 +65,7 @@ const Perfil = () => {
             user_name: data.user_name || '',
             bio: data.bio || '',
           }));
-          setEditData(prev => ({ // Also initialize editData with fetched data
+          setEditData(prev => ({
             ...prev,
             nombreCompleto: data.nombreCompleto,
             email: data.email,
@@ -65,16 +74,17 @@ const Perfil = () => {
             bio: data.bio || '',
           }));
         }
-      });
+      })
+      .catch(error => console.error('Error loading user data:', error));
 
-    // Fetch user avatar (similar to Header)
+    // Fetch user avatar
     const fetchAvatar = async (userEmail: string) => {
       try {
         const response = await fetch(`/api/perfil-photo?email=${encodeURIComponent(userEmail)}`);
         if (response.ok) {
           const data = await response.json();
           setProfileData(prev => ({ ...prev, avatar: data.photoUrl || '/default_avatar.png' }));
-          setEditData(prev => ({ ...prev, avatar: data.photoUrl || '/default_avatar.png' })); // Also update editData
+          setEditData(prev => ({ ...prev, avatar: data.photoUrl || '/default_avatar.png' }));
         } else {
           console.error('Failed to fetch avatar:', response.status, response.statusText);
           setProfileData(prev => ({ ...prev, avatar: '/default_avatar.png' }));
@@ -87,30 +97,44 @@ const Perfil = () => {
       }
     };
 
+    // Fetch datos académicos de tutor
+    const fetchTutorData = async (userEmail: string) => {
+      try {
+        setLoadingTutorData(true);
+        const response = await fetch(`/api/tutor-academico?email=${encodeURIComponent(userEmail)}`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          if (data.esTutor) {
+            setShowTutorSection(true);
+            setTutorData(data.datosAcademicos);
+          } else {
+            setShowTutorSection(false);
+            setTutorData(null);
+          }
+        } else {
+          console.error('Error fetching tutor data:', response.status);
+          setShowTutorSection(false);
+          setTutorData(null);
+        }
+      } catch (error) {
+        console.error('Error fetching tutor data:', error);
+        setShowTutorSection(false);
+        setTutorData(null);
+      } finally {
+        setLoadingTutorData(false);
+      }
+    };
+
     if (email) {
       fetchAvatar(email);
-    }
-
-    // Verificar si usuario es tutor aprobado
-    const esTutor = localStorage.getItem('esTutorAprobado');
-    if (esTutor === 'true') {
-      setShowTutorSection(true);
-      const solicitudAprobada = JSON.parse(localStorage.getItem('solicitudTutorAprobada') || '{}');
-      setTutorData({
-        universidad: solicitudAprobada.universidad || '',
-        titulo: solicitudAprobada.titulo || '',
-        certificacion: solicitudAprobada.certificacion || '',
-        entidad: solicitudAprobada.entidad || '',
-        año: solicitudAprobada.año || ''
-      });
-    } else {
-      setShowTutorSection(false);
-      setTutorData(null);
+      fetchTutorData(email);
     }
   }, []);
 
   const handleEdit = () => {
-    setEditData(profileData); // Ensure editData is fresh with current profileData
+    setEditData(profileData);
     setIsEditing(true);
   };
 
@@ -128,7 +152,7 @@ const Perfil = () => {
       setIsEditing(false);
       localStorage.setItem('nombreCompleto', updated.nombreCompleto);
       localStorage.setItem('email', updated.email);
-      alert("¡Cambios de perfil guardados con éxito!"); // Feedback for general profile updates
+      setShowSuccessModal(true);
     } else {
       alert("❌ Error al guardar los cambios.");
     }
@@ -146,10 +170,9 @@ const Perfil = () => {
     }));
   };
 
-  // --- NEW: handleAvatarClick and handleFileChange for direct upload ---
   const handleAvatarClick = () => {
-    if (fileInputRef.current && !uploading) { // Only allow click if not already uploading
-      fileInputRef.current.click(); // Trigger click on hidden file input
+    if (fileInputRef.current && !uploading) {
+      fileInputRef.current.click();
     }
   };
 
@@ -157,7 +180,7 @@ const Perfil = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const email = localStorage.getItem("email"); // Get current user email
+    const email = localStorage.getItem("email");
     if (!email) {
       alert('Error: No se encontró el correo del usuario logueado para subir la foto.');
       return;
@@ -166,7 +189,7 @@ const Perfil = () => {
     setUploading(true);
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('email', email); // Send email to the API route
+    formData.append('email', email);
 
     try {
       const response = await fetch('/api/perfil-photo', {
@@ -176,9 +199,8 @@ const Perfil = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setProfileData(prev => ({ ...prev, avatar: data.photoUrl })); // Update profileData
-        setEditData(prev => ({ ...prev, avatar: data.photoUrl })); // Also update editData
-        // alert('Foto de perfil actualizada con éxito!'); // Visual feedback is better than alert here
+        setProfileData(prev => ({ ...prev, avatar: data.photoUrl }));
+        setEditData(prev => ({ ...prev, avatar: data.photoUrl }));
       } else {
         const errorData = await response.json();
         alert(`Error al subir la foto: ${errorData.message || 'Error desconocido'}`);
@@ -190,11 +212,10 @@ const Perfil = () => {
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
-        fileInputRef.current.value = ''; // Clear the file input for subsequent uploads
+        fileInputRef.current.value = '';
       }
     }
   };
-  // --- END NEW ---
 
   const handlePasswordChange = async () => {
     try {
@@ -224,27 +245,25 @@ const Perfil = () => {
       <div className="profile-content">
         {/* Avatar Section */}
         <div className="avatar-section">
-          {/* New container for styling and click handling */}
           <div className="profile-avatar-container" onClick={handleAvatarClick}>
-            {uploading && ( // Show spinner when uploading
+            {uploading && (
               <div className="profile-avatar-overlay">
-                <div className="loading-spinner"></div> {/* Use a specific class for this context */}
+                <div className="loading-spinner"></div>
               </div>
             )}
-            {!uploading && ( // Show "Cambiar Foto" overlay when not uploading
+            {!uploading && (
               <div className="profile-avatar-overlay">
                 <span className="change-photo-text">Cambiar Foto</span>
               </div>
             )}
             <Image
-              src={profileData.avatar} // Display the fetched or newly uploaded avatar
+              src={profileData.avatar}
               alt="Avatar"
               width={120}
               height={120}
-              className="profile-avatar-image" // New class for the Image tag
-              priority // Or remove if not critical for LCP
+              className="profile-avatar-image"
+              priority
             />
-            {/* Hidden file input */}
             <input
               type="file"
               ref={fileInputRef}
@@ -337,44 +356,91 @@ const Perfil = () => {
           </div>
         </div>
 
-        {/* Mostrar sección académica SOLO si es tutor aprobado */}
-        {showTutorSection && tutorData && (
-          <div className="info-section" style={{ marginTop: '2rem', backgroundColor: '#f0f4f8' }}>
-            <h2>Información Académica (Tutor)</h2>
-            <div className="info-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        {/* Sección Académica de Tutor - Solo si es tutor aprobado */}
+        {loadingTutorData ? (
+          <div className="info-section tutor-loading">
+            <p>Cargando información académica...</p>
+          </div>
+        ) : showTutorSection && tutorData ? (
+          <div className="info-section tutor-section">
+            <div className="info-header">
+              <h2>🎓 Información Académica (Tutor)</h2>
+              <div className="tutor-status">
+                <span className="status-badge approved">✅ {tutorData.estado}</span>
+              </div>
+            </div>
+            
+            <div className="tutor-info-grid">
               <div className="info-field">
                 <label>Universidad</label>
                 <p>{tutorData.universidad || 'No registrado'}</p>
               </div>
+              
               <div className="info-field">
-                <label>Título</label>
-                <p>{tutorData.titulo || 'No registrado'}</p>
+                <label>Profesión/Título</label>
+                <p>{tutorData.profesion || 'No registrado'}</p>
               </div>
+              
               <div className="info-field">
                 <label>Certificación</label>
                 <p>{tutorData.certificacion || 'No registrado'}</p>
               </div>
+              
               <div className="info-field">
-                <label>Entidad emisora</label>
+                <label>Entidad Emisora</label>
                 <p>{tutorData.entidad || 'No registrado'}</p>
               </div>
+              
               <div className="info-field">
                 <label>Año</label>
-                <p>{tutorData.año || 'No registrado'}</p>
+                <p>{tutorData.anio || 'No registrado'}</p>
               </div>
+              
+              <div className="info-field">
+                <label>Fecha Titulación</label>
+                <p>{tutorData.fechaTitulacion || 'No registrado'}</p>
+              </div>
+              
+              <div className="info-field">
+                <label>Modalidad</label>
+                <p>{tutorData.modalidad || 'No registrado'}</p>
+              </div>
+              
+              <div className="info-field">
+                <label>Horarios</label>
+                <p>{tutorData.horarios || 'No registrado'}</p>
+              </div>
+              
+              
+              
+              {tutorData.fechaInicioProfesion && (
+                <div className="info-field">
+                  <label>Inicio Profesión</label>
+                  <p>{tutorData.fechaInicioProfesion}</p>
+                </div>
+              )}
+              
+              {tutorData.fechaFinProfesion && (
+                <div className="info-field">
+                  <label>Fin Profesión</label>
+                  <p>{tutorData.fechaFinProfesion}</p>
+                </div>
+              )}
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* Seguridad */}
         <div className="security-section">
           <h2>Seguridad</h2>
           <div className="security-options">
-            <button className="security-button" onClick={() => setShowPasswordModal(true)}>Cambiar contraseña</button>
-            <button className="security-button">Autenticación de dos factores</button>
+            <button className="security-button" onClick={() => setShowPasswordModal(true)}>
+              🔐 Cambiar contraseña
+            </button>
           </div>
         </div>
 
+        {/* Modal de contraseña */}
         {showPasswordModal && (
           <div className="modal-overlay">
             <div className="modal">
@@ -396,6 +462,28 @@ const Perfil = () => {
               <button className="modal-btn" onClick={handlePasswordChange}>Guardar</button>
               <button className="modal-btn" onClick={() => setShowPasswordModal(false)}>Cancelar</button>
               {passwordMessage && <p className="mensaje-texto">{passwordMessage}</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Modal de éxito */}
+        {showSuccessModal && (
+          <div className="success-modal-overlay">
+            <div className="success-modal">
+              <div className="success-modal-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="10" fill="#10b981"/>
+                  <path d="m9 12 2 2 4-4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 className="success-modal-title">¡Cambios guardados con éxito!</h3>
+              <p className="success-modal-message">Tu información de perfil ha sido actualizada correctamente.</p>
+              <button 
+                className="success-modal-button"
+                onClick={() => setShowSuccessModal(false)}
+              >
+                Aceptar
+              </button>
             </div>
           </div>
         )}
