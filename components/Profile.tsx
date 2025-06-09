@@ -45,6 +45,9 @@ const Perfil = () => {
   const [newPassword, setNewPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
 
+  // Estado para el modal de éxito
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   useEffect(() => {
     const email = localStorage.getItem("email");
     if (!email) return;
@@ -149,7 +152,7 @@ const Perfil = () => {
       setIsEditing(false);
       localStorage.setItem('nombreCompleto', updated.nombreCompleto);
       localStorage.setItem('email', updated.email);
-      alert("¡Cambios de perfil guardados con éxito!");
+      setShowSuccessModal(true);
     } else {
       alert("❌ Error al guardar los cambios.");
     }
@@ -437,6 +440,7 @@ const Perfil = () => {
           </div>
         </div>
 
+        {/* Modal de contraseña */}
         {showPasswordModal && (
           <div className="modal-overlay">
             <div className="modal">
@@ -458,6 +462,28 @@ const Perfil = () => {
               <button className="modal-btn" onClick={handlePasswordChange}>Guardar</button>
               <button className="modal-btn" onClick={() => setShowPasswordModal(false)}>Cancelar</button>
               {passwordMessage && <p className="mensaje-texto">{passwordMessage}</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Modal de éxito */}
+        {showSuccessModal && (
+          <div className="success-modal-overlay">
+            <div className="success-modal">
+              <div className="success-modal-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="10" fill="#10b981"/>
+                  <path d="m9 12 2 2 4-4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 className="success-modal-title">¡Cambios guardados con éxito!</h3>
+              <p className="success-modal-message">Tu información de perfil ha sido actualizada correctamente.</p>
+              <button 
+                className="success-modal-button"
+                onClick={() => setShowSuccessModal(false)}
+              >
+                Aceptar
+              </button>
             </div>
           </div>
         )}
