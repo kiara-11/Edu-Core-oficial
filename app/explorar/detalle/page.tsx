@@ -1,4 +1,4 @@
-import Explorar from '@/components/Detalle'
+import Explorar from '@/components/Detalle2'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer';
 

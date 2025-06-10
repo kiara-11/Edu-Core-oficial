@@ -246,7 +246,7 @@ export default function CourseExplorer() {
                   </div>
                 </div>
                 
-                <Link href={`/explorar/detalles?id=${course.id}`}>
+                <Link href={`/explorar/detalle?id=${course.id}`}>
                   <button className={styles.viewMoreButton}>
                     VER MÁS
                   </button>
