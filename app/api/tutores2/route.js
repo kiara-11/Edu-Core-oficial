@@ -83,41 +83,6 @@ export async function GET(request) {
       stack: error.stack
     });
     
-    // Manejo de errores más específico
-    if (error.code) {
-      switch (error.code) {
-        case 'EREQUEST':
-          return NextResponse.json(
-            { 
-              error: 'Error en la consulta SQL', 
-              details: error.message,
-              suggestion: 'Verifique que las tablas y columnas existan en la base de datos'
-            },
-            { status: 400 }
-          );
-        case 'ECONNRESET':
-        case 'ETIMEOUT':
-          return NextResponse.json(
-            { error: 'Error de conexión a la base de datos' },
-            { status: 503 }
-          );
-        case 'ELOGIN':
-          return NextResponse.json(
-            { error: 'Error de autenticación en la base de datos' },
-            { status: 401 }
-          );
-        default:
-          return NextResponse.json(
-            { 
-              error: 'Error de base de datos', 
-              code: error.code,
-              message: error.message 
-            },
-            { status: 500 }
-          );
-      }
-    }
-    
     // Para errores sin código específico
     if (error.message?.includes('Invalid object name')) {
       return NextResponse.json(

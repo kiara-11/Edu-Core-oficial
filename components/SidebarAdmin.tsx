@@ -11,7 +11,7 @@ const Sidebar = () => {
     { name: 'Aprobación de tutores', href: '/admintutor' },
     { name: 'Aprobación de certificados', href: '/Certificado' },
     { name: 'Publicar Curso', href: '/publicarcursoadmi' },
-    { name: 'Administrar Curso', href: '/Certificado' },
+    { name: 'Administrar Curso', href: '/cursoadmi' },
     { name: 'Explorar Cursos', href: '/explorarAdmi' },
     { name: 'Control de pagos', href: '/miscursos' }//cambiar links por el correspondiente page
   ];

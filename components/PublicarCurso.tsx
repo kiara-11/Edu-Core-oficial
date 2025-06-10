@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import styles from './PublicarCurso.module.css';
+import Link from "next/link";
 
 interface Horario {
   dia: string;
@@ -744,11 +745,13 @@ export default function PublicarCurso() {
               </div>
             </div>
             <p className={styles.mensajeTexto}>
-              Su curso ha sido publicado exitosamente y será revisado por nuestro equipo.
+              Su curso ha sido publicado exitosamente
             </p>
+            <Link href={`/miscursostutor`}></Link>
             <button 
               onClick={cerrarMensajeSolicitud}
               className={styles.cerrarBtn}
+
             >
               CONTINUAR
             </button>
