@@ -1,0 +1,110 @@
+.admin-reports-container {
+  padding: 30px;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background-color: #d6ecec;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-section h2 {
+  color: #1f1f1f;
+  margin: 0;
+}
+
+.filters-section {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.date-filter {
+  padding: 8px 15px;
+  border: 1px solid #0b7077;
+  border-radius: 5px;
+  background-color: white;
+  color: #0b7077;
+  font-size: 14px;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.export-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.pdf-btn {
+  background-color: #f26430;
+  color: white;
+}
+
+.excel-btn {
+  background-color: #0b7077;
+  color: white;
+}
+
+.export-btn:hover {
+  opacity: 0.9;
+}
+
+.reports-navigation {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  padding: 12px 20px;
+  border: 2px solid #0b7077;
+  background-color: white;
+  color: #0b7077;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: #0b7077;
+  color: white;
+}
+
+.nav-btn.active {
+  background-color: #0b7077;
+  color: white;
+}
+
+.report-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.report-content h3 {
+  color: #0b7077;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 24px;
+}
+

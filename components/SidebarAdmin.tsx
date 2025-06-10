@@ -13,8 +13,9 @@ const Sidebar = () => {
     { name: 'Publicar Curso', href: '/publicarcursoadmi' },
     { name: 'Administrar Curso', href: '/cursoadmi' },
     { name: 'Explorar Cursos', href: '/explorarAdmi' },
-    { name: 'Control de pagos', href: '/miscursos' }//cambiar links por el correspondiente page
-  ];
+    { name: 'Control de pagos', href: '/pagosadmin' },//cambiar links por el correspondiente page
+    { name: 'Informes y Reportes', href: '/informesadmin' }
+    ];
 
   return (
     <aside className={styles.sidebar}>

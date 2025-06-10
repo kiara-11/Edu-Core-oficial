@@ -13,8 +13,9 @@ const Sidebar = () => {
     { name: 'Notificaciones', href: '/notificaciones' },//cambiar links por el correspondiente page
     { name: 'Explorar cursos', href: '/explorarcurso' },
     { name: 'Convertirme en Tutor', href: '/formulario' },
-    { name: 'Control de Pagos', href: '/pagos'}
-  ];
+    { name: 'Control de pagos', href: '/pagosest'},
+    { name: 'Informes y reportes', href: '/informesest' }     
+   ];
 
   return (
     <aside className={styles.sidebar}>

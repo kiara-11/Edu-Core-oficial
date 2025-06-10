@@ -14,7 +14,8 @@ const Sidebar = () => {
     { name: 'Mis cursos', href: '/miscursostutor' },//cambiar links por el correspondiente page
     { name: 'Explorar cursos', href: '/explorarcurso' },
     { name: 'Publicar un curso', href: '/publicarcurso' },
-    { name: 'Control de Pagos', href: '/pagos' }
+    { name: 'Control de pagos', href: '/pagostutor' },
+    { name: 'Informes y reportes', href: '/informestutor' }    
   ];
 
   return (
